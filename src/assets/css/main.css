@@ -1,0 +1,58 @@
+html,body {
+  font-family: 'Open Sans', serif;
+}
+
+.texts{
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.1),
+      rgba(0, 0, 0, 0.1)
+    );
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.hero.is-info {
+  background: linear-gradient(
+      rgba(0, 0, 0, 0.5),
+      rgba(0, 0, 0, 0.5)
+    ), url('https://majordomo.simpleb2b.io/random-image/splash/30') no-repeat center center fixed;*/
+    /*), url('https://unsplash.it/1200/900?random') no-repeat center center fixed;*/
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+.hero .nav, .hero.is-success .nav {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.hero .subtitle {
+  padding: 3rem 0;
+  line-height: 1.5;
+}
+.textlogo1 {
+    /*
+    font-family: 'Rubik', sans-serif;
+    font-family: 'Archivo Black', sans-serif;
+    font-family: 'Work Sans', sans-serif;
+    font-family: 'Chivo', sans-serif;
+    */
+    font-family: 'Rubik', sans-serif;
+    font-family: 'Bitter', serif;
+}
+
+.textlogo2 {
+    /*
+    font-style: italic;
+    font-family: 'Rubik', sans-serif;
+    font-family: 'Bitter', serif;
+    font-family: 'Work Sans', sans-serif;
+    font-family: 'Chivo', sans-serif;
+    font-family: 'Archivo Black', sans-serif;
+    */
+    font-weight: bold;
+    font-family: 'Work Sans', sans-serif;
+    font-family: 'Bitter', serif;
+    font-family: 'Archivo Black', sans-serif;
+}
