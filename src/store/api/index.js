@@ -79,10 +79,10 @@ const API = {
         
     actions: {
         getRoot({getters,commit,state}){
-            //let resource = getters.root
-            //if (resource){
-            //    return HAL(resource)
-            //}
+            let resource = getters.root
+            if (resource){
+                return resource
+            }
             return getters.http({
                 url: API_ROOT
             }).then(response=>{
