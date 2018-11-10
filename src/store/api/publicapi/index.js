@@ -21,62 +21,72 @@ export default {
     },
 
     actions: {
-        getPublicRoot({getters, commit}, {tenant}){
-            let url = getters.root.url('public-root', {tenant})
-            let resource = getters.cache({key:url})
-            if (resource){
-                return HAL(resource)
-            }
-            return getters.http({url}).then(response=>{
-                commit('setPublicRoot', {publicRoot: response.data})
-                return HAL(response.data)
+        getPublicRoot({getters, commit, dispatch}, {tenant}){
+            return dispatch('getRoot').then(root=>{
+                let url = root.url('public-root', {tenant})
+                let resource = getters.cache({key:url})
+                if (resource){
+                    return HAL(resource)
+                }
+                return getters.http({url}).then(response=>{
+                    commit('setPublicRoot', {publicRoot: response.data})
+                    return HAL(response.data)
+                })
             })
         },
 
-        getPublicProducts({getters, commit}, {params}={}){
-            let url = getters.publicRoot.url('public-products', {}, params)
-            let resource = getters.cache({key:url})
-            if (resource){
-                return HAL(resource)
-            }
-            return getters.http({url}).then(response=>{
-                commit('cache', {key:url, value:response.data})
-                return HAL(response.data)
+        getPublicProducts({getters, commit, dispatch}, {params}={}){
+            return dispatch('getPublicRoot').then(publicRoot=>{
+                let url = publicRoot.url('public-products', {}, params)
+                let resource = getters.cache({key:url})
+                if (resource){
+                    return HAL(resource)
+                }
+                return getters.http({url}).then(response=>{
+                    commit('cache', {key:url, value:response.data})
+                    return HAL(response.data)
+                })
             })
         },
 
         getPublicProduct({getters}, {product_id}){
         },
 
-        getPublicProductSchema({getters, commit}){
-            let url = getters.publicRoot.url('public-product-schema')
-            return getters.http({url}).then(response=>{
-                commit('cache', {key:url, value:response.data})
-                return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
+        getPublicProductSchema({getters, commit, dispatch}){
+            return dispatch('getPublicRoot').then(publicRoot=>{
+                let url = publicRoot.url('public-product-schema')
+                return getters.http({url}).then(response=>{
+                    commit('cache', {key:url, value:response.data})
+                    return HAL(response.data)
+                }).catch(error=>{
+                    console.log(error)
+                    console.log(error.response)
+                })
             })
         },
 
-        getPublicFilterSets({getters, commit}){
-            let url = getters.publicRoot.url('public-filter-sets')
-            return getters.http({url}).then(response=>{
-                commit('cache', {key:url, value:response.data})
-                return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
+        getPublicFilterSets({getters, commit, dispatch}){
+            return dispatch('getPublicRoot').then(publicRoot=>{
+                let url = publicRoot.url('public-filter-sets')
+                return getters.http({url}).then(response=>{
+                    commit('cache', {key:url, value:response.data})
+                    return HAL(response.data)
+                }).catch(error=>{
+                    console.log(error)
+                    console.log(error.response)
+                })
             })
         },
 
-        postPublicInquiry({getters, commit}, {data}){
-            let url = getters.publicRoot.url('public-inquiries')
-            return getters.http({url, method:'post', data}).then(response=>{
-                console.log(response)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
+        postPublicInquiry({getters, commit, dispatch}, {data}){
+            return dispatch('getPublicRoot').then(publicRoot=>{
+                let url = publicRoot.url('public-inquiries')
+                return getters.http({url, method:'post', data}).then(response=>{
+                    console.log(response)
+                }).catch(error=>{
+                    console.log(error)
+                    console.log(error.response)
+                })
             })
         },
 
