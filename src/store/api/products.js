@@ -46,7 +46,7 @@ export default {
             return getters.http({
                 url, data, method:'put', auth:true,
             }).then(resp=>{
-                return dispatch('getProductSchema')
+                return dispatch('getProductSchema', {refresh:true})
             }).catch(error=>{
                 console.log(error.response)
                 throw error
