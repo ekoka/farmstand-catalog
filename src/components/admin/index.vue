@@ -37,7 +37,9 @@ export default {
         //let tenant = url.subdomain()
         const query = URI(window.location.search).query(true)
         let access_key = query.access_key
-        this.setAccessKey({accessKey:access_key})
+        if (access_key){
+            this.setAccessKey({accessKey:access_key})
+        }
 
         let lang = query.lang
 
