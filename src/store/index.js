@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createPersistedState from 'vuex-persistedstate'
+//import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from '@/assets/js/persistedstate'
 
 import api from './api'
 import inquiry from './inquiry'

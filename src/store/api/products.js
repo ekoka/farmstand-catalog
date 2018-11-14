@@ -87,8 +87,7 @@ export default {
 
         putProduct({getters, dispatch, commit}, {product_id, data}){
             let url = getters.tenant.url('product', {product_id})
-            console.log(url)
-            return getters.http({url, method:'put', data, auth:true}).then(r=>{
+            return getters.http({url, method:'put', data, auth:true}).then(response=>{
                 commit('removeProduct', {product_id})
             }).catch(error=>{
                 console.log(error)
