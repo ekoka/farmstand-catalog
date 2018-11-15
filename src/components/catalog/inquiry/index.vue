@@ -1,6 +1,6 @@
 <template>
 <div>
-    <cart/>
+    <smallcart/>
     <addresses/>
     <comments/>
 
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import cart from './cart'
+import smallcart from './smallcart'
 import addresses from './addresses'
 import comments from './comments'
 import {mapActions, mapState} from 'vuex'

@@ -2,7 +2,6 @@
 <div>
     <h3 class="subtitle">Billing address</h3>
 
-    {{billingAddress}}
     <div><label title="required">Title: 
         <select v-model="billingAddress.title">
             <option disabled value="">--Select One--</option>
