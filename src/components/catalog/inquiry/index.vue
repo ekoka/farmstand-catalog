@@ -17,7 +17,7 @@ import comments from './comments'
 import {mapActions, mapState} from 'vuex'
 
 export default {
-    components: {cart, addresses, comments},
+    components: {smallcart, addresses, comments},
 
     created(){
         this.cmpalias('router-link', 'rl')
