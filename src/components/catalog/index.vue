@@ -1,6 +1,6 @@
 <template>
 <div>
-    <inquiry/>
+    <smallcart/>
 
     <h2 class="title">Catalog</h2>
 
@@ -30,10 +30,10 @@
 </template>
 
 <script>
-import inquiry from './inquiry'
+import smallcart from './inquiry/smallcart'
 import {mapActions, mapGetters, mapMutations} from 'vuex'
 export default {
-    components: { inquiry, } , 
+    components: { smallcart, } , 
     data(){
         return {
             filters:[],

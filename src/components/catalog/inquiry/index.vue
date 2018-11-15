@@ -1,6 +1,6 @@
 <template>
 <div>
-    <smallcart/>
+    <cart/>
     <addresses/>
     <comments/>
 
@@ -11,13 +11,13 @@
 </template>
 
 <script>
-import smallcart from './smallcart'
+import cart from './cart'
 import addresses from './addresses'
 import comments from './comments'
 import {mapActions, mapState} from 'vuex'
 
 export default {
-    components: {smallcart, addresses, comments},
+    components: {cart, addresses, comments},
 
     created(){
         this.cmpalias('router-link', 'rl')
