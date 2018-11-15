@@ -12,6 +12,7 @@
     </div>
     <template v-for="fs, i in filterSets">
         <multi-filters v-if="fs.key('multichoice')" :filterSet="fs" :productFilters="originalProductFilters" @update="updateFilters($event, i)"/>
+        <multi-filters v-else :filterSet="fs" :productFilters="originalProductFilters" @update="updateFilters($event, i)"/>
     </template>
 
     <button @click="saveProduct">save</button> | <a>delete</a>
