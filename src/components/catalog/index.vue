@@ -15,8 +15,8 @@
     </template>
 
     <h3 class="subtitle">Products</h3>
+        <h4 class="subtitle is-5">{{fieldNames}}</h4>
     <ul>
-        <li>{{fieldNames}}</li>
         <li v-for="p in products"> {{fields(p)}} 
             <a v-if="productAdded(p.data.product_id)" @click="removeProduct({product:p.data})">remove</a>
             <a v-else @click="addProduct({product:p.data})">add</a> 
