@@ -17,6 +17,6 @@ export default new Router({
         //{'name': 'KISS', path:'/kiss', component: KISS},
         //{path: '/admin', name: 'AdminIndex', component: AdminIndex,},
 
-        Catalog,
+        ...Catalog,
     ]
 })

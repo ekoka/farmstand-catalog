@@ -1,6 +1,7 @@
 <template>
 <div>
     <h3 class="subtitle">Cart</h3>
+    <div><rl :to="{name:'CatalogInquiry'}">Open cart</rl></div>
     <ul>
         <li v-for="p in products"> 
             <div>{{p.fields[0]}} | {{p.fields[1]}} | {{p.fields[2]}}</div> 

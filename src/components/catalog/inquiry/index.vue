@@ -1,5 +1,6 @@
 <template>
 <div>
+    <rl :to="{name:'Catalog'}">Return to Products</rl> 
     <cart/>
     <addresses/>
     <comments/>
