@@ -1,82 +1,209 @@
 <template>
-<div>
-    <h3 class="subtitle">Billing address</h3>
+<section>
+    <div class="box">
+        <h3 class="subtitle">Contact information</h3>
+        <div class="field">
+            <div class="control">
+                <label title="required">Title</label>
+            </div><!-- control -->
+            <div class="select">
+                <select v-model="billingAddress.title">
+                    <option disabled>--Select One--</option>
+                    <option value="Mrs">Mrs</option>
+                    <option value="Mr">Mr</option>
+                </select>
+            </div><!-- select -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label class="label" title="required">First name <span class="has-text-danger">*</span></label>
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.first_name" required placeholder="e.g. Jane"/>
+            </div>
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label class="label" title="required">Last name <span class="has-text-danger">*</span></label>
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.last_name" required placeholder="e.g. Smith"/>
+            </div>
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label class="label" title="required">Email address <span class="has-text-danger">*</span></label>
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.email" required placeholder="e.g. jane.smith@example.com"/>
+            </div>
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Company</label>
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.company"/>
+            </div><!-- control -->
+        </div><!-- field -->
 
-    <div><label title="required">Title: 
-        <select v-model="billingAddress.title">
-            <option disabled value="">--Select One--</option>
-            <option value="Mrs">Mrs</option>
-            <option value="Mr">Mr</option>
-        </select>
-    </label></div>
-    <div><label title="required">First name:* <input v-model="billingAddress.first_name" /></label></div>
-    <div><label title="required">Last name:* <input v-model="billingAddress.last_name" /></label></div>
-    <div><label title="required">Email address:* <input v-model="billingAddress.email" /></label></div>
+    </div><!-- box -->
 
-    <div><label>Company: <input v-model="billingAddress.company"/></label></div>
-    <div><label>Address 1: <input v-model="billingAddress.address1"/></label></div>
-    <div><label>Address 2: <input v-model="billingAddress.address2"/></label></div>
-    <div><label>City: <input v-model="billingAddress.city"/></label></div>
-    <div><label>State/Province: <input v-model="billingAddress.state_province"/></label></div>
-    <div><label>Country: <input v-model="billingAddress.country"/></label></div>
-    <div><label>Zip/Postal Code: <input v-model="billingAddress.zip_postal_code"/></label></div>
+    <div class="box">
+        <h3 class="subtitle">Billing address</h3>
+        <div class="field">
+            <div class="control">
+                <label>Address 1</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.address1"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Address 2</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.address2"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>City</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.city"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>State/Province</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.state_province"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Country</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.country"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Zip/Postal Code</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="billingAddress.zip_postal_code"/>
+            </div><!-- control -->
+        </div><!-- field -->
+    </div><!-- box -->
 
-    <br>
-    <h3 class="subtitle">Shipping address</h3>
-    <div><label>Same as billing address <input v-model="shippingAddress.see_billing" type="checkbox"/></label></div>
-    <br>
-    <div><label>Name/Company: <input v-model="shippingAddress.company"/></label></div>
-    <div><label>Address 1: <input v-model="shippingAddress.address1"/></label></div>
-    <div><label>Address 2: <input v-model="shippingAddress.address2"/></label></div>
-    <div><label>City: <input v-model="shippingAddress.city"/></label></div>
-    <div><label>State/Province: <input v-model="shippingAddress.state_province"/></label></div>
-    <div><label>Country: <input v-model="shippingAddress.country"/></label></div>
-    <div><label>Zip/Postal Code: <input v-model="shippingAddress.zip_postal_code"/></label></div>
-</div>
+    <div class="box">
+        <h3 class="subtitle">Shipping address</h3>
+        <div class="field">
+            <div class="control">
+                <button class="button is-info is-outlined">Copy billing address above</button>
+            </div><!-- control -->
+        </div><!-- field -->
+
+        <div class="field">
+            <div class="control">
+                <label>Name/Company</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.company"/>
+            </div><!-- control -->
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <label>Address 1</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.address1"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Address 2</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.address2"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>City</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.city"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>State/Province</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.state_province"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Country</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.country"/>
+            </div><!-- control -->
+        </div><!-- field -->
+        <div class="field">
+            <div class="control">
+                <label>Zip/Postal Code</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="shippingAddress.zip_postal_code"/>
+            </div><!-- control -->
+        </div><!-- field -->
+    </div><!-- box -->
+
+</section>
 </template>
 
 <script>
-import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
-export default {
+    import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
+    export default {
 
-    data(){
-        return {
-        }
-    },
-
-    computed:{
-        ...mapState({
-            shippingAddress: state=>state.inquiry.shippingAddress,
-            billingAddress: state=>state.inquiry.billingAddress,
-        })
-    },
-
-    watch:{
-        billingAddress: {
-            deep: true,
-            handler(nv){
-                this.pingMutation({})
-            },
+        computed:{
+            ...mapState({
+                shippingAddress: state=>state.inquiry.shippingAddress,
+                billingAddress: state=>state.inquiry.billingAddress,
+            })
         },
-        shippingAddress: {
-            deep: true,
-            handler(nv){
-                this.pingMutation({})
+
+        watch:{
+            billingAddress: {
+                deep: true,
+                handler(nv){
+                    this.pingMutation({})
+                },
             },
-        }
-    },
+            shippingAddress: {
+                deep: true,
+                handler(nv){
+                    this.pingMutation({})
+                },
+            }
+        },
 
-    created(){
-        this.cmpalias('router-link', 'rl')
-    },
+        methods:{
+            ...mapMutations({
+                // only because vuex-persistedstate listens to mutations
+                pingMutation: 'inquiry/pingMutation',
+            }),
+        },
 
-    methods:{
-        ...mapMutations({
-            // only because vuex-persistedstate listens to mutations
-            pingMutation: 'inquiry/pingMutation',
-        }),
-    },
-
-}
+    }
 </script>
 

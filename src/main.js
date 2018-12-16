@@ -4,6 +4,8 @@ import Vue from 'vue'
 import store from './store'
 import router from './router'
 import App from './App'
+import './assets/css/main.scss'
+
 
 // adding a global event bus 
 const EventBus = new Vue()
@@ -19,10 +21,6 @@ store.$eventBus = EventBus
 
 Vue.config.productionTip = false
 Vue.prototype.$jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
-Vue.prototype.cmpalias = function(cmpName, alias) {
-    /* because sometimes global components names are too damn long! */
-    this.$options.components[alias] = this.$options.components[cmpName]
-}
 
 /* eslint-disable no-new */
 const VERSION = '1'
@@ -56,3 +54,4 @@ new Vue({
 window.onerror = function(message, source, lineno, colno, error) {
   console.log('Exception: ', error)
 }
+

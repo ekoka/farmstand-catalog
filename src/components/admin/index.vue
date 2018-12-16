@@ -4,7 +4,7 @@
     <div><a @click="signout">Sign out</a></div>
 
     <div v-if="tenant">
-        <rl :to="{name:'AdminInquiries'}"> Inquiries </rl> | <rl :to="{name:'AdminProducts'}">Catalog</rl> | <rl :to="{name:'AdminSettings'}">Settings</rl>
+        <router-link :to="{name:'AdminInquiries'}"> Inquiries </router-link> | <router-link :to="{name:'AdminProducts'}">Catalog</router-link> | <router-link :to="{name:'AdminSettings'}">Settings</router-link>
 
         <router-view/>
     </div>
@@ -31,8 +31,6 @@ export default {
         }
     },
     created(){
-        this.cmpalias('router-link', 'rl')
-
         //let url = URI(window.location.href)
         //let tenant = url.subdomain()
         const query = URI(window.location.search).query(true)

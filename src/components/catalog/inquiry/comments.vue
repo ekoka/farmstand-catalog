@@ -1,8 +1,11 @@
 <template>
 <div>
-    <label>Other comments and/or instructions: 
-        <textarea v-model="$store.state.inquiry.comments"></textarea>
-    </label>
+    <div class="control">
+        <label class="label">Other comments or instructions</label>
+    </div>
+    <div class="control">
+        <textarea class="textarea" v-model="$store.state.inquiry.comments"></textarea>
+    </div>
 </div>
 </template>
 
@@ -20,7 +23,7 @@ export default {
     },
 
     created(){
-        this.cmpalias('router-link', 'rl')
+        //this.cmpalias('router-link', 'rl')
     },
     methods:{
         ...mapMutations({

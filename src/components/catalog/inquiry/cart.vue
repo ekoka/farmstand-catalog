@@ -1,14 +1,34 @@
 <template>
 <div>
-    <h3 class="subtitle">Cart</h3>
-    <ul>
-        <li v-for="p in products"> 
-            <div>{{p.fields[0]}} | {{p.fields[1]}} | {{p.fields[2]}}</div> 
-            <div><label>Wanted quantities: <input v-model="p.quantity" /></label></div>
-            <div><label>Other questions / comments: <textarea v-model="p.comments"/></label></div> 
-              <a @click="removeProduct({product:p})">remove</a>
-        </li>
-    </ul>
+    <div v-for="p in products" class="box"> 
+
+        <p class="subtitle is-5">{{p.fields[0]}} {{p.fields[1]}}</p> 
+
+        <div class="field">
+            <div class="control">
+                <label class="label">Requested quantity</label> 
+            </div><!-- control -->
+            <div class="control">
+                <input class="input" v-model="p.quantity" />
+            </div><!-- control -->
+        </div><!-- field -->
+
+        <div class="field">
+            <div class="control">
+                <label class="label">Questions or comments</label>
+            </div>
+            <div class="control">
+                <textarea class="textarea" v-model="p.comments"/>
+            </div>
+        </div><!-- field -->
+
+        <div class="control has-icons-left">
+            <button class="button is-danger is-outlined is-small" @click="removeProduct({product:p})">
+                Remove
+            </button>
+        </div><!-- control -->
+
+    </div><!-- box -->
 </div>
 </template>
 
@@ -16,11 +36,6 @@
 import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
 export default {
 
-    data(){
-        return {
-            //products: this.$store.state.inquiry.products
-        }
-    },
     computed:{
         ...mapState({
             products: state=>state.inquiry.products
@@ -36,12 +51,8 @@ export default {
         }
     },
 
-    created(){
-        this.cmpalias('router-link', 'rl')
-    },
     methods:{
         ...mapMutations({
-            //removeProduct: 'inquiry/removeProduct',
             // only because vuex-persistedstate listens to mutations
             pingMutation: 'inquiry/pingMutation',
         }),

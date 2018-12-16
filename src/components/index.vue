@@ -1,7 +1,7 @@
 <template>
 <div>
     <h1>KISS Order Manager</h1>
-    <rl :to="{name:'Signin'}">Log In</rl> | <rl :to="{name:'Signup'}">Sign Up</rl>
+    <router-link :to="{name:'Signin'}">Log In</router-link> | <router-link :to="{name:'Signup'}">Sign Up</router-link>
 
     <router-view></router-view>
 
@@ -9,10 +9,6 @@
 </template>
 
 <script>
-export default {
-    created(){
-        this.cmpalias('router-link', 'rl')
-    }
-}
+export default {}
 </script>
 

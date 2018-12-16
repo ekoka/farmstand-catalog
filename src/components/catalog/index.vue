@@ -1,42 +1,34 @@
 <template>
 <div>
-    <smallcart/>
+    <top-nav/>
 
-    <h2 class="title">Catalog</h2>
-
-    <template v-for="fs in filterSets">
-    <h3 class="subtitle">{{fs.key('label')}}</h3>
-    <ul>
-        <li v-for="f in fs.key('filters')"> 
-            <label>{{f.label}}<input v-model="filters" :value="{filter_id: f.filter_id, set_id:fs.key('filter_set_id')}" type="checkbox"></input></label>
-        </li>
-    </ul>
-    <hr>
-    </template>
-
-    <h3 class="subtitle">Products</h3>
-        <h4 class="subtitle is-5">{{fieldNames}}</h4>
-    <ul>
-        <li v-for="p in products"> {{fields(p)}} 
-            <a v-if="productAdded(p.data.product_id)" @click="removeProduct({product:p.data})">remove</a>
-            <a v-else @click="addProduct({product:p.data})">add</a> 
-        </li>
-    </ul>
-
-    <hr>
-
-
+    <section class="section">
+        <div class="columns">
+            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+                <left-nav active="catalog"/>
+                <filter-vertical v-for="fs,key in filterSets" :filterSet="fs" :key="key" v-model="filters[fs.key('filter_set_id')]"/>
+                <smallcart/>
+            </div>
+            <div class="column">
+                <product-table :products="products" :fieldNames="fieldNames" :fields="schema.fields"/>
+            </div><!-- column -->
+        </div><!-- columns -->
+    </section><!-- section -->
 </div>
 </template>
 
 <script>
 import smallcart from './inquiry/smallcart'
+import topNav from './elements/top-nav'
+import leftNav from './elements/left-nav'
+import filterVertical from './elements/filter-vertical'
+import productTable from './elements/product-table'
 import {mapActions, mapGetters, mapMutations} from 'vuex'
 export default {
-    components: { smallcart, } , 
+    components: { smallcart, topNav, leftNav, filterVertical, productTable,},
     data(){
         return {
-            filters:[],
+            filters:{},
             filterSets: [],
             schema: {},
             categories:[],
@@ -44,28 +36,30 @@ export default {
         }
     },
 
-    watch:{
+    watch: {
         filters: {
-            deep:true,
+            deep: true,
             handler(selected){
-                let filters = selected.map(f=>{return f.filter_id})
-                let sets = {}
-                selected.forEach(f=>{ sets[f.set_id] = f.set_id })
-                sets = Object.keys(sets)
+                let sets = Object.keys(selected).filter(s=>{
+                    return selected[s].length 
+                })
+                let filters = Object.values(selected).reduce((ff, f)=>{
+                    let rv = (ff && ff.length) ? new Set(ff.concat(f)) : new Set(f)
+                    return [...rv]
+                })
                 this.getPublicProducts({params:{filters, sets}
                 }).then(products=>{
                     this.products = products.embedded('products')
                 })
             }
-        }
+        },
     },
-
     computed:{
         fieldNames(){
             if (this.schema.fields){
                 return this.schema.fields.filter(f=>{
                     return f
-                }).join(' | ')
+                })
             }
             return []
         },
@@ -85,7 +79,6 @@ export default {
 
     created(){
 
-        this.cmpalias('router-link', 'rl')
         this.getPublicRoot({
             tenant:this.$store.getters['subdomain'],
         }).then(()=>{
@@ -105,9 +98,17 @@ export default {
 
     methods: {
         fields(product){
-            return product.key('fields').slice(0, this.fieldLength).map(f=>{
-                return f
-            }).join(' | ')
+            let rv = [];
+            let fields = product.key('fields')
+            for (let i=0; i<this.fieldLength;i++){
+                rv[i] = fields[i] || ''
+            }
+            return rv
+            //return product.key('fields').slice(0, this.fieldLength).map(f=>{
+            //    return f || 'none'
+            //})
+            //return product.key('fields').map(f=>{
+            //})
         },
         
         ...mapActions({
