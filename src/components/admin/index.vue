@@ -1,13 +1,10 @@
 <template>
 <div>
-    <h2 class="title">Catalog Manager</h2>
-    <div><a @click="signout">Sign out</a></div>
+    <navbar />
 
-    <div v-if="tenant">
-        <router-link :to="{name:'AdminInquiries'}"> Inquiries </router-link> | <router-link :to="{name:'AdminProducts'}">Catalog</router-link> | <router-link :to="{name:'AdminSettings'}">Settings</router-link>
-
+    <section class="section"> 
         <router-view/>
-    </div>
+    </section>
 
 </div>
 </template>
@@ -15,24 +12,13 @@
 <script>
 import URI from 'urijs'
 import {mapActions, mapMutations} from 'vuex'
+
+import navbar from './elements/navbar'
+
 export default {
+    components: {navbar,},
 
-    data(){
-        return {
-            tenant: null,
-            account: null,
-        }
-    },
-
-    mounted(){
-        if(!this.account){
-            //this.$router.push({name:'Signup'})
-            //window.location.replace('http://localhost:8080/signup')
-        }
-    },
     created(){
-        //let url = URI(window.location.href)
-        //let tenant = url.subdomain()
         const query = URI(window.location.search).query(true)
         let access_key = query.access_key
 
@@ -52,23 +38,16 @@ export default {
         })
     },
     methods:{
-        signout(){
-            this.$store.commit('api/resetApi')
-            //this.$router.push({name:'Signup'})
-            window.location.replace('http://localhost:8080/signup')
-        },
-
-        ...mapMutations({
-            setAccessKey: 'api/setAccessKey',
-        }),
-
         ...mapActions({
             'getRoot': 'api/getRoot',
             'getTenant': 'api/getTenant',
             'getAccount': 'api/getAccount',
-        })
-
+        }),
+        ...mapMutations({
+            'setAccessKey': 'api/setAccessKey',
+        }),
     }
+
+
 }
 </script>
-

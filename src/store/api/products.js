@@ -77,7 +77,7 @@ export default {
             }).then(response=>{
                 console.log( HAL(response.data).url('location'))
                 url = HAL(response.data).url('location')
-                commit('removeProduct', {})
+                commit('removeProduct', {}) // remove all products from cache
                 return dispatch('getProduct', {url})
             }).catch(error=>{
                 console.log(error)

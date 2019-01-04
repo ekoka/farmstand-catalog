@@ -14,7 +14,12 @@ export default {
     children:[
         Catalog,
         Inquiries,
-        {name:'AdminTenant', component: Tenant, path:'tenant', props: true},
+        {
+            name:'AdminTenant', 
+            component: Tenant, 
+            path:'tenant', 
+            props: true
+        },
         Settings,
     ]
 }
