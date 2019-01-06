@@ -22,7 +22,7 @@ export default {
         },
         iconClass(){
             const visible = 'mdi-eye-off-outline'
-            const invisible = 'mdi-eye-outline'
+            const invisible = 'mdi-eye'
             return this.visible?visible:invisible
         },
         buttonTitle(){

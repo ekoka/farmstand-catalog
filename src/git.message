@@ -1,0 +1,5 @@
+- split `removeProduct` mutation in two
+- add `clearProductCollection` mutation
+
+- load existing product into Edit component
+- add more comments to the code

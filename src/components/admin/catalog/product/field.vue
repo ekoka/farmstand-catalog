@@ -7,6 +7,7 @@
 import shorttext from '@/components/admin/data-fields/shorttext'
 import longtext from '@/components/admin/data-fields/longtext'
 import mediumtext from '@/components/admin/data-fields/mediumtext'
+import radio from '@/components/admin/data-fields/radio'
 
 export default {
     model: {
@@ -14,20 +15,20 @@ export default {
         event: 'updated'
     },
     props: ['field', 'schema'],
-    components: {
-        shorttext, longtext, mediumtext,
-    },
 
     computed: {
         currentInput (){
+            const control = this.schema.control || this.schema.field_type
             return {
                 //BOOL:Bool,
                 //MULTI_CHOICE:MultiChoice,
                 SHORT_TEXT:shorttext,
                 MEDIUM_TEXT:mediumtext,
                 LONG_TEXT:longtext,
+                BOOL:radio,
+                radio: radio,
                 //SINGLE_CHOICE:SingleChoice,
-            }[this.schema.field_type]
+            }[control]
         },
     },
 }

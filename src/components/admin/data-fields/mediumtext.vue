@@ -20,11 +20,7 @@ export default {
     props:['field', 'schema'],
     data (){
         return {
-            mutable:{
-                value: this.field.value || null,
-                searchable: this.field.searchable || true,
-                display: this.field.display || true,
-            }
+            mutable:this.field
         }
     },
     watch: {

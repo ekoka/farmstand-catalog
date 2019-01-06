@@ -30,14 +30,19 @@ export default {
 
         removeProduct(state, {product_id=null}){
             const tenant = HAL(state.tenant)
-            // claer collection
-            Cache(state.cache).clear(tenant.url('products'))
             if (product_id){
-                // uncache product with different `partial` qs 
+                // Remove product resource with different 
+                // `partial` params. 
                 let url = tenant.url('product', {product_id})
                 Cache(state.cache).clear(url)
             }
-        }
+        },
+
+        clearProductCollection(state){
+            const tenant = HAL(state.tenant)
+            // clear product collection
+            Cache(state.cache).clear(tenant.url('products'))
+        },
     },
 
     actions:{
@@ -73,11 +78,15 @@ export default {
         postProduct({getters, dispatch, commit}, {data}){
             let url = getters.tenant.url('products')
             return getters.http({
-                url, data, method:'post', auth:true
+                url, 
+                data, 
+                method:'post', 
+                auth:true
             }).then(response=>{
-                console.log( HAL(response.data).url('location'))
                 url = HAL(response.data).url('location')
-                commit('removeProduct', {}) // remove all products from cache
+                // Remove entire product collection from cache.
+                commit('clearProductCollection')
+                // get product
                 return dispatch('getProduct', {url})
             }).catch(error=>{
                 console.log(error)
@@ -87,7 +96,15 @@ export default {
 
         putProduct({getters, dispatch, commit}, {product_id, data}){
             let url = getters.tenant.url('product', {product_id})
-            return getters.http({url, method:'put', data, auth:true}).then(response=>{
+            return getters.http({
+                url, 
+                method:'put', 
+                data, 
+                auth:true
+            }).then((response) => {
+                // clear the cached list of products
+                commit('clearProductCollection')
+                // remove cached product resource.
                 commit('removeProduct', {product_id})
             }).catch(error=>{
                 console.log(error)
@@ -100,6 +117,9 @@ export default {
             // from the ID, the reverse is more difficult
             let url = getters.tenant.url('product', {product_id})
             return getters.http({url, method:'delete', auth:true}).then(r=>{
+                // clear cached product collection 
+                commit('clearProductCollection')
+                // remove cached product resource
                 commit('removeProduct', {product_id})
             }).catch(error=>{
                 console.log(error)
@@ -113,13 +133,13 @@ export default {
                 url = getters.tenant.url('product', {product_id}, {partial})
             }
             if (!refresh){ 
-                console.log(url)
+            // we attempt loading product data from cache
                 let resource = getters.cache({key:url})
                 if (resource){
                     return HAL(resource)
                 }
             }
-            return getters.http({url, auth:true}).then(response=>{
+            return getters.http({url, auth:true}).then((response)=>{
                 commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
             }).catch(error=>{

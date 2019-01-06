@@ -5,10 +5,10 @@
     </div>
     <!-- TODO: add meta controls (display, searchable) -->
     <label class="radio">
-        <input :name="schema.name" v-model="mutable.value" :value="true" type="radio"> {{schema.schema.options[true]}}
+        <input :name="schema.name" v-model="mutable.value" :value="true" type="radio"> {{schema.schema.options['true']}}
     </label>
     <label class="radio">
-        <input :name="schema.name" v-model="mutable.value" :value="false" type="radio"> {{schema.schema.options[false]}}
+        <input :name="schema.name" v-model="mutable.value" :value="false" type="radio"> {{schema.schema.options['false']}}
     </label>
 </div><!-- field -->
 </template>
@@ -22,7 +22,11 @@ export default {
     props:['field', 'schema'],
     data (){
         return {
-            mutable:this.field
+            mutable:{
+                value: (this.field && this.field.value) || null,
+                searchable: (this.field && this.field.searchable) || true,
+                display: (this.field && this.field.display) || true,
+            }
         }
     },
     watch: {

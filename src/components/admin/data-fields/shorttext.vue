@@ -19,11 +19,7 @@ export default {
     props:['field', 'schema'],
     data (){
         return {
-            mutable:{
-                value: (this.field && this.field.value) || null,
-                searchable: (this.field && this.field.searchable) || true,
-                display: (this.field && this.field.display) || true,
-            }
+            mutable: this.field
         }
     },
     watch: {

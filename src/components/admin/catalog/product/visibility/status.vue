@@ -2,10 +2,10 @@
 <span class="tag is-outlined is-medium" :class="background">
     <span class="">
         <template v-if="!visible">
-            This product is currently not visible in the catalog
+            This product is currently not viewable in the catalog
         </template>
         <template v-else>
-            This product is currently visible in the catalog
+            This product is currently viewable in the catalog
         </template>
     </span>
 </span>
