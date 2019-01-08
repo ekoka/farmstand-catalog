@@ -1,2 +1,7 @@
-- move products.vue to products/index.vue
-- add statusSwitch dropdown 
+- work on visibility toggling
+
+- add patchProduct to state
+- rename event in visibilityToggle component to 'toggled'
+
+- other changes:
+    - add shadow to statusSwitch dropdown

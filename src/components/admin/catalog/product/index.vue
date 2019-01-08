@@ -14,7 +14,7 @@
         <div class="column is-8">
         <template v-if="ready">
 
-            <visibility v-model="product.visible"></visibility>
+            <visibility @toggled="toggleVisibility" :visible="product.visible"></visibility>
 
             <div class="box">
                 <field v-for="fieldSchema, key in productSchema.key('fields')"
@@ -223,10 +223,31 @@ export default {
             this.product.filters = Object.keys(d)
         },
 
+        toggleVisibility(value){
+            if(this.product.product_id){
+                const data = {
+                    visible: value
+                }
+                this.patchProduct({
+                    data, 
+                    product_id: this.product.product_id
+                }).then(()=>{
+                    // if we got here then maybe all was well
+                    this.product.visible = value
+                }).catch(error=>{
+                    console.log(error)
+                    // a message should be emitted here letting user
+                    // know that they should try again later. e.g. 
+                    // network problems.
+                })
+            }
+        },
+
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
             getProduct: 'api/getProduct',
             putProduct: 'api/putProduct',
+            patchProduct: 'api/patchProduct',
             postProduct: 'api/postProduct',
             getFilterSets: 'api/getFilterSets',
         }),

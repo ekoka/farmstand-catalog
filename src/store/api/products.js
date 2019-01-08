@@ -112,6 +112,25 @@ export default {
             })
         },
 
+        // currently is virtually the same as putProduct, except that
+        // we send request with a PATCH method.
+        // The difference between both methods is that data sent with
+        // PATCH must match exactly the schema stored by the backend.
+        patchProduct({getters, dispatch, commit}, {product_id, data}){
+            let url = getters.tenant.url('product', {product_id})
+            return getters.http({
+                url, 
+                method:'patch', 
+                data, 
+                auth:true
+            }).then((response) => {
+                // clear the cached list of products
+                commit('clearProductCollection')
+                // remove cached product resource.
+                commit('removeProduct', {product_id})
+            })
+        },
+
         deleteProduct({getters, commit}, {product_id}){
             // we don't delete by url because we can generate the url
             // from the ID, the reverse is more difficult

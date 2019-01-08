@@ -17,7 +17,10 @@
 import CurrentStatus from './status'
 import Toggle from './toggle'
 export default {
-    model: {prop: 'visible', event: 'visibility'},
+    model: {
+        prop: 'visible', 
+        event: 'toggled'
+    },
     props: ['visible'],
 
     components: {
@@ -27,7 +30,7 @@ export default {
 
     methods:{
         toggleVisibility(){
-            this.$emit('visibility', !this.visible) 
+            this.$emit('toggled', !this.visible) 
         }
     },
 
