@@ -1,8 +1,15 @@
 <template>
 <div>
-    <h2 class="subtitle is-3">
-        Edit Product
-    </h2>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <router-link :to="{name:'AdminProducts'}">Catalog</router-link>
+            </li>
+            <li class="is-active">
+                <a href="">Edit Product</a>
+            </li>
+        </ul>
+    </nav> <!-- breadcrumb -->
     <div class="columns">
         <div class="column is-8">
         <template v-if="ready">
