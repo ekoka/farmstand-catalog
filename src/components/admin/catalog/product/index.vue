@@ -14,17 +14,20 @@
         <div class="column is-8">
         <template v-if="ready">
 
-            <visibility @toggled="toggleVisibility" :visible="product.visible"></visibility>
+            <visibility @toggled="toggleVisibility" 
+                :visible="product.visible">
+            </visibility>
 
             <div class="box">
                 <field v-for="fieldSchema, key in productSchema.key('fields')"
                     :key="key" 
                     :schema="fieldSchema" 
                     v-model="product.data.fields[key]"
-                    @updated="changed=true"
-                    >
+                    @updated="changed=true">
                 </field>
-            </div>
+            </div><!-- box -->
+
+            <product-images></product-images>
 
             <filters></filters>
 
@@ -35,7 +38,7 @@
                 <button class="button">
                     Cancel
                 </button>
-            </div>
+            </div><!-- form-controls -->
 
         </template>
         </div><!-- column -->
@@ -45,11 +48,12 @@
 
 <script>
 import Field from './field'
+import ProductImages from './images'
 import Visibility from './visibility'
 import Filters from './filters'
 import {mapActions, mapGetters} from 'vuex'
 export default {
-    components: {Visibility, Filters, Field},
+    components: {Visibility, Filters, Field, ProductImages},
     props: ['product_id'],
     data(){
         return {

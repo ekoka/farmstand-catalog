@@ -47,7 +47,7 @@ const API = {
         ...inquiries.getters,
         ...filters.getters,
         ...publicapi.getters,
-        //...images.getters,
+        ...images.getters,
     },
     mutations: {
         cache(state, {key, value}){
@@ -69,7 +69,7 @@ const API = {
         ...inquiries.mutations,
         ...filters.mutations,
         ...publicapi.mutations,
-        //...images.mutations,
+        ...images.mutations,
 
         resetApi(state){
             initApi({state, skip:['root']})
