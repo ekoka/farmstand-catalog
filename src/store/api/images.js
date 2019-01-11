@@ -18,6 +18,7 @@ export default {
             return getters.http({
                 // url: getters.sourceImageUrl,
                 url,
+                auth:true,
                 method: 'post',
                 header: {'Content-Type': 'multipart/form-data'},
                 data: formData,
@@ -30,6 +31,15 @@ export default {
                     return HAL(resp.data)
                 })
 
+            })
+        },
+        getImages({getters},{qsparams}={qsparams:null}){
+            let url = getters.tenant.url('images',null,qsparams)
+            return getters.http({
+                url,
+                auth:true,
+            }).then((response)=>{
+                return HAL(response.data)
             })
         },
     },

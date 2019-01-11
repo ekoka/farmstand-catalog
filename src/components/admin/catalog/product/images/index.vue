@@ -1,31 +1,52 @@
 <template>
 <div class="box">
-    <h4 class="subtitle is-5">Add or remove product pictures</h4>
+    <h4 class="subtitle is-5">
+        Add or remove product images
+    </h4>
 
-    <div class="field">
-        <div class="control">
-            <thumb-grid :images="uploadedImages">
-            </thumb-grid>
-        </div>
-        <div class="control">
-            <div class="file has-name">
-                <label class="file-label">
-                    <input id="fileinput" class="file-input" @change="updateChosenFiles" type="file">
-                    <span class="file-cta">
-                        <span class="file-icon">
-                            <i class="mdi mdi-upload"></i>
-                        </span><!-- file-icon -->
-                        <span class="file-label">
-                            Choose a file&hellip;
-                        </span><!-- file-label -->
-                    </span><!-- file-cta -->
-                    <span class="file-name">
-                    </span><!-- file-name -->
-                    <img v-for="i in localImages" :src="i.path"/>
-                </label><!-- file-label -->
-            </div><!-- file -->
-        </div><!-- control -->
-    </div><!-- field -->
+    <image-selector @selected="mergeSelection($event)" @close="selector=false" v-if="selector">
+    </image-selector>
+
+    <thumb-grid 
+        v-if="images.length" 
+        :images="images">
+    </thumb-grid>
+    <div class="field is-horizontal">
+        <div class="field-body">
+            <div class="field">
+                <div class="control">
+                    <div class="file has-name">
+                        <label class="file-label">
+                            <input id="fileinput" 
+                            class="file-input" 
+                            @change="updateChosenFiles" 
+                            type="file">
+                            <span class="file-cta">
+                                <span class="file-icon">
+                                    <i class="mdi mdi-upload"></i>
+                                </span><!-- file-icon -->
+                                <span class="file-label">
+                                    Upload new images&hellip;
+                                </span><!-- file-label -->
+                            </span><!-- file-cta -->
+                        </label><!-- file-label -->
+                    </div><!-- file -->
+                </div><!-- control -->
+            </div><!-- field -->
+            <div class="field"> 
+                <label> or </label>
+            </div><!-- field -->
+            <div class="field">
+                <div class="control">
+                    <button class="button" @click="openImageSelector">
+                        Select from existing ones
+                    </button>
+                </div><!-- control -->
+            </div><!-- field -->
+        </div><!-- field-body -->
+    </div><!-- field is-horizontal -->
+
+
 </div>
 </template>
 
@@ -33,7 +54,8 @@
 import {mapActions} from 'vuex'
 
 import thumbGrid from './grid'
-import {reduce, map} from 'lodash/fp'
+import imageSelector from './selector'
+import _ from 'lodash/fp'
 
 const acceptedTypes = [
     'image/png',
@@ -43,16 +65,16 @@ const acceptedTypes = [
 ]
 
 export default {
-    components: {
-        thumbGrid,
-    },
+    components: {thumbGrid, imageSelector,},
+
+    props: ['product_id'],
 
     data(){
         return {
             files: null,
             selectedFiles: [],
-            uploadedImages: [],
             images:[],
+            selector: false,
         }
     },
 
@@ -60,7 +82,7 @@ export default {
         fileNames(){
             let rv = 'No file chosen'
             if (this.selectedFiles && this.selectedFiles.length){
-                rv = reduce((acc, cur)=>{
+                rv = _.reduce((acc, cur)=>{
                     acc.push(cur.name)
                     return acc
                 }, [])(this.selectedFiles)
@@ -69,18 +91,19 @@ export default {
             return rv
         },
         localImages(){
-            return map(f=>{
+            return _.map(f=>{
                 console.log(f.webkitRelativePath)
                 const path = f.webkitRelativePath + '/' + f.name
                 return {path}
             })(this.selectedFiles)
         },
         fileTypes(){
-            return map(f=>{
+            return _.map(f=>{
                 return f.type
             })(this.selectedFiles)
         },
     },
+
     watch:{
         selectedFiles: {
             deep: true,
@@ -95,7 +118,7 @@ export default {
 
     methods: {
         updateChosenFiles(e){
-            map((f)=>{
+            _.map((f)=>{
                 this.selectedFiles.push(f)
             })(e.target.files || e.dataTransfer.files)
         },
@@ -107,13 +130,22 @@ export default {
             this.postSourceImage({
                 image
             }).then((i)=>{
-                this.uploadedImages.push(i.data)
+                this.images.push(i.data)
             }).catch(error=>{
                 // upload failed for some reason
                 // TODO: issue upload failed message
                 console.log('upload failed')
                 console.log(error)
             })
+        },
+
+        openImageSelector(){
+            this.selector = true
+        },
+        mergeSelection(e){
+            _.map(i=>{
+                this.images.push(i)
+            })(e)
         },
         //uploadCurrentFile(){
         //    const next = () => {
@@ -140,6 +172,5 @@ export default {
             postSourceImage: 'api/postSourceImage',
         }),
     },
-
 }
 </script>
