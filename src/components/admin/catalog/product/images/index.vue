@@ -1,15 +1,15 @@
 <template>
 <div class="box">
     <h4 class="subtitle is-5">
-        Add or remove product images
+        Product images
     </h4>
 
     <image-selector @selected="mergeSelection($event)" @close="selector=false" v-if="selector">
-    </image-selector>
+</image-selector>
 
     <thumb-grid 
         v-if="images.length" 
-        :images="images">
+        v-model="images" >
     </thumb-grid>
     <div class="field is-horizontal">
         <div class="field-body">
@@ -71,11 +71,22 @@ export default {
 
     data(){
         return {
+            ready:false,
             files: null,
             selectedFiles: [],
             images:[],
             selector: false,
         }
+    },
+
+    mounted(){
+        if(this.product_id){
+            return this.loadProductImages(this.product_id).then(()=>{
+                this.ready = true
+            })
+        } 
+        this.ready = true
+        
     },
 
     computed:{
@@ -87,15 +98,7 @@ export default {
                     return acc
                 }, [])(this.selectedFiles)
             }
-            console.log(rv)
             return rv
-        },
-        localImages(){
-            return _.map(f=>{
-                console.log(f.webkitRelativePath)
-                const path = f.webkitRelativePath + '/' + f.name
-                return {path}
-            })(this.selectedFiles)
         },
         fileTypes(){
             return _.map(f=>{
@@ -113,6 +116,19 @@ export default {
                     this.uploadCurrentFile(value)
                 }
             }
+        },
+        images:{
+            deep:true,
+            handler(v){
+                // we only emit a 'changed' event if the `ready` flag is set 
+                if(!this.ready){
+                    return
+                }
+                this.$emit('changed', _.map(i=>{
+                    return i.image_id
+                }, v))
+                
+            }
         }
     },
 
@@ -125,8 +141,6 @@ export default {
 
         uploadCurrentFile(image){
             // todo implement a buffer here that lets user cancel upload
-            console.log(image)
-            
             this.postSourceImage({
                 image
             }).then((i)=>{
@@ -142,34 +156,26 @@ export default {
         openImageSelector(){
             this.selector = true
         },
+
         mergeSelection(e){
             _.map(i=>{
                 this.images.push(i)
             })(e)
         },
-        //uploadCurrentFile(){
-        //    const next = () => {
-        //        // currentFile is unset only at end of upload 
-        //        this.currentFile = null
-        //        // file is removed from stack only at end of upload
-        //        this.localImages.shift()
-        //    }
 
-        //    this.postImageUpload({image: this.currentFile}).then(()=>{
-        //        console.log(this.currentFile.name + ' uploaded')
-        //        // TODO: issue upload succeeded message
-        //        console.log('upload succeeded')
-        //        next()
-        //    }).catch(error=>{
-        //        // upload failed for some reason
-        //        // TODO: issue upload failed message
-        //        console.log('upload failed')
-        //        console.log(error)
-        //        next()
-        //    })
-        //},
+        loadProductImages(product_id){
+            return this.getProductImages({
+                product_id
+            }).then(resp=>{
+                _.map(i=>{
+                    this.images.push(i.data)
+                })(resp.embedded('images'))
+            })
+        },
+
         ...mapActions({
             postSourceImage: 'api/postSourceImage',
+            getProductImages: 'api/getProductImages',
         }),
     },
 }

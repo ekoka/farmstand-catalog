@@ -33,12 +33,45 @@ export default {
 
             })
         },
+
         getImages({getters},{qsparams}={qsparams:null}){
             let url = getters.tenant.url('images',null,qsparams)
             return getters.http({
                 url,
                 auth:true,
             }).then((response)=>{
+                return HAL(response.data)
+            })
+        },
+
+        getProductImages({getters, dispatch}, {product_id}){
+            return dispatch('getProduct', {
+                product_id, 
+                partial:0
+            }).then(product=>{
+                const url = product.url('images')
+                return getters.http({
+                    url,
+                    auth:true,
+                }).then((response)=>{
+                    return HAL(response.data)
+                })
+            })
+        },
+
+        putProductImages({getters,dispatch}, {product_id, images}){
+            return dispatch('getProduct', {
+                product_id, 
+                partial:0
+            }).then(product=>{
+                const url = product.url('images')
+                return getters.http({
+                    url,
+                    auth:true,
+                    data: images,
+                    method: 'put',
+                })
+            }).then((response)=> {
                 return HAL(response.data)
             })
         },

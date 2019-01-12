@@ -27,7 +27,10 @@
                 </field>
             </div><!-- box -->
 
-            <product-images></product-images>
+            <product-images 
+                :product_id="product_id"
+                @changed="updateImageList($event)">
+            </product-images>
 
             <filters></filters>
 
@@ -85,6 +88,9 @@ export default {
                 },
                 visible: false,
             },
+            mutable: {
+                images: [],
+            }
         }
     },
 
@@ -133,7 +139,6 @@ export default {
     methods:{
         loadProduct(product_id){
             // existing product
-            //console.log(product_id)
             if(product_id){
                 // Get the product's `resource` as a HAL object.
                 // It's possibly loaded from cache, if not specified
@@ -189,9 +194,18 @@ export default {
             }
         },
 
+        updateImageList(images){
+            this.$set(this.mutable, 'images', images)
+            this.changed = true
+        },
+
         saveProduct(){
             this.submitted = true
             if(this.product.product_id){
+                this.putProductImages({
+                    product_id:this.product.product_id,
+                    images: this.mutable.images
+                })
                 return this.putProduct({
                     product_id:this.product.product_id, 
                     data:this.product
@@ -199,16 +213,26 @@ export default {
             } else {
                 return this.postProduct({
                     data:this.product
-                }).then( product => {
-                    this.$router.push({
-                        name:'AdminEditProduct', 
-                        params:{
-                            product_id:product.key('product_id')
-                        }
+                }).then(product=>{
+                    return this.putProductImages({
+                        product_id:product.product_id,
+                        images: this.mutable.images
+                    }).then(()=>{
+                        this.redirectToProductPage({product})
                     })
                 })
             }
         },
+
+        redirectToProductPage({product}){
+            this.$router.push({
+                name:'AdminEditProduct', 
+                params:{
+                    product_id:product.key('product_id')
+                }
+            })
+        },
+
         fieldName(idx){
             const defaultLabel = 'Unnamed Field'
             const rv = this.productSchema ? this.productSchema.data['fields'][idx]: null
@@ -254,6 +278,7 @@ export default {
             patchProduct: 'api/patchProduct',
             postProduct: 'api/postProduct',
             getFilterSets: 'api/getFilterSets',
+            putProductImages: 'api/putProductImages',
         }),
     },
 }
