@@ -3,7 +3,7 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <router-link :to="{name:'AdminProducts'}">Catalog</router-link>
+                <router-link :to="{name:'AdminProductList'}">Catalog</router-link>
             </li>
             <li class="is-active">
                 <a href="">Edit Product</a>
@@ -29,7 +29,8 @@
 
             <product-images 
                 :product_id="product_id"
-                @changed="updateImageList($event)">
+                :images.sync="mutable.images"
+                @changed="changed=true">
             </product-images>
 
             <filters></filters>
@@ -55,6 +56,7 @@ import ProductImages from './images'
 import Visibility from './visibility'
 import Filters from './filters'
 import {mapActions, mapGetters} from 'vuex'
+import _ from 'lodash/fp'
 export default {
     components: {Visibility, Filters, Field, ProductImages},
     props: ['product_id'],
@@ -194,41 +196,49 @@ export default {
             }
         },
 
-        updateImageList(images){
-            this.$set(this.mutable, 'images', images)
-            this.changed = true
-        },
+        //updateImageList(images){
+            //this.$set(this.mutable, 'images', images)
+            //this.changed = true
+        //},
 
         saveProduct(){
             this.submitted = true
-            if(this.product.product_id){
+            const product_id = this.product.product_id
+            // 
+            const data = _.unset('images', this.product)
+            const images = this.mutable.images
+
+            if(product_id){
                 this.putProductImages({
-                    product_id:this.product.product_id,
-                    images: this.mutable.images
+                    product_id,
+                    images
                 })
                 return this.putProduct({
-                    product_id:this.product.product_id, 
-                    data:this.product
+                    product_id, 
+                    data
                 })
             } else {
                 return this.postProduct({
-                    data:this.product
+                    data
                 }).then(product=>{
+
                     return this.putProductImages({
-                        product_id:product.product_id,
-                        images: this.mutable.images
+                        product_id:product.data.product_id,
+                        images
                     }).then(()=>{
-                        this.redirectToProductPage({product})
+                        this.redirectToProductPage({
+                            product_id:product.data.product_id
+                        })
                     })
                 })
             }
         },
 
-        redirectToProductPage({product}){
+        redirectToProductPage({product_id}){
             this.$router.push({
                 name:'AdminEditProduct', 
                 params:{
-                    product_id:product.key('product_id')
+                    product_id
                 }
             })
         },
@@ -279,6 +289,7 @@ export default {
             postProduct: 'api/postProduct',
             getFilterSets: 'api/getFilterSets',
             putProductImages: 'api/putProductImages',
+            deleteProduct: 'api/deleteProduct',
         }),
     },
 }

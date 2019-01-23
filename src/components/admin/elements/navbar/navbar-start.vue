@@ -1,6 +1,6 @@
 <template>
 <div class="navbar-start">
-    <router-link class="navbar-item is-active" :to="{name: 'AdminProducts'}">
+    <router-link class="navbar-item is-active" :to="{name: 'AdminProductList'}">
         <span class="icon has-text-primary">
             <i class="mdi mdi-book-open-page-variant"></i>
                 <!-- notebook -->

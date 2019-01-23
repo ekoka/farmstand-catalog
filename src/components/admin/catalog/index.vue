@@ -1,13 +1,13 @@
 <template>
 <div class="columns">
-    <div class="column">
-        left menu
-    </div>
-    <router-view class="column is-10-tablet is-9-widescreen"/>
+    <sidebar class="column is-2-tablet is-2-desktop is-2-widescreen"></sidebar>
+    <router-view class="column"/>
 </div>
 </template>
 
 <script>
+import sidebar from './sidebar'
 export default {
+    components : {sidebar}
 }
 </script>

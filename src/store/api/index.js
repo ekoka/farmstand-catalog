@@ -9,10 +9,29 @@ import {HAL} from '@/utils/hal'
 import {Cache} from '@/utils/cache'
 import {API_ROOT, API_HOST} from '@/assets/js/config'
 
+/*
+cache API:
+
+- store(uri, value)
+- cache(key)
+    returns value stored at storage[key] 
+- fetch(uri)
+
+- remove(uri)
+    delete storage[key][version]
+
+- clear(uri)
+    delete storage[key]
+
+- reset(uri)
+    alias for clear(uri)
+*/
+
+
 const API = {
     namespaced: true,
 
-    state:{},
+    state:{}, // initialization of state happens in initApi()
 
     getters: {
         cache(state){

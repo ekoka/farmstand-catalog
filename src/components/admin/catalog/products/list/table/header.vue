@@ -1,12 +1,14 @@
 <template>
 <div class="prod-row columns">
+    <div class="prod-item column is-1">
+    </div><!-- product-table-item -->
     <div class="prod-item column is-2">
         <div class="title is-6">Product ref. #</div>
     </div><!-- product-table-item -->
-    <div class="prod-item column is-2">
+    <div class="prod-item column">
         <div class="title is-6">Name</div>
     </div><!-- product-table-item -->
-    <div class="prod-item column">
+    <div class="prod-item column is-2">
         <div class="title is-6">Availability</div>
     </div><!-- product-table-item -->
     <div class="prod-item column is-2">

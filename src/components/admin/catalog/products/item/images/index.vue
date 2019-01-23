@@ -8,8 +8,8 @@
 </image-selector>
 
     <thumb-grid 
-        v-if="images.length" 
-        v-model="images" >
+        v-if="mutable.images.length" 
+        v-model="mutable.images" >
     </thumb-grid>
     <div class="field is-horizontal">
         <div class="field-body">
@@ -67,15 +67,17 @@ const acceptedTypes = [
 export default {
     components: {thumbGrid, imageSelector,},
 
-    props: ['product_id'],
+    props: ['product_id', 'images'],
 
     data(){
         return {
             ready:false,
             files: null,
             selectedFiles: [],
-            images:[],
             selector: false,
+            mutable:{
+                images:[],
+            },
         }
     },
 
@@ -117,16 +119,23 @@ export default {
                 }
             }
         },
-        images:{
+        'mutable.images':{
             deep:true,
             handler(v){
                 // we only emit a 'changed' event if the `ready` flag is set 
+                // sync up the data
+                this.$emit('update:images', _.map(i=>{
+                    return i.image_id
+                })(v))
+                // return if still just loading base data
                 if(!this.ready){
                     return
                 }
-                this.$emit('changed', _.map(i=>{
-                    return i.image_id
-                }, v))
+                // any changes beyond base data load will be visible to parent
+                this.$emit('changed', true)
+                //this.$emit('changed', _.map(i=>{
+                //    return i.image_id
+                //}, v))
                 
             }
         }
@@ -144,7 +153,7 @@ export default {
             this.postSourceImage({
                 image
             }).then((i)=>{
-                this.images.push(i.data)
+                this.mutable.images.push(i.data)
             }).catch(error=>{
                 // upload failed for some reason
                 // TODO: issue upload failed message
@@ -159,7 +168,7 @@ export default {
 
         mergeSelection(e){
             _.map(i=>{
-                this.images.push(i)
+                this.mutable.images.push(i)
             })(e)
         },
 
@@ -168,7 +177,7 @@ export default {
                 product_id
             }).then(resp=>{
                 _.map(i=>{
-                    this.images.push(i.data)
+                    this.mutable.images.push(i.data)
                 })(resp.embedded('images'))
             })
         },

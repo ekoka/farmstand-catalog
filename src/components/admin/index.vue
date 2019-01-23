@@ -1,11 +1,9 @@
 <template>
 <div>
     <navbar />
-
     <section class="section"> 
         <router-view/>
     </section>
-
 </div>
 </template>
 

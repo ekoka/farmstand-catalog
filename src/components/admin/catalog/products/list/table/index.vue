@@ -1,5 +1,5 @@
 <template>
-<div class="product-table is-fullwidth">
+<div class="product-table">
     <div class="prod-header top-header">
         <product-table-header />
     </div>

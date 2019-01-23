@@ -1,85 +1,128 @@
-import {HAL} from '@/utils/hal'
+import {HAL} from '@/utils/hal' // helper to navigate HAL API resources
+import {Cache} from '@/utils/cache' // helper to manipulate a cache
+import _ from 'lodash/fp'
 
 export default {
-    state:{
-        filterSets:null,
-    },
+    state:{},
     getters:{
-        filterSets(state){
-            if(!state.filterSets){
-                return null
+        filters(state, getters){
+            return ({filter_id=null}={})=>{
+                const url = getters.tenant.url('filters')
+                const filters = HAL(getters.cache({key:url}))
+                if(!filter_id){
+                    // if no filter_id is specified, return all filters
+                    return filters
+                } else {
+                    // only return filter associated with filter_id
+                    if (filters){
+                        let filter = _.find(f=>{
+                            return f.key('filter_id')===filter_id
+                        })(filters.embedded('filters'))
+                        return filter
+                    }
+                }
             }
-            return HAL(state.filterSets)
         },
     },
 
     mutations:{
+        setFilters(state, {filters}){
+            // filters is an API resource in HAL format 
+            // use the helper to navigate it
+            filters = HAL(filters)
 
-        setFilterSets(state, {filterSets}){
-            state.filterSets = filterSets
-        },
-        updateFilterSet(state, {filter}){
-            const fsts = HAL(state.filterSets).embedded('filter_sets')
-            fsts.forEach(fs=>{
-                fs.updateItem({
-                    collection:'filters',
-                    identifier:'filter_id',
-                    replacement:filter,
-                })
+            // first store the filter list in cache 
+            // filters.self is a shortcut to filters.url('self')
+            // filters.resource is the original JSON from the http response
+            Cache(state.cache).store(filters.self, filters.resource)
+
+            // store each filter in cache
+            filters.embedded('filters').forEach(f=>{
+                Cache(state.cache).store(f.self, f.resource)
             })
         },
-        deleteFilter(state, {filter_id}){
-            const fsts = HAL(state.filterSets).embedded('filter_sets')
-            fsts.forEach(fs=>{
-                fs.deleteItem({
-                    collection:'filters',
-                    identifier:'filter_id',
-                    value:filter_id,
-                })
-            })
-        },
+
+        removeFilter(state, {filters, filter_id}){
+            //filters. 
+        }
+        //updateFilterSet(state, {filter}){
+        //    const fsts = HAL(state.filterSets).embedded('filter_sets')
+        //    fsts.forEach(fs=>{
+        //        fs.updateItem({
+        //            collection:'filters',
+        //            identifier:'filter_id',
+        //            replacement:filter,
+        //        })
+        //    })
+        //},
     },
 
+
     actions:{
-        getFilterSets({commit,getters},{refresh=false}={}){
-            if (getters.filterSets && !refresh){
-                // return early
-                return getters.filterSets
+        postFilter({getters, commit, dispatch},{data}){
+            let url = getters.tenant.url('filters')
+            return getters.http({
+                url, 
+                data, 
+                method:'post',
+                auth:true
+            }).then(response=>{
+                // async refresh filter list
+                let filter_id = HAL(response.data).data.filter_id
+                return dispatch('getFilters', {refresh:true}).then(()=>{
+                    return dispatch('getFilter', {filter_id})
+                })
+            })
+        },
+
+        getFilters({getters, commit}, {refresh=false}={}){
+            if (!refresh){
+                const filters = getters.filters()
+                if (filters){
+                    return filters
+                }
             }
-            const url = getters.tenant.url('filter_sets')
-            return getters.http({url}).then(response=>{
-                commit('setFilterSets', {filterSets:response.data})
-                return getters.filterSets
+            const url = getters.tenant.url('filters')
+            return getters.http({
+                url,
+                auth: true,
+            }).then(response=>{
+                commit('setFilters', {filters:response.data})
+                let filters = getters.filters()
+                return filters
+            }).catch(error=>{
+                console.log(error)
+            })
+        },
+
+        getFilter({getters, commit}, {filter_id, refresh=false}){
+            if (!refresh){ 
+                let filter = getters.filters({filter_id})
+                if(filter){
+                    return filter
+                }
+            }
+            const url = getters.filters().url('filter', {filter_id})
+
+            return getters.http({
+                url,
+                auth:true,
+            }).then(response=>{
+                commit('cache', {key:url, value:response.data})
+                return HAL(response.data)
             }).catch(error=>{
                 console.log(error)
                 console.log(error.response)
-                throw error
             })
         },
-        postFilter({getters, commit, dispatch},{data, url}){
+        
+        putFilter({getters, dispatch}, {filter_id, data}){
+            let url = getters.filters({filter_id}).self
             return getters.http({
-                url, data, method:'post',auth:true
-            }).then(response=>{
-                return dispatch('getFilterSets', {refresh:true}).then(()=>{
-                    // get filter
-                    return getters.http({
-                        url:HAL(response.data).url('location')
-                    }).then(resp=>{
-                        console.log(resp.data)
-                        return HAL(resp.data)
-                    })
-                })
-            }).catch(error=>{
-                console.log(error)
-            })
-        },
-
-        putFilter({getters, dispatch}, {data}){
-            const filter_id = data.filter_id
-            let url = getters.filterSets.url(
-                'filter', {filter_id})
-            return getters.http({
-                url, method:'put', data, auth:true
+                url,
+                method:'put',
+                data,
+                auth:true,
             }).then(resp=>{
                 return dispatch('getFilter', {filter_id, refresh:true})
             }).catch(error=>{
@@ -88,35 +131,25 @@ export default {
             })
         },
 
-        getFilter({getters, commit},{filter_id, refresh=false}){
-            const url = getters.filterSets.url('filter', {filter_id})
-            if (!refresh){ 
-                let resource = getters.cache({key:url})
-                if (resource){
-                    return HAL(resource)
-                }
-            }
-
-            return getters.http({url}).then(response=>{
-                commit('cache', {key:url, value:response.data})
-                commit('updateFilterSet', {filter:response.data})
-                return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
-            })
-        },
-        
         deleteFilter({getters, commit}, {filter_id}){
-            const url = getters.filterSets.url('filter', {filter_id})
-            return getters.http({url, method:'delete', auth:true
+            const url = getters.filters().url('filter', {filter_id})
+            return getters.http({
+                url, 
+                method:'delete',
+                auth:true,
             }).then(resp=>{
-                commit('deleteFilter', {filter_id})
+                commit('removeFilter', {
+                    filters: getters.filters(),
+                    filter_id
+                })
                 commit('uncache', {key:url})
             }).catch(error=>{
                 console.log(error)
                 console.log(error.response)
             })
+        },
+
+        postFilterOption({getters, commit}, {filter_id, option}){
         },
         
     },

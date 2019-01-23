@@ -1,5 +1,6 @@
 <template>
-<nav class="navbar has-shadow is-spaced">
+<nav class="navbar has-shadow">
+    <!--<nav class="navbar has-shadow is-spaced">-->
     <!-- is-spaced -->
     <div class="container">
         <div class="navbar-brand">

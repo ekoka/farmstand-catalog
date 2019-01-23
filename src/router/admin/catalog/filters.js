@@ -1,7 +1,7 @@
 // components
-import Index from '@/components/admin/settings/filters'
-import List from '@/components/admin/settings/filters/list'
-import Filter from '@/components/admin/settings/filters/filter'
+import Index from '@/components/admin/catalog/filters'
+import List from '@/components/admin/catalog/filters/list'
+import Filter from '@/components/admin/catalog/filters/item'
 
 
 export default [

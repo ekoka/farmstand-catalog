@@ -176,7 +176,9 @@ export default {
                 }
             }
             return getters.http({url, auth:true}).then(response=>{
+                // caching each product's resource
                 commit('setProducts', {products:response.data})
+                // caching product list
                 commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
             }).catch(error=>{
