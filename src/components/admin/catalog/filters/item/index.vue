@@ -26,20 +26,23 @@
         </div><!-- field -->
         <div class="field is-grouped is-grouped-left">
             <div class="control">
-                <label class="label">
-                    Multiple selection
-                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="true">
-                </label>
-            </div>
-            <div class="control">
 
                 <label class="label">
                     Single selection 
                     <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="false">
                 </label>
             </div>
+            <div class="control">
+                <label class="label">
+                    Multiple selection
+                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="true">
+                </label>
+            </div>
+            <tooltip>Pertains to how many filter options a product can be associated with simultaneously. It should be noted that once a filter has been saved, it can only be changed from single to multiple selection, not the other way around.</tooltip>
         </div><!-- field -->
-        <option-list v-if="ready" :options.sync="mutable.filter.options"></option-list>
+        <option-list v-if="ready" 
+            :options.sync="mutable.filter.options">
+        </option-list>
     </div><!-- column -->
 
     <div class="column">
@@ -60,16 +63,19 @@
 <script>
 import _ from 'lodash/fp'
 import OptionList from './options'
+import Tooltip from '@/components/admin/elements/tooltip'
 import {mapActions} from 'vuex'
 export default {
     components: {
-        OptionList
+        OptionList,
+        Tooltip,
     },
 
     props:['filter_id'],
 
     data(){
         return {
+            displayHelp: false,
             ready: false,
             mutable: {
                 filter: {
@@ -84,6 +90,13 @@ export default {
                 },
             },
         }
+    },
+
+    watch:{
+        'mutable.filter.options': {
+            deep:true,
+            handler(){},
+        },
     },
 
     mounted(){
@@ -116,12 +129,9 @@ export default {
                     filter_id:this.filter_id,
                     data,
                 }).then(()=>{
-                    this.saveOptions(this.filter_id)
+                    this.loadFilter()
                 })
             }
-        },
-
-        saveOptions(filter_id){
         },
 
         loadFilter(){
@@ -149,7 +159,6 @@ export default {
             deleteFilter: 'api/deleteFilter',
             putFilter: 'api/putFilter',
             postFilterOption: 'api/postFilterOption'
-            
         })
     },
 

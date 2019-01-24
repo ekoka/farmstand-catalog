@@ -1,8 +1,6 @@
 <template>
 <div class="columns">
     <message :class="{'is-active':showConfirmation}"
-        :callback="removeOption"
-        :params="{optionIndex}"
         v-bind="confirmMessage"
         @close="showConfirmation=false">
     </message>
@@ -23,13 +21,16 @@
                 <input class="input" v-model="o.data.label">
             </div><!-- control -->
             <div class="control">
-                <button class="button is-outlined" @click="associateProducts(o)">
+                <button 
+                    class="button is-outlined" 
+                    :disabled="!o.filter_option_id"
+                    @click="associateProducts(o)">
                     select products
                 </button>
             </div><!-- control -->
         </div><!-- field -->
     </div><!-- column -->
-</div>
+</div><!-- columns -->
 </template>
 
 <script>
@@ -44,12 +45,18 @@ export default {
 
     data(){
         return {
+            mutable: {
+                options:[],
+            },
             confirmMessage:{
                 level: 'warning',
-                callback:"removeOption",
                 confirmBtn:{
                     label: "Remove",
                     css: "is-warning"
+                },
+                callback:this.removeOption,
+                params:{
+                    optionIndex: 0,
                 },
                 cancelBtn:{
                     label: 'Cancel',
@@ -58,44 +65,72 @@ export default {
                 header: 'Remove option',
                 message:"This option might be associated with a few products. Do you want to remove it?", 
             },
-            optionIndex: undefined,
             showConfirmation: false,
-            mutable: {
-                options:[...this.options]
-            }
         }
     },
     watch:{
-        'mutable.options': {
-            handler(){
+        options: {
+            handler(val){
+                // temporary suspend watcher on mutable.options
+                // while we're setting items on them so as not to 
+                // trigger a never-ending cycle of event between 
+                // data.mutable.options and props.options
+                if (this.mutableOptionsUnwatch){
+                    this.mutableOptionsUnwatch()
+                }
+                this.mutable.options = [...this.options]
                 if(!this.mutable.options.length){
                     this.mutable.options.push(this.newOption())
                 }
-                this.$emit('update:options', this.mutable.options)
+
+
+                this.mutableOptionsUnwatch = this.$watch(
+                    'mutable.options', function(val){
+                        this.$emit('update:options', val)
+                    }, { deep: true, })
             },
-            deep:true,
-            immediate: true,
+            immediate: true
         }
     },
     methods: {
-        insert(arr, index, items){
-            return [...arr.slice(0,index), ...items, ...arr.slice(index)]
+
+        insertItem(arr, index, items){
+            /* insert items in array at the indicated index */
+            return [
+                ...arr.slice(0,index), 
+                ...items, 
+                ...arr.slice(index)]
         },
+
         addOption(i){
-            this.mutable.options = this.insert(
+            /* add a new option to the list of options at the specified index.
+             */
+            this.mutable.options = this.insertItem(
                     this.mutable.options, i+1, [this.newOption()])
         },
-        confirmRemoval(index){
-            this.optionIndex = index
-            this.showConfirmation = true
-        },
-        removeOption({optionIndex}){
-            this.mutable.options.splice(optionIndex,1)
-        },
+
         newOption(){
+            /* return a new option object */
             return {
                 data:{label: null}
             }
+        },
+
+        confirmRemoval(index){
+            /* record the index of the option being removed and set the 
+               display flag of the confirmation modal panel.
+             */
+            this.confirmMessage.params.optionIndex = index
+            this.showConfirmation = true
+        },
+
+        removeOption({optionIndex}){
+            /* remove option at the specified index */
+            console.log(optionIndex)
+            this.mutable.options.splice(optionIndex,1)
+        },
+
+        associateProducts(option){
         },
     },
 }
