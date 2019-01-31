@@ -1,6 +1,23 @@
 import {HAL} from '@/utils/hal'
 import {Cache} from '@/utils/cache'
 
+/*
+ * How to handle product collection
+ *  - product collection is not a resource per say. It's just a cached
+ *  dump that contains both products and partial products.
+ *  - when getting the product list resource, each partial product in the
+ *  list is placed in the product collection.
+ *  - as well, when getting a product's details the resource is also
+ *  placed in the collection.
+ *  - then everytime info on a product is needed, whether partial or detailed,
+ *  product collection is the primary source.
+ *  - In that way the product's list resource is only affected by product
+ *  addition and product removal.
+ *  - maybe there should be a separate product_details resource with its own
+ *  endpoint (get_product_details) that can take a list of product_ids.
+ * 
+ */
+
 export default {
     state:{
         productSchema:null,
@@ -187,5 +204,23 @@ export default {
                 throw error
             })
         },
+
+        putProductFilterOptions({getters, dispatch}, {product_id, data}){
+            return dispatch('getProduct', {
+                product_id, 
+                partial:0
+            }).then(product=>{
+                const url = product.url('filters')
+                return getters.http({
+                    url,
+                    auth:true,
+                    data,
+                    method: 'put',
+                })
+            }).then((response)=> {
+                return HAL(response.data)
+            })
+        },
+
     },
 }

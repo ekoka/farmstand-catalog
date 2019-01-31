@@ -14,11 +14,11 @@
                 <div class="media-left">
                     {{f.data.description}}
                 </div>
-                <div class="media-right">
+                <!--<div class="media-right">
                     14 Multiple choice options
-                </div>
+                </div>-->
                 <div class="media-right">
-                    <a class="button is-small" :class="{'is-warning': !f.active, 'is-success':f.active}">currently disabled</a> 
+                    <a class="button is-small" :class="{'is-warning': !f.active, 'is-success':f.active}">{{f.active ? 'currently enabled' :  'currently disabled'}}</a> 
                 </div>
             </div><!-- media -->
 

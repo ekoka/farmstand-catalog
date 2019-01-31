@@ -125,7 +125,9 @@ function initApi({state, skip=[]}){
     let initState = {
         cache: {},
         root: null,
-        // ensure to only copy the state from each submodule
+        // deep copy the state from each submodule as opposed to simply just
+        // copying the 1st level references.
+        // TODO: is this step really necessary?
         ...jsoncopy(accounts.state),
         ...jsoncopy(filters.state),
         ...jsoncopy(products.state),

@@ -34,17 +34,23 @@
 
     </div><!-- level -->
 
-    <product-table v-if="ready" v-model="products" />
-
+    <product-table v-if="ready" :products="filteredProducts" />
 </div>
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {map,flow,filter,toPairs, every,each,intersection} from 'lodash/fp'
+import Vue from 'vue'
+import {mapActions, mapMutations, mapState} from 'vuex'
 import productTable from './table'
+
+//const _ = wrapperLodash
+
+//mixin(_, {map, compose, filter, forIn, intersection})
+
 export default {
     components: {
-        productTable
+        productTable,
     },
 
     data(){
@@ -52,6 +58,31 @@ export default {
             ready: false,
             products: null,
         }
+    },
+
+    computed:{
+        ...mapState('admin/products', {
+            productFilters: 'productFilters'
+        }),
+
+        filteredProducts(){
+            return filter(p=>{
+                return flow(
+                    toPairs, // filters to tuple of (fname, flist)
+                    map(([fname, flist]) => {
+                        let valid = 1
+                        if(flist.length){
+                            valid = 0
+                            valid = intersection(flist)(p.filters[fname] || []).length
+                        }
+                        return valid
+                    }),
+                    every(v=>{
+                        return v
+                    })
+                )(this.productFilters)
+            })(this.products)
+        },
     },
 
     mounted(){
@@ -63,12 +94,49 @@ export default {
                 this.ready = true
             })
         })
+        this.enableFilters()
+    },
+
+    destroyed(){
+        this.disableFilters()
     },
 
     methods: {
+        filterProduct(p){
+            let valid = 1
+            forIn(foptions, fname => {
+                if(foptions.length){
+                    valid = 0 
+                    valid = intersection(foptions)(p.filters[fname] || []).length
+                }
+            })
+            return valid
+        },
+        enableFilters(){
+            // load filter data in admin/products store
+            this.getFilters().then(filters=>{
+                filters = map(f=>{
+                    return f.data
+                })(filters.embedded('filters'))
+                this.setFilters({filters})
+            })
+            // enable filter component in sidebar
+            this.showFilters({value:true})
+        },
+
+        disableFilters(){
+            this.showFilters({value:false})
+        },
+
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
             getProducts: 'api/getProducts',
+            getFilters: 'api/getFilters',
+        }),
+
+        ...mapMutations({
+            showFilters: 'admin/products/showFilters',
+            setFilters: 'admin/products/setFilters',
         }),
     },
 }

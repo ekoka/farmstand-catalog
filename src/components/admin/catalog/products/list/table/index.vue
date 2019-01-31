@@ -5,7 +5,7 @@
     </div>
 
     <div class="prod-body">
-        <product-row v-for="product,key in products" :key='key' :product="product" />
+        <product-row v-for="product in products" :key='product.product_id' :product="product" />
     </div>
 
     <div class="prod-header bottom-header">
@@ -19,11 +19,11 @@ import productRow from './row'
 import productTableHeader from './header'
 export default {
     components: {productRow, productTableHeader},
-    model: {
-        prop: ['products'], 
-        event: 'updated',
-    },
     props: ['products'],
+
+    watch:{
+        products(){},
+    }
 }
 </script>
 

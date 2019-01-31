@@ -22,5 +22,42 @@
 
         </ul>
     </nav><!-- menu -->
+
+    <productFilters v-if="showFilters"></productFilters>
+
 </div><!-- column -->
 </template>
+
+<script>
+import Vue from 'vue'
+import {mapState} from 'vuex'
+
+import productFilters from '../products/list/filters'
+
+export default {
+
+    components:{
+        productFilters,
+    },
+
+    computed:{
+        ...mapState('admin/products', {
+            showFilters: 'showFilters',
+        })
+    },
+
+    data(){
+        return{
+            sidebarComponent: null
+        }
+    },
+
+    methods: {
+        loadSidebarComponent({componentName, component}){
+            //this.sidebarComponent = true
+            this.sidebarComponent = componentName
+            Vue.component(componentName, component)
+        }
+    },
+}
+</script>

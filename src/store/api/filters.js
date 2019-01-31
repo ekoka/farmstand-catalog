@@ -45,16 +45,6 @@ export default {
         removeFilter(state, {filters, filter_id}){
             //filters. 
         }
-        //updateFilterSet(state, {filter}){
-        //    const fsts = HAL(state.filterSets).embedded('filter_sets')
-        //    fsts.forEach(fs=>{
-        //        fs.updateItem({
-        //            collection:'filters',
-        //            identifier:'filter_id',
-        //            replacement:filter,
-        //        })
-        //    })
-        //},
     },
 
 
@@ -148,9 +138,25 @@ export default {
                 console.log(error.response)
             })
         },
-
-        postFilterOption({getters, commit}, {filter_id, option}){
-        },
         
+        getFilterOption({getters}, {url}){
+            return getters.http({
+                url,
+                auth: true,
+            }).then(response=>{
+                return HAL(response.data)
+            })
+        },
+
+        putFilterOptionProducts({getters}, {url, data}){
+            return getters.http({
+                url,
+                data,
+                method: 'put',
+                auth: true,
+            }).then(response=>{
+                return HAL(response.data)
+            })
+        },
     },
 }

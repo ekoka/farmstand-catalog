@@ -4,6 +4,13 @@
         v-bind="confirmMessage"
         @close="showConfirmation=false">
     </message>
+
+    <filterOptionProducts 
+        v-if="productSelection.active" 
+        v-bind="productSelection"
+        @close="closeProductSelection">
+    </filterOptionProducts>
+
     <div class="column">
         Options
         <div class="field has-addons" v-for="o,i in mutable.options">
@@ -24,7 +31,7 @@
                 <button 
                     class="button is-outlined" 
                     :disabled="!o.filter_option_id"
-                    @click="associateProducts(o)">
+                    @click="openProductSelection(o.filter_option_id)">
                     select products
                 </button>
             </div><!-- control -->
@@ -36,15 +43,22 @@
 <script>
 import _ from 'lodash/fp'
 import message from '@/components/admin/elements/messages'
+import filterOptionProducts from './filter-option-products'
 
 export default {
     components: {
-        message
+        message,
+        filterOptionProducts
     },
-    props: ['options'],
+    props: ['options', 'filterResource'],
 
     data(){
         return {
+            productSelection: {
+                active: false,
+                filter: null,
+                filter_option_id: null,
+            },
             mutable: {
                 options:[],
             },
@@ -126,11 +140,18 @@ export default {
 
         removeOption({optionIndex}){
             /* remove option at the specified index */
-            console.log(optionIndex)
             this.mutable.options.splice(optionIndex,1)
         },
 
-        associateProducts(option){
+        openProductSelection(filter_option_id){
+            this.productSelection['filter_option_id'] = filter_option_id
+            this.productSelection['filter'] = this.filterResource
+            this.productSelection['active'] = true
+        },
+        closeProductSelection(){
+            this.productSelection['filter_option_id'] = null
+            this.productSelection['filter'] = null
+            this.productSelection['active'] = false
         },
     },
 }

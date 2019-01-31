@@ -26,21 +26,26 @@
         </div><!-- field -->
         <div class="field is-grouped is-grouped-left">
             <div class="control">
-
                 <label class="label">
-                    Single selection 
-                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="false">
+                    Filter option selection type: 
                 </label>
             </div>
             <div class="control">
-                <label class="label">
-                    Multiple selection
-                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="true">
+                <label class="">
+                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="false">
+                    Single
                 </label>
             </div>
-            <tooltip>Pertains to how many filter options a product can be associated with simultaneously. It should be noted that once a filter has been saved, it can only be changed from single to multiple selection, not the other way around.</tooltip>
+            <div class="control">
+                <label class="">
+                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="true">
+                    Multiple
+                </label>
+            </div>
+            <tooltip>Pertains to how many simultaneous options a product can be associated with (i.e. can a product be linked to more than one option at a time). Note that once a filter has been saved, it can only be changed from single to multiple choice, not the other way around.</tooltip>
         </div><!-- field -->
         <option-list v-if="ready" 
+            :filterResource="filterResource"
             :options.sync="mutable.filter.options">
         </option-list>
     </div><!-- column -->
@@ -75,6 +80,7 @@ export default {
 
     data(){
         return {
+            filterResource: null,
             displayHelp: false,
             ready: false,
             mutable: {
@@ -139,6 +145,7 @@ export default {
                 filter_id:this.filter_id,
                 refresh:true
             }).then(filter=>{
+                this.filterResource = filter
                 this.mutable.filter = filter.data
             })
         },

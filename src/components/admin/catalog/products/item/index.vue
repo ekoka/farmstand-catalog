@@ -15,14 +15,14 @@
         <template v-if="ready">
 
             <visibility @toggled="toggleVisibility" 
-                :visible="product.visible">
+                :visible="mutable.product.visible">
             </visibility>
 
             <div class="box">
                 <field v-for="fieldSchema, key in productSchema.key('fields')"
                     :key="key" 
                     :schema="fieldSchema" 
-                    v-model="product.data.fields[key]"
+                    v-model="mutable.product.data.fields[key]"
                     @updated="changed=true">
                 </field>
             </div><!-- box -->
@@ -33,7 +33,10 @@
                 @changed="changed=true">
             </product-images>
 
-            <filters></filters>
+            <filters :product="mutable.product" 
+                :productFilters="mutable.filters" 
+                @productFilters:update="updateFilters">
+            </filters>
 
             <div class="form-controls" :class="{'is-hidden': !changed}">
                 <button class="button is-link" :class="buttonClass" @click="saveProduct">
@@ -84,27 +87,19 @@ export default {
             // avoiding double-submits.
             submitted: false,
 
-            product: {
-                data: {
-                    fields: [],
-                },
-                visible: false,
-            },
-            mutable: {
-                images: [],
-            }
-        }
-    },
 
-    created(){
-        //this.getProductSchema()
-        //this.getFilterSets().then(filterSets=>{
-        //    this.filterSets = filterSets.embedded('filter_sets')
-        //    this.filterSets.forEach((f, i)=>{
-        //        // initialize synced filters
-        //        this.syncedFilterSets[i] = []
-        //    })
-        //})
+
+            mutable: {
+                product: {
+                    data: {
+                        fields: [],
+                    },
+                    visible: false,
+                },
+                images: [],
+                filters: [],
+            },
+        }
     },
 
     mounted(){
@@ -148,8 +143,8 @@ export default {
                 this.getProduct({
                     product_id, 
                     partial:0, 
-                    refresh:false
-                }).then((resource) => {
+                    refresh:1
+                }).then((product) => {
                     // the `HAL.data` property is a getter method 
                     // that returns a *copy* of the resource's original
                     // data, using the JSON.parse(JSON.stringify(obj)) 
@@ -158,15 +153,18 @@ export default {
                     // component, while keeping the main source pristine.
                     // This will be handy when the time comes to implement
                     // the "Cancel edit" feature.
-                    Object.keys(resource.data).forEach((k) => {
-                        // instead of directly assigning `product=resource`
-                        // we rather assign each value to a `product`'s key.
-                        // That's because the object `product` points to
-                        // is already being watched and is reactive. If we
-                        // assigned another object to the `product` variable
-                        // we'd lose the reactivity.
-                        this.product[k] = resource.data[k]
-                    })
+                    this.mutable.product = product.data
+                    this.mutable.filters = this.mutable.product.filters
+                    delete this.mutable.product.filters 
+                    //Object.keys(resource.data).forEach((k) => {
+                    //    // instead of directly assigning `product=resource`
+                    //    // we rather assign each value to a `product`'s key.
+                    //    // That's because the object `product` points to
+                    //    // is already being watched and is reactive. If we
+                    //    // assigned another object to the `product` variable
+                    //    // we'd lose the reactivity.
+                    //    this.product[k] = resource.data[k]
+                    //})
                     //this.originalProductFilters = resource.embedded('filters').map(f=>{
                     //    return f.key('filter_id')
                     //})
@@ -181,7 +179,7 @@ export default {
             } else {
             // new product
                 this.productSchema.key('fields').map(s=>{
-                    this.product.data.fields.push({
+                    this.mutable.product.data.fields.push({
                         value: null,
                         name: s.name,
                         field_type: s.field_type,
@@ -196,38 +194,55 @@ export default {
             }
         },
 
-        //updateImageList(images){
-            //this.$set(this.mutable, 'images', images)
-            //this.changed = true
-        //},
-
         saveProduct(){
             this.submitted = true
-            const product_id = this.product.product_id
+            const product_id = this.mutable.product.product_id
             // 
-            const data = _.unset('images', this.product)
+            const data = _.unset('images', this.mutable.product)
             const images = this.mutable.images
+            const filters = this.mutable.filters
 
             if(product_id){
-                this.putProductImages({
-                    product_id,
-                    images
-                })
                 return this.putProduct({
                     product_id, 
                     data
+                }).then(()=>{
+                    this.putProductFilterOptions({
+                        product_id,
+                        data:{filters},
+                    })
+                    this.putProductImages({
+                        product_id,
+                        images
+                    })
+                }).then(()=>{
+                    this.getProduct({
+                        product_id, 
+                        refresh:1,
+                        partial:1,
+                    })
                 })
             } else {
                 return this.postProduct({
                     data
                 }).then(product=>{
-
-                    return this.putProductImages({
+                    this.putProductFilterOptions({
+                        product_id:product.data.product_id,
+                        data:{filters},
+                    })
+                    this.putProductImages({
                         product_id:product.data.product_id,
                         images
+                    })
+                    return product.data.product_id
+                }).then(product_id=>{
+                    this.getProduct({
+                        product_id, 
+                        refresh:1,
+                        partial:0,
                     }).then(()=>{
                         this.redirectToProductPage({
-                            product_id:product.data.product_id
+                            product_id
                         })
                     })
                 })
@@ -249,35 +264,30 @@ export default {
             return rv || defaultLabel
         },
 
-        updateFilters(filters, idx){
-            this.syncedFilterSets[idx] = filters
-            // merge all syncedFilterSets
-            let d = {} 
-            this.syncedFilterSets.forEach(fs=>{
-                fs.forEach(f=>{
-                    d[f] = null
-                })
-            })
-            this.product.filters = Object.keys(d)
+        updateFilters(filters){
+            this.changed = true
+            this.$set(this.mutable, 'filters', filters)
         },
 
         toggleVisibility(value){
-            if(this.product.product_id){
+            if(this.mutable.product.product_id){
                 const data = {
                     visible: value
                 }
                 this.patchProduct({
                     data, 
-                    product_id: this.product.product_id
+                    product_id: this.mutable.product.product_id
                 }).then(()=>{
                     // if we got here then maybe all was well
-                    this.product.visible = value
+                    this.mutable.product.visible = value
                 }).catch(error=>{
                     console.log(error)
                     // a message should be emitted here letting user
                     // know that they should try again later. e.g. 
                     // network problems.
                 })
+            } else {
+                this.mutable.product.visible = value
             }
         },
 
@@ -290,6 +300,7 @@ export default {
             getFilterSets: 'api/getFilterSets',
             putProductImages: 'api/putProductImages',
             deleteProduct: 'api/deleteProduct',
+            putProductFilterOptions: 'api/putProductFilterOptions',
         }),
     },
 }
