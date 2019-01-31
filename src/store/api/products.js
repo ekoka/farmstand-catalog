@@ -1,3 +1,4 @@
+import _ from 'lodash/fp'
 import {HAL} from '@/utils/hal'
 import {Cache} from '@/utils/cache'
 
@@ -29,6 +30,10 @@ export default {
             }
             return HAL(state.productSchema)
         },
+        product(state){
+            return function(){
+            }
+        },
     },
 
     mutations:{
@@ -40,7 +45,7 @@ export default {
         },
 
         setProducts(state, {products}){
-            HAL(products).embedded('products').forEach(p=>{
+            HAL(products).embedded('product_ids').forEach(p=>{
                 Cache(state.cache).store(p.self, p.resource)
             })
         },
@@ -59,6 +64,12 @@ export default {
             const tenant = HAL(state.tenant)
             // clear product collection
             Cache(state.cache).clear(tenant.url('products'))
+        },
+
+        setProduct(state, {url, product}){
+            Cache(state.cache).store(url, product)
+            //Cache(state.cache).store(key, value)
+            //commit('cache', {key:url, value:response.data})
         },
     },
 
@@ -102,7 +113,7 @@ export default {
             }).then(response=>{
                 url = HAL(response.data).url('location')
                 // Remove entire product collection from cache.
-                commit('clearProductCollection')
+                // commit('clearProductCollection')
                 // get product
                 return dispatch('getProduct', {url})
             }).catch(error=>{
@@ -120,7 +131,7 @@ export default {
                 auth:true
             }).then((response) => {
                 // clear the cached list of products
-                commit('clearProductCollection')
+                // commit('clearProductCollection')
                 // remove cached product resource.
                 commit('removeProduct', {product_id})
             }).catch(error=>{
@@ -142,7 +153,7 @@ export default {
                 auth:true
             }).then((response) => {
                 // clear the cached list of products
-                commit('clearProductCollection')
+                // commit('clearProductCollection')
                 // remove cached product resource.
                 commit('removeProduct', {product_id})
             })
@@ -154,7 +165,7 @@ export default {
             let url = getters.tenant.url('product', {product_id})
             return getters.http({url, method:'delete', auth:true}).then(r=>{
                 // clear cached product collection 
-                commit('clearProductCollection')
+                // commit('clearProductCollection')
                 // remove cached product resource
                 commit('removeProduct', {product_id})
             }).catch(error=>{
@@ -163,40 +174,19 @@ export default {
             })
         },
 
-        getProduct({getters, commit},{url, product_id, refresh=false, 
-                    partial=1}){
-            if (product_id){
-                url = getters.tenant.url('product', {product_id}, {partial})
-            }
-            if (!refresh){ 
-            // we attempt loading product data from cache
-                let resource = getters.cache({key:url})
-                if (resource){
-                    return HAL(resource)
-                }
-            }
-            return getters.http({url, auth:true}).then((response)=>{
-                commit('cache', {key:url, value:response.data})
-                return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
-            })
-        },
-
-        getProducts({getters, commit}, {params, refresh=false}={}){
+        getProducts({getters, commit}, {params}={}){
             let url = getters.tenant.url('products')
-            if (!refresh){ 
-                let resource = getters.cache({key:url})
-                if (resource){
-                    return HAL(resource)
-                }
-            }
+            //if (!refresh){ 
+            //    let resource = getters.cache({key:url})
+            //    if (resource){
+            //        return HAL(resource)
+            //    }
+            //}
             return getters.http({url, auth:true}).then(response=>{
                 // caching each product's resource
-                commit('setProducts', {products:response.data})
+                //commit('setProducts', {products:response.data})
                 // caching product list
-                commit('cache', {key:url, value:response.data})
+                //commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
             }).catch(error=>{
                 console.log(error)
@@ -205,11 +195,69 @@ export default {
             })
         },
 
+        getProduct({getters, commit},{url, product_id, refresh=false}){
+            if (product_id){
+                url = getters.tenant.url('product', {product_id})
+            }
+            if (!refresh){
+                // we attempt loading product data from cache
+                let resource = getters.cache({key:url})
+                if (resource){
+                    return HAL(resource)
+                }
+            }
+
+            return getters.http({url, auth:true}).then((response)=>{
+                //commit('cache', {key:url, value:response.data})
+                commit('setProduct', {url, product:response.data})
+                return HAL(getters.cache({key:url}))
+                //return HAL(response.data)
+            }).catch(error=>{
+                console.log(error)
+                console.log(error.response)
+            })
+        },
+
+
+        getProductDetails({getters, commit}, {product_ids=[], refresh=false}={}){
+            let rv  = []
+            if (!refresh){ 
+                let missing = []
+                _.each(product_id=>{
+                    let url = getters.tenant.url('product', {product_id})
+                    let resource = getters.cache({key:url})
+                    if (resource){
+                        rv.push(HAL(resource))
+                        return 
+                    }
+                    missing.push(product_id)
+                })(product_ids)
+
+                if (!missing.length){
+                    // all resources found, return them
+                    return rv
+                }
+                // there are uncached resources, we continue
+                product_ids = missing
+            }
+
+            let url = getters.tenant.url(
+                'product_details', null, {pid:product_ids})
+            return getters.http({
+                url,
+                auth: true,
+            }).then(response=>{
+                return _.concat(rv, _.map(p=>{
+                    let url = getters.tenant.url('product', {
+                        product_id: p.data.product_id})
+                    commit('setProduct', {url, product:p.resource})
+                    return p
+                })(HAL(response.data).embedded('products')))
+            })
+        },
+
         putProductFilterOptions({getters, dispatch}, {product_id, data}){
-            return dispatch('getProduct', {
-                product_id, 
-                partial:0
-            }).then(product=>{
+            return dispatch('getProduct', {product_id}).then(product=>{
                 const url = product.url('filters')
                 return getters.http({
                     url,

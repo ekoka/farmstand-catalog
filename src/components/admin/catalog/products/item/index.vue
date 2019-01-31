@@ -142,7 +142,6 @@ export default {
                 // otherwise with the `refresh:true` option.
                 this.getProduct({
                     product_id, 
-                    partial:0, 
                     refresh:1
                 }).then((product) => {
                     // the `HAL.data` property is a getter method 
@@ -219,7 +218,6 @@ export default {
                     this.getProduct({
                         product_id, 
                         refresh:1,
-                        partial:1,
                     })
                 })
             } else {
@@ -239,7 +237,6 @@ export default {
                     this.getProduct({
                         product_id, 
                         refresh:1,
-                        partial:0,
                     }).then(()=>{
                         this.redirectToProductPage({
                             product_id

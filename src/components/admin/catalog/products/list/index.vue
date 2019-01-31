@@ -87,14 +87,21 @@ export default {
 
     mounted(){
         this.getProductSchema().then(()=>{
-            return this.getProducts().then((products) => {
-                this.products = products.embedded('products').map((p) => {
-                    return p.data
+            this.getProducts().then(products=>{
+                this.getProductDetails({
+                    product_ids:products.data.product_ids
+                }).then(products=>{
+                    this.products = map(p=>{
+                        return p.data
+                    })(products)
+                    this.ready = true 
+                }).then(()=>{
+                    this.enableFilters()
+                }).catch(error=>{
+                    console.log(error)
                 })
-                this.ready = true
             })
         })
-        this.enableFilters()
     },
 
     destroyed(){
@@ -131,6 +138,7 @@ export default {
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
             getProducts: 'api/getProducts',
+            getProductDetails: 'api/getProductDetails',
             getFilters: 'api/getFilters',
         }),
 
