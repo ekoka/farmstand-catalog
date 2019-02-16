@@ -27,8 +27,8 @@ export default {
         let lang = query.lang
 
         this.getRoot().then(root=>{
-            this.getTenant({tenant:this.$store.getters['subdomain']}).then(tenant=>{
-                this.tenant = tenant.data
+            this.getDomain({domain:this.$store.getters['subdomain']}).then(domain=>{
+                this.domain = domain.data
                 this.getAccount().then(account=>{
                     this.account = account.data
                 })
@@ -38,7 +38,7 @@ export default {
     methods:{
         ...mapActions({
             'getRoot': 'api/getRoot',
-            'getTenant': 'api/getTenant',
+            'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
         }),
         ...mapMutations({

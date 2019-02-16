@@ -4,15 +4,15 @@ export default {
     state: {
         account: null,
         accessKey: null,
-        tenant: null,
+        domain: null,
     },
 
     getters: {
         account(state){
             return HAL(state.account)
         },
-        tenant(state){
-            return HAL(state.tenant)
+        domain(state){
+            return HAL(state.domain)
         },
     },
 
@@ -20,8 +20,8 @@ export default {
         setAccount(state, {account}){
             state.account = account
         },
-        setTenant(state, {tenant}){
-            state.tenant = tenant
+        setDomain(state, {domain}){
+            state.domain = domain
         },
 
         setAccessKey(state, {accessKey}){
@@ -31,7 +31,7 @@ export default {
 
     actions: {
         getAccount({getters, commit, dispatch}){
-            const url = getters.tenant.url('account')
+            const url = getters.domain.url('account')
             return getters.http({url}).then(response => {
                 commit('setAccount', {account:response.data})
                 return HAL(response.data)
@@ -41,10 +41,10 @@ export default {
             })
         },
 
-        getTenant({commit, getters}, {tenant}={}){
-            let url = getters.root.url('tenant', {tenant})
-            return getters.http({url}).then(response=>{
-                commit('setTenant', {tenant:response.data})
+        getDomain({commit, getters}, {domain}={}){
+            let url = getters.root.url('domain', {domain})
+            return getters.http({url, auth:true}).then(response=>{
+                commit('setDomain', {domain:response.data})
                 return HAL(response.data)
             }).catch(error=>{
                 console.log(error)

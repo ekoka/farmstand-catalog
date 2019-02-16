@@ -1,6 +1,16 @@
 <template>
 <div class="columns">
     <div class="column is-8-tablet">
+        <nav class="breadcrumb">
+            <ul>
+                <li>
+                    <router-link :to="{name:'AdminFilterList'}">Filters</router-link>
+                </li>
+                <li class="is-active">
+                    <a href="">Edit Filter</a>
+                </li>
+            </ul>
+        </nav> <!-- breadcrumb -->
         <div class="field ">
             <div class="control">
                 <label class="label">Name</label>

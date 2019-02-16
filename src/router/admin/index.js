@@ -1,8 +1,9 @@
 // components
 import Admin from '@/components/admin'
-import Tenant from '@/components/admin/tenant'
+import Domain from '@/components/admin/domain'
 // routes
 import Catalog from './catalog'
+import Users from './users'
 import Settings from './settings'
 import Inquiries from './inquiries'
 
@@ -14,10 +15,11 @@ export default {
     children:[
         Catalog,
         Inquiries,
+        Users,
         {
-            name:'AdminTenant', 
-            component: Tenant, 
-            path:'tenant', 
+            name:'AdminDomain', 
+            component: Domain, 
+            path:'domain', 
             props: true
         },
         Settings,

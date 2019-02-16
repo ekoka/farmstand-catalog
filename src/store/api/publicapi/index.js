@@ -23,8 +23,8 @@ export default {
     actions: {
         getPublicRoot({getters, commit, dispatch, rootGetters}){
             return dispatch('getRoot').then(root=>{
-                let tenant = rootGetters.subdomain
-                let url = root.url('public-root', {tenant})
+                let domain = rootGetters.subdomain
+                let url = root.url('public-root', {domain})
                 let resource = getters.cache({key:url})
                 if (resource){
                     return HAL(resource)

@@ -51,19 +51,19 @@ export default {
         },
 
         removeProduct(state, {product_id=null}){
-            const tenant = HAL(state.tenant)
+            const domain = HAL(state.domain)
             if (product_id){
                 // Remove product resource with different 
                 // `partial` params. 
-                let url = tenant.url('product', {product_id})
+                let url = domain.url('product', {product_id})
                 Cache(state.cache).clear(url)
             }
         },
 
         clearProductCollection(state){
-            const tenant = HAL(state.tenant)
+            const domain = HAL(state.domain)
             // clear product collection
-            Cache(state.cache).clear(tenant.url('products'))
+            Cache(state.cache).clear(domain.url('products'))
         },
 
         setProduct(state, {url, product}){
@@ -75,7 +75,7 @@ export default {
 
     actions:{
         putProductSchema({getters, dispatch, commit},{data}){
-            const url = getters.tenant.url('product_schema')
+            const url = getters.domain.url('product_schema')
             return getters.http({
                 url, data, method:'put', auth:true,
             }).then(resp=>{
@@ -87,7 +87,7 @@ export default {
         },
 
         getProductSchema({commit, getters}, {refresh=false}={}){
-            const url = getters.tenant.url('product_schema')
+            const url = getters.domain.url('product_schema')
             if (!refresh){ 
                 let resource = getters.cache({key:url})
                 if (resource){
@@ -104,7 +104,7 @@ export default {
         },
 
         postProduct({getters, dispatch, commit}, {data}){
-            let url = getters.tenant.url('products')
+            let url = getters.domain.url('products')
             return getters.http({
                 url, 
                 data, 
@@ -123,7 +123,7 @@ export default {
         },
 
         putProduct({getters, dispatch, commit}, {product_id, data}){
-            let url = getters.tenant.url('product', {product_id})
+            let url = getters.domain.url('product', {product_id})
             return getters.http({
                 url, 
                 method:'put', 
@@ -145,7 +145,7 @@ export default {
         // The difference between both methods is that data sent with
         // PATCH must match exactly the schema stored by the backend.
         patchProduct({getters, dispatch, commit}, {product_id, data}){
-            let url = getters.tenant.url('product', {product_id})
+            let url = getters.domain.url('product', {product_id})
             return getters.http({
                 url, 
                 method:'patch', 
@@ -162,7 +162,7 @@ export default {
         deleteProduct({getters, commit}, {product_id}){
             // we don't delete by url because we can generate the url
             // from the ID, the reverse is more difficult
-            let url = getters.tenant.url('product', {product_id})
+            let url = getters.domain.url('product', {product_id})
             return getters.http({url, method:'delete', auth:true}).then(r=>{
                 // clear cached product collection 
                 // commit('clearProductCollection')
@@ -175,7 +175,7 @@ export default {
         },
 
         getProducts({getters, commit}, {params}={}){
-            let url = getters.tenant.url('products')
+            let url = getters.domain.url('products')
             //if (!refresh){ 
             //    let resource = getters.cache({key:url})
             //    if (resource){
@@ -197,7 +197,7 @@ export default {
 
         getProduct({getters, commit},{url, product_id, refresh=false}){
             if (product_id){
-                url = getters.tenant.url('product', {product_id})
+                url = getters.domain.url('product', {product_id})
             }
             if (!refresh){
                 // we attempt loading product data from cache
@@ -224,7 +224,7 @@ export default {
             if (!refresh){ 
                 let missing = []
                 _.each(product_id=>{
-                    let url = getters.tenant.url('product', {product_id})
+                    let url = getters.domain.url('product', {product_id})
                     let resource = getters.cache({key:url})
                     if (resource){
                         rv.push(HAL(resource))
@@ -241,14 +241,14 @@ export default {
                 product_ids = missing
             }
 
-            let url = getters.tenant.url(
+            let url = getters.domain.url(
                 'product_details', null, {pid:product_ids})
             return getters.http({
                 url,
                 auth: true,
             }).then(response=>{
                 return _.concat(rv, _.map(p=>{
-                    let url = getters.tenant.url('product', {
+                    let url = getters.domain.url('product', {
                         product_id: p.data.product_id})
                     commit('setProduct', {url, product:p.resource})
                     return p

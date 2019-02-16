@@ -9,17 +9,23 @@ export default [
         path: 'filters',
         component: Index,
         children:[
-            {path: '', name:'AdminFilters', component: List},
-            {path:':filter_set_id/add', component:Filter, 
-                        name:'AdminAddFilter', props:true},
-        ]
-    },
-    {
-        path: 'filter',
-        component: Index,
-        children:[
-            {path:':filter_id', component:Filter, name:'AdminEditFilter',
-                props:true},
+            {
+                path: '', 
+                name:'AdminFilters',
+                component: List
+            },
+            {
+                path:'new',
+                component:Filter, 
+                name:'AdminNewFilter', 
+                props:true
+            },
+            {
+                path:':filter_id',
+                component:Filter,
+                name:'AdminEditFilter',
+                props:true
+            },
         ]
     },
 ]

@@ -7,7 +7,7 @@ export default {
     getters:{
         filters(state, getters){
             return ({filter_id=null}={})=>{
-                const url = getters.tenant.url('filters')
+                const url = getters.domain.url('filters')
                 const filters = HAL(getters.cache({key:url}))
                 if(!filter_id){
                     // if no filter_id is specified, return all filters
@@ -50,7 +50,7 @@ export default {
 
     actions:{
         postFilter({getters, commit, dispatch},{data}){
-            let url = getters.tenant.url('filters')
+            let url = getters.domain.url('filters')
             return getters.http({
                 url, 
                 data, 
@@ -72,7 +72,7 @@ export default {
                     return filters
                 }
             }
-            const url = getters.tenant.url('filters')
+            const url = getters.domain.url('filters')
             return getters.http({
                 url,
                 auth: true,

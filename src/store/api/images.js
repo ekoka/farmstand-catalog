@@ -14,7 +14,7 @@ export default {
             //const url = ctx.rootState.apiUrl + contentsUrl + lang
             const formData = new FormData()
             formData.append('image', image)
-            let url = getters.tenant.url('source_images')
+            let url = getters.domain.url('source_images')
             return getters.http({
                 // url: getters.sourceImageUrl,
                 url,
@@ -35,7 +35,7 @@ export default {
         },
 
         getImages({getters},{qsparams}={qsparams:null}){
-            let url = getters.tenant.url('images',null,qsparams)
+            let url = getters.domain.url('images',null,qsparams)
             return getters.http({
                 url,
                 auth:true,

@@ -12,7 +12,7 @@ export default {
 
     actions:{
         getInquiries({getters, commit}, {refresh=false}={}){
-            let url = getters.tenant.url('inquiries')
+            let url = getters.domain.url('inquiries')
             if (!refresh){
                 let resource = getters.cache({key:url})
                 if(resource){

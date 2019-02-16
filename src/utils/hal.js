@@ -99,6 +99,12 @@ export class HALResource {
 
     url (rel, params, qsparams={}){
         let href = this.href(rel)
+        if(!href){
+            return
+        }
+        if (params==null) {
+            params = {}
+        }
         let uri = URI.expand(href, params).search(qsparams)
         if(uri.is('absolute')){
             return uri.toString()

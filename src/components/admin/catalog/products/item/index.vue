@@ -3,7 +3,7 @@
     <nav class="breadcrumb">
         <ul>
             <li>
-                <router-link :to="{name:'AdminProductList'}">Catalog</router-link>
+                <router-link :to="{name:'AdminProductList'}">Products</router-link>
             </li>
             <li class="is-active">
                 <a href="">Edit Product</a>
