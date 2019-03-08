@@ -5,11 +5,12 @@
         @close="showConfirmation=false">
     </message>
 
-    <filterOptionProducts 
-        v-if="productSelection.active" 
-        v-bind="productSelection"
-        @close="closeProductSelection">
-    </filterOptionProducts>
+    <div class="modal" :class="{'is-active': productSelection.active}">
+        <div @click="closeProductSelection" class="modal-background"></div>
+        <filterOptionProducts v-bind="productSelection" 
+            @close="closeProductSelection">
+        </filterOptionProducts>
+    </div>
 
     <div class="column">
         Options

@@ -1,10 +1,7 @@
 <template>
-<div class="is-active modal">
-    <div @click="$emit('close')" class="modal-background"></div>
-    <div class="card">
-
+<div class="card">
+    <div class="card-content">
         <h4>Filter</h4>
-
         <h4>Products</h4>
         <div v-for="p, i in mutable.products">
             <label>
@@ -14,10 +11,9 @@
                 {{field(p, 'name')}}
             </label>
         </div>
-
         <button @click="saveSelection">save</button>
-    </div><!-- card -->
-</div><!-- modal -->
+    </div><!-- card-content -->
+</div><!-- card -->
 </template>
 
 <script>
