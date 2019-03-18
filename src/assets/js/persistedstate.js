@@ -101,7 +101,7 @@ export default function(options, storage, key) {
 
         // adding this to handle changes from various tabs
         window.addEventListener("storage", e => {
-            if (e.key !== "vuex") return
+            if (e.key !== key) return
 
             // exit if no change
             //if (e.newValue === JSON.stringify(this.$store.state)) return

@@ -3,7 +3,7 @@ import {HAL} from '@/utils/hal'
 export default {
     state: {
         account: null,
-        accessKey: null,
+        accessToken: null,
         domain: null,
     },
 
@@ -24,8 +24,8 @@ export default {
             state.domain = domain
         },
 
-        setAccessKey(state, {accessKey}){
-            state.accessKey = accessKey
+        setAccessToken(state, {accessToken}){
+            state.accessToken = accessToken
         },
     },
 
@@ -35,9 +35,6 @@ export default {
             return getters.http({url}).then(response => {
                 commit('setAccount', {account:response.data})
                 return HAL(response.data)
-            }).catch(error => {
-                console.log(error)
-                console.log(error.response)
             })
         },
 
@@ -46,9 +43,6 @@ export default {
             return getters.http({url, auth:true}).then(response=>{
                 commit('setDomain', {domain:response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
     },

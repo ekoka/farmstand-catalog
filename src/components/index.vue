@@ -1,7 +1,7 @@
 <template>
 <div>
-    <h1>KISS Order Manager</h1>
-    <router-link :to="{name:'Signin'}">Log In</router-link> | <router-link :to="{name:'Signup'}">Sign Up</router-link>
+    <h1>Productlist</h1>
+    <router-link :to="{name:'Login'}">Log in</router-link> | <router-link :to="{name:'Register'}">Register</router-link>
 
     <router-view></router-view>
 

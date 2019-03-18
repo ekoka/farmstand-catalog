@@ -51,8 +51,8 @@ const API = {
         },
 
         authHeaders(state, getters){
-            const authScheme = 'access-token'
-            const auth = authScheme + ' ' + state.accessKey
+            const authScheme = 'access_token'
+            const auth = authScheme + ' ' + state.accessToken
             return {'Authorization': auth}
         },
 
@@ -81,8 +81,6 @@ const API = {
             state.root = root
         },
 
-        setAccessKey(){
-        },
         ...accounts.mutations,
         ...products.mutations,
         ...inquiries.mutations,
@@ -138,7 +136,8 @@ function initApi({state, skip=[]}){
     
     // delete everything not in the skip list
     // or reset to initState
-    Object.keys(state).concat(Object.keys(initState)).forEach(k=>{
+    const allKeys = Object.keys(state).concat(Object.keys(initState))
+    allKeys.forEach(k=>{
         if (skip.includes(k)){
             return // skip
         }
