@@ -8,7 +8,7 @@
         <product-row v-for="product in products" :key='product.product_id' :product="product" />
     </div>
 
-    <div class="prod-header bottom-header">
+    <div v-if="products.length>10" class="prod-header bottom-header">
         <product-table-header />
     </div>
 </div><!-- product-table -->

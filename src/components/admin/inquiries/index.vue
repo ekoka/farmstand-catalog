@@ -1,6 +1,8 @@
 <template>
 <div>
-    <h2 class="subtitle">Inquiries</h2>
+    <h2 class="subtitle is-3">Inquiries</h2>
+
+    <h2 class="subtitle">Coming soon</h2>
 
     <router-view/>
 
@@ -10,7 +12,6 @@
 <script>
 export default {
     created(){
-        this.cmpalias('router-link', 'rl')
     },
 }
 </script>

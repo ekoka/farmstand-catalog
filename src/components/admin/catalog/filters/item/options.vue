@@ -1,86 +1,76 @@
 <template>
-<div class="columns">
-    <message :class="{'is-active':showConfirmation}"
-        v-bind="confirmMessage"
-        @close="showConfirmation=false">
-    </message>
+<div>
+    <Modal v-if="modalComponent.component" :modalComponent.sync="modalComponent.component" 
+        :listenFor="Object.keys(modalComponent.events)"
+        :params="modalComponent.params"
+        v-on="modalComponent.events"
+        >
+    </Modal>
 
-    <div class="modal" :class="{'is-active': productSelection.active}">
-        <div @click="closeProductSelection" class="modal-background"></div>
-        <filterOptionProducts v-bind="productSelection" 
-            @close="closeProductSelection">
-        </filterOptionProducts>
+    <div class="level">
+        <div class="level-left">
+            <div class="level-item">
+                <h5 class="subtitle is-4">Category options</h5>
+            </div>
+            <div class="level-item">
+                <button @click="addOption" class="button is-link is-outlined">
+                    <span class="icon is-small">
+                        <i class="mdi mdi-plus-circle-outline"></i>
+                    </span>
+                    <span>Add one</span>
+                </button>
+            </div>
+        </div>
     </div>
+        
+    <div class="field has-addons" v-for="o,i in mutable.options">
+        <div class="control">
+            <button class="button" title="Remove this option" @click="removeOption(i)"><span class="icon is-small" :class="{'has-text-danger': o.filter_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
+                <span>remove</span>
+            
+            </button>
+        </div><!-- control -->
 
-    <div class="column">
-        Options
-        <div class="field has-addons" v-for="o,i in mutable.options">
-            <div class="control">
-                <button class="button" title="Add an option after this one" @click="addOption(i)">
-                    <span class="icon is-small"><i class="mdi mdi-plus-circle-outline"></i></span>
-                </button>
-            </div><!-- control -->
-            <div class="control">
-                <button class="button" title="Remove this option" @click="confirmRemoval(i)"><span class="icon is-small" :class="{'has-text-danger': o.filter_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
-                
-                </button>
-            </div><!-- control -->
-            <div class="control">
-                <input class="input" v-model="o.data.label">
-            </div><!-- control -->
-            <div class="control">
-                <button 
-                    class="button is-outlined" 
-                    :disabled="!o.filter_option_id"
-                    @click="openProductSelection(o.filter_option_id)">
-                    select products
-                </button>
-            </div><!-- control -->
-        </div><!-- field -->
-    </div><!-- column -->
-</div><!-- columns -->
+        <div class="control">
+            <input class="input" v-model="o.data.label">
+        </div><!-- control -->
+        <div class="control">
+            <button 
+                class="button is-text is-outlined" 
+                :disabled="!o.filter_option_id"
+                @click="openProductSelection(o.filter_option_id)">
+                select products
+            </button>
+        </div><!-- control -->
+
+    </div><!-- field -->
+</div><!--  -->
 </template>
 
 <script>
 import _ from 'lodash/fp'
-import message from '@/components/admin/elements/messages'
-import filterOptionProducts from './filter-option-products'
+import Message from './message'
+import Modal from '@/components/admin/elements/modal'
+import FilterOptionProducts from './filter-option-products'
+import {HAL} from '@/utils/hal'
 
 export default {
     components: {
-        message,
-        filterOptionProducts
+        Modal,
+        Message,
+        FilterOptionProducts
     },
     props: ['options', 'filterResource'],
 
     data(){
         return {
-            productSelection: {
-                active: false,
-                filter: null,
-                filter_option_id: null,
-            },
+            // modal params
+            modalComponent: {},
+            //listenFor: [],
+
             mutable: {
                 options:[],
             },
-            confirmMessage:{
-                level: 'warning',
-                confirmBtn:{
-                    label: "Remove",
-                    css: "is-warning"
-                },
-                callback:this.removeOption,
-                params:{
-                    optionIndex: 0,
-                },
-                cancelBtn:{
-                    label: 'Cancel',
-                    css: 'is-light',
-                },
-                header: 'Remove option',
-                message:"This option might be associated with a few products. Do you want to remove it?", 
-            },
-            showConfirmation: false,
         }
     },
     watch:{
@@ -108,20 +98,8 @@ export default {
         }
     },
     methods: {
-
-        insertItem(arr, index, items){
-            /* insert items in array at the indicated index */
-            return [
-                ...arr.slice(0,index), 
-                ...items, 
-                ...arr.slice(index)]
-        },
-
         addOption(i){
-            /* add a new option to the list of options at the specified index.
-             */
-            this.mutable.options = this.insertItem(
-                    this.mutable.options, i+1, [this.newOption()])
+            this.mutable.options.push(this.newOption())
         },
 
         newOption(){
@@ -131,28 +109,43 @@ export default {
             }
         },
 
-        confirmRemoval(index){
-            /* record the index of the option being removed and set the 
-               display flag of the confirmation modal panel.
-             */
-            this.confirmMessage.params.optionIndex = index
-            this.showConfirmation = true
+        resetModalComponent(){
+            _.each(k=>{
+                this.modalComponent[k] = null
+            })(Object.keys(this.modalComponent))
         },
 
-        removeOption({optionIndex}){
-            /* remove option at the specified index */
-            this.mutable.options.splice(optionIndex,1)
+        removeOption(optionIndex){
+            let answer = (e)=>{
+                if(e==true){
+                    this.mutable.options.splice(optionIndex, 1)
+                }
+                this.resetModalComponent()
+            }
+            this.modalComponent = {
+                component:Message,
+                params:{},
+                events: {answer},
+            }
         },
 
         openProductSelection(filter_option_id){
-            this.productSelection['filter_option_id'] = filter_option_id
-            this.productSelection['filter'] = this.filterResource
-            this.productSelection['active'] = true
-        },
-        closeProductSelection(){
-            this.productSelection['filter_option_id'] = null
-            this.productSelection['filter'] = null
-            this.productSelection['active'] = false
+            const filter = HAL(this.filterResource)
+            const optionUrl = filter.url('option', {filter_option_id })
+            const filterData = filter.key('data')
+
+            this.modalComponent = {
+                component: FilterOptionProducts,
+                params:{
+                    filter_option_id, 
+                    optionUrl,
+                    filterData,
+                },
+                events:{close(){
+                        this.resetModalComponent()
+                    },
+                },
+            }
         },
     },
 }

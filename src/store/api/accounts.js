@@ -2,6 +2,7 @@ import {HAL} from '@/utils/hal'
 
 export default {
     state: {
+        profile: null,
         account: null,
         accessToken: null,
         domain: null,
@@ -13,6 +14,9 @@ export default {
         },
         domain(state){
             return HAL(state.domain)
+        },
+        profile(state){
+            return HAL(state.profile)
         },
     },
 
@@ -27,13 +31,25 @@ export default {
         setAccessToken(state, {accessToken}){
             state.accessToken = accessToken
         },
+
+        setProfile(state, {profile}){
+            state.profile = profile
+        },
     },
 
     actions: {
-        getAccount({getters, commit, dispatch}){
-            const url = getters.domain.url('account')
-            return getters.http({url}).then(response => {
+        getAccount({getters, commit, dispatch}, {account_id}){
+            const url = getters.root.url('account', {account_id})
+            return getters.http({url, auth:true}).then(response => {
                 commit('setAccount', {account:response.data})
+                return HAL(response.data)
+            })
+        },
+
+        getProfile({commit, getters}){
+            const url = getters.root.url('profile')
+            return getters.http({url, auth:true}).then(response => {
+                commit('setProfile', {profile:response.data})
                 return HAL(response.data)
             })
         },

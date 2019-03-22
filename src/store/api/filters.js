@@ -59,39 +59,27 @@ export default {
             }).then(response=>{
                 // async refresh filter list
                 let filter_id = HAL(response.data).data.filter_id
-                return dispatch('getFilters', {refresh:true}).then(()=>{
-                    return dispatch('getFilter', {filter_id})
-                })
+                dispatch('getFilters')
+                return filter_id
+            }).then((filter_id)=>{
+                return dispatch('getFilter', {filter_id})
             })
         },
 
-        getFilters({getters, commit}, {refresh=false}={}){
-            if (!refresh){
-                const filters = getters.filters()
-                if (filters){
-                    return filters
-                }
-            }
+        getFilters({getters, commit}){
             const url = getters.domain.url('filters')
             return getters.http({
                 url,
                 auth: true,
             }).then(response=>{
                 commit('setFilters', {filters:response.data})
-                let filters = getters.filters()
-                return filters
+                return getters.filters()
             }).catch(error=>{
                 console.log(error)
             })
         },
 
-        getFilter({getters, commit}, {filter_id, refresh=false}){
-            if (!refresh){ 
-                let filter = getters.filters({filter_id})
-                if(filter){
-                    return filter
-                }
-            }
+        getFilter({getters, commit}, {filter_id}){
             const url = getters.filters().url('filter', {filter_id})
 
             return getters.http({
@@ -100,9 +88,6 @@ export default {
             }).then(response=>{
                 commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
         
@@ -114,10 +99,7 @@ export default {
                 data,
                 auth:true,
             }).then(resp=>{
-                return dispatch('getFilter', {filter_id, refresh:true})
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
+                return dispatch('getFilter', {filter_id})
             })
         },
 
@@ -133,9 +115,6 @@ export default {
                     filter_id
                 })
                 commit('uncache', {key:url})
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
         

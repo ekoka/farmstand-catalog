@@ -96,17 +96,11 @@ const API = {
         
     actions: {
         getRoot({getters,commit,state}){
-            let resource = getters.root
-            if (resource){
-                return resource
-            }
             return getters.http({
                 url: API_ROOT
             }).then(response=>{
                 commit('setRoot', {root:response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error.response)
             })
         },
         ...accounts.actions,

@@ -1,6 +1,9 @@
 <template>
 <div>
-    <div class="card">
+    <div v-if="filters.length==0" class="is-size-4">
+        You have no filters yet.
+    </div>
+    <div v-else class="card">
         <div class="card-content">
             <div v-for="f,i in filters" class="media">
                 <div class="media-left">
@@ -21,9 +24,6 @@
                     <a class="button is-small" :class="{'is-warning': !f.active, 'is-success':f.active}">{{f.active ? 'currently enabled' :  'currently disabled'}}</a> 
                 </div>
             </div><!-- media -->
-
-            <div class="media"></div><!-- media -->
-            <a class="button is-outlined is-link" href="books.html">Add a new filters</a>
         </div><!-- card-content -->
     </div><!-- card -->
 </div><!-- column -->

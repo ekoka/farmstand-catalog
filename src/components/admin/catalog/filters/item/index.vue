@@ -1,16 +1,35 @@
 <template>
-<div class="columns">
-    <div class="column is-8-tablet">
-        <nav class="breadcrumb">
-            <ul>
-                <li>
-                    <router-link :to="{name:'AdminFilterList'}">Filters</router-link>
-                </li>
-                <li class="is-active">
-                    <a href="">Edit Filter</a>
-                </li>
-            </ul>
-        </nav> <!-- breadcrumb -->
+<div>
+    <nav class="breadcrumb">
+        <ul>
+            <li>
+                <router-link :to="{name:'AdminFilterList'}">Filters</router-link>
+            </li>
+            <li class="is-active">
+                <a href="">Edit Filter</a>
+            </li>
+        </ul>
+    </nav> <!-- breadcrumb -->
+
+    <div class="box">
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-danger is-outlined" @click="removeFilter">Delete this filter</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="level-item">
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-link" @click="saveFilter">Save your changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="field ">
             <div class="control">
                 <label class="label">Name</label>
@@ -37,42 +56,29 @@
         <div class="field is-grouped is-grouped-left">
             <div class="control">
                 <label class="label">
-                    Filter option selection type: 
-                </label>
-            </div>
-            <div class="control">
-                <label class="">
-                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="false">
-                    Single
+                    Can a product be linked to more than one option? 
                 </label>
             </div>
             <div class="control">
                 <label class="">
                     <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="true">
-                    Multiple
+                    Yes
                 </label>
             </div>
-            <tooltip>Pertains to how many simultaneous options a product can be associated with (i.e. can a product be linked to more than one option at a time). Note that once a filter has been saved, it can only be changed from single to multiple choice, not the other way around.</tooltip>
+            <div class="control">
+                <label class="">
+                    <input type="radio" class="radio" v-model="mutable.filter.multichoice" :value="false">
+                   No 
+                </label>
+            </div>
+            <tooltip>How many simultaneous options can a product be associated with. For example, in a "Category" filter each product could belong to multiple categories. On the other hand a "Maker" filter could be set up such that each product can only be linked to a single manufacturer. Note that once a filter has been saved, it can only be changed from Single to Multiple choice, not the other way around.</tooltip>
         </div><!-- field -->
-        <option-list v-if="ready" 
-            :filterResource="filterResource"
-            :options.sync="mutable.filter.options">
-        </option-list>
-    </div><!-- column -->
-
-    <div class="column">
-        <div class="field">
-            <div class="control">
-                <button class="button is-link" @click="saveFilter">Save your changes</button>
-            </div>
-        </div>
-        <div class="field">
-            <div class="control">
-                <button class="button is-danger is-outlined" @click="removeFilter">Delete this filter</button>
-            </div>
-        </div>
-    </div><!-- column -->
-</div><!-- columns -->
+    </div>
+    <option-list class="box" v-if="ready" 
+        :filterResource="filterResource"
+        :options.sync="mutable.filter.options">
+    </option-list>
+</div>
 </template>
 
 <script>
@@ -86,12 +92,22 @@ export default {
         Tooltip,
     },
 
-    props:['filter_id'],
+    // we don't use props here because for some reason they're not being updated 
+    // on route push that resolve to the same component. 
+    //props:['filter_id'],
 
     data(){
         return {
+            // filter_id is initialized to null and later updated by a watcher 
+            // on `$route.params.filter_id` that triggers asap. It thus acts as 
+            // the initializer.
+            filter_id: null,
+            // the HAL resource returned from the store
             filterResource: null,
             displayHelp: false,
+            // this flags prevents the `OptionList` component from being prematurely
+            // loaded. It set to true once the filter's resources have been fetched 
+            // from the api.
             ready: false,
             mutable: {
                 filter: {
@@ -109,38 +125,61 @@ export default {
     },
 
     watch:{
+
+        // just making sure to watch
         'mutable.filter.options': {
             deep:true,
             handler(){},
         },
-    },
 
-    mounted(){
-        if (this.filter_id){
-            this.loadFilter().then(()=>{
-                this.ready = true
-            })
-        } else {
-            this.ready = true
+        // this param updates `filter_id` on the model and 
+        // reloads the filter if necessary.
+        '$route.params.filter_id': {
+            handler(filter_id){
+                // if `filter_id` has a value
+                if(filter_id){
+                    // set model's `filter_id`
+                    this.filter_id = filter_id
+                    // then load filter's resource
+                    this.loadFilter().then(()=>{
+                        // set the ready flag, so that options component can be loaded
+                        this.ready = true
+                    })
+                } else {
+                    // set the ready flag, so that options component can be loaded
+                    this.ready = true
+                }
+            },
+            // fire this handler immediately upon mounting component
+            immediate:true,
         }
     },
 
     methods:{
+        // save filter to API
         saveFilter(){
+            // mutable version of filter is the data 
             let data = this.mutable.filter
+
+            // if no `filter_id` on model, assume this is a new filter
             if(!this.filter_id){
                 // create new filter
                 return this.postFilter({
                     data
                 }).then(f=>{
-                    // redirect to filter's page
+                    // push new filter's url.
+                    // but since it resolves to the same component, the change of url
+                    // won't trigger the usual initializers (created(), mounted(), etc).
+                    // Luckily we're relying on a watcher on `$route.params.filter_id`
+                    // for initialization.
                     this.$router.push({
                         name: 'AdminEditFilter', params:{
                             filter_id: f.data.filter_id
                         },
                     })
                 })
-            } else {
+            } else { // if this.filter_id is set
+                // updating an existing filter
                 return this.putFilter({
                     filter_id:this.filter_id,
                     data,
@@ -153,9 +192,8 @@ export default {
         loadFilter(){
             return this.getFilter({
                 filter_id:this.filter_id,
-                refresh:true
             }).then(filter=>{
-                this.filterResource = filter
+                this.filterResource = filter.resource
                 this.mutable.filter = filter.data
             })
         },

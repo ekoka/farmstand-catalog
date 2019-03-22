@@ -25,7 +25,7 @@ export default new Vuex.Store({
         qs_lang (state, getters){
             return 'lang=' + getters.lang
         },
-        subdomain(state, getters){
+        urlSubdomain(state, getters){
             return URI(window.location.href).subdomain()
         },
     },

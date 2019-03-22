@@ -18,31 +18,39 @@ export default {
 
     created(){
         const query = URI(window.location.search).query(true)
-        let access_key = query.access_key
+        let access_token = query.access_token
 
-        if (access_key){
-            this.setAccessKey({accessKey:access_key})
+        if (access_token){
+            this.setAccessToken({accessToken:access_token})
         }
 
         let lang = query.lang
-
         this.getRoot().then(root=>{
-            this.getDomain({domain:this.$store.getters['subdomain']}).then(domain=>{
-                this.domain = domain.data
-                this.getAccount().then(account=>{
-                    this.account = account.data
-                })
+            return this.getProfile()
+        }).then(profile=>{
+            return this.getAccount({account_id:profile.data.account_id})
+        }).then(account=>{
+            //this.domain = domain.data
+            return this.getDomain({
+                domain:this.$store.getters['urlSubdomain']
             })
         })
+        
+        //.then(account=>{
+        //            this.account = account.data
+        //        })
+        //    })
+        //})
     },
     methods:{
         ...mapActions({
             'getRoot': 'api/getRoot',
             'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
+            'getProfile': 'api/getProfile',
         }),
         ...mapMutations({
-            'setAccessKey': 'api/setAccessKey',
+            'setAccessToken': 'api/setAccessToken',
         }),
     }
 

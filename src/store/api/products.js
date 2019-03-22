@@ -1,6 +1,17 @@
 import _ from 'lodash/fp'
+
+import flow from 'lodash/fp/flow'
+import compose from 'lodash/fp/compose'
+import map from 'lodash/fp/map'
+import reduce from 'lodash/fp/reduce'
+import filter from 'lodash/fp/filter'
+import concat from 'lodash/fp/concat'
+import difference from 'lodash/fp/difference'
+import each from 'lodash/fp/each'
+import union from 'lodash/fp/union'
+
 import {HAL} from '@/utils/hal'
-import {Cache} from '@/utils/cache'
+import {Cache, Buffer} from '@/utils/cache'
 
 /*
  * How to handle product collection
@@ -22,6 +33,7 @@ import {Cache} from '@/utils/cache'
 export default {
     state:{
         productSchema:null,
+        productResources: {stack: [], lock:[]},
     },
     getters:{
         productSchema(state){
@@ -68,9 +80,16 @@ export default {
 
         setProduct(state, {url, product}){
             Cache(state.cache).store(url, product)
-            //Cache(state.cache).store(key, value)
-            //commit('cache', {key:url, value:response.data})
         },
+
+        addProductResourceToCollection(state, {path, productResource}){
+            if (!state.productResources.lock){
+                state.productResources = {lock:[], stack:[]}
+            }
+            Buffer(state.productResources).store(path, productResource)
+        },
+
+
     },
 
     actions:{
@@ -79,27 +98,15 @@ export default {
             return getters.http({
                 url, data, method:'put', auth:true,
             }).then(resp=>{
-                return dispatch('getProductSchema', {refresh:true})
-            }).catch(error=>{
-                console.log(error.response)
-                throw error
+                return dispatch('getProductSchema')
             })
         },
 
-        getProductSchema({commit, getters}, {refresh=false}={}){
+        getProductSchema({commit, getters}){
             const url = getters.domain.url('product_schema')
-            if (!refresh){ 
-                let resource = getters.cache({key:url})
-                if (resource){
-                    return HAL(resource)
-                }
-            }
             return getters.http({url, auth:true}).then(response=>{
                 commit('setProductSchema', {productSchema: response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error.response)
-                throw error
             })
         },
 
@@ -116,9 +123,6 @@ export default {
                 // commit('clearProductCollection')
                 // get product
                 return dispatch('getProduct', {url})
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
 
@@ -134,9 +138,6 @@ export default {
                 // commit('clearProductCollection')
                 // remove cached product resource.
                 commit('removeProduct', {product_id})
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
 
@@ -168,79 +169,34 @@ export default {
                 // commit('clearProductCollection')
                 // remove cached product resource
                 commit('removeProduct', {product_id})
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
             })
         },
 
         getProducts({getters, commit}, {params}={}){
             let url = getters.domain.url('products')
-            //if (!refresh){ 
-            //    let resource = getters.cache({key:url})
-            //    if (resource){
-            //        return HAL(resource)
-            //    }
-            //}
             return getters.http({url, auth:true}).then(response=>{
-                // caching each product's resource
-                //commit('setProducts', {products:response.data})
-                // caching product list
-                //commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
-                throw error
             })
         },
 
-        getProduct({getters, commit},{url, product_id, refresh=false}){
+        getProduct({getters, commit},{url, product_id}){
+            // always returns a fresh copy of product resource
             if (product_id){
                 url = getters.domain.url('product', {product_id})
             }
-            if (!refresh){
-                // we attempt loading product data from cache
-                let resource = getters.cache({key:url})
-                if (resource){
-                    return HAL(resource)
-                }
-            }
-
             return getters.http({url, auth:true}).then((response)=>{
-                //commit('cache', {key:url, value:response.data})
-                commit('setProduct', {url, product:response.data})
-                return HAL(getters.cache({key:url}))
-                //return HAL(response.data)
-            }).catch(error=>{
-                console.log(error)
-                console.log(error.response)
+                // halify
+                const product = HAL(response.data)
+                const path = product.key('product_id')
+                const productResource = product.resource
+                commit('addProductResourceToCollection', {path,productResource})
+                return product
             })
         },
 
 
-        getProductDetails({getters, commit}, {product_ids=[], refresh=false}={}){
+        getProductDetails({getters, commit}, {product_ids=[]}={}){
             let rv  = []
-            if (!refresh){ 
-                let missing = []
-                _.each(product_id=>{
-                    let url = getters.domain.url('product', {product_id})
-                    let resource = getters.cache({key:url})
-                    if (resource){
-                        rv.push(HAL(resource))
-                        return 
-                    }
-                    missing.push(product_id)
-                })(product_ids)
-
-                if (!missing.length){
-                    // all resources found, return them
-                    return rv
-                }
-                // there are uncached resources, we continue
-                product_ids = missing
-            }
-
             let url = getters.domain.url(
                 'product_details', null, {pid:product_ids})
             return getters.http({
@@ -253,6 +209,48 @@ export default {
                     commit('setProduct', {url, product:p.resource})
                     return p
                 })(HAL(response.data).embedded('products')))
+            })
+        },
+
+        getProductResources({getters, state, commit, rootState}, {product_ids}){
+            if(!state.productResources.stack){
+                state.productResources = {stack:[], lock:[]}
+            }
+            const buffer = Buffer(state.productResources)
+            const halify = map(p=>{
+                return HAL(p)
+            })
+            const finder = reduce((accumulator, product_id)=>{
+                const resource = buffer.fetch({product_id})
+                if(resource){
+                    accumulator.found.push(resource)
+                    accumulator.foundIds.push(product_id)
+                }
+                return accumulator
+            }, {found:[], foundIds:[]})
+            const {found, foundIds} = finder(product_ids)
+            const notfound = difference(product_ids, foundIds)
+
+            if(notfound.length==0){
+                return halify(found)
+            }
+                
+            let url = getters.domain.url('product_resources', null, {
+                pid:notfound
+            })
+            return getters.http({
+                url,
+                auth:true
+            }).then(response=>{
+                const addNewResources = each(p=>{
+                    const path = {'product_id': p.key('product_id')}
+                    commit('addProductResourceToCollection', {
+                        path, productResource:p.resource
+                    })
+                })
+                const resources = HAL(response.data)
+                addNewResources(resources.embedded('products'))
+                return union(halify(found), resources.embedded('products'))
             })
         },
 

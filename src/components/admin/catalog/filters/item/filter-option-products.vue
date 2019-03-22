@@ -1,17 +1,29 @@
 <template>
 <div class="card">
     <div class="card-content">
-        <h4>Filter</h4>
-        <h4>Products</h4>
-        <div v-for="p, i in mutable.products">
-            <label>
-                <input type="checkbox" 
-                    :value="p.product_id" 
-                    v-model="mutable.selectedProducts">
-                {{field(p, 'name')}}
-            </label>
+        <div class="level">
+            <div class="level-left">
+                <h4 class="title is-3">
+                    {{filterData.label}}
+                </h4>
+            </div>
         </div>
-        <button @click="saveSelection">save</button>
+        <h4 class="subtitle is-5">Products linked to option <span class="is-text-4 has-text-weight-semibold is-italic">{{filterOption.data.label}}</span></h4>
+        <div class="columns is-multiline">
+            <div v-for="p, i in mutable.products" class="column is-one-third">
+                <div class="field">
+                    <label class="">
+                        <input type="checkbox" 
+                            :value="p.product_id"
+                            v-model="mutable.selectedProducts">
+                        {{field(p, 'name')}}
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <button class="button" @click="saveSelection">save</button>
+        </div>
     </div><!-- card-content -->
 </div><!-- card -->
 </template>
@@ -19,13 +31,15 @@
 <script>
 import _ from 'lodash/fp'
 import {mapActions} from 'vuex' 
+import {HAL} from '@/utils/hal'
 
 export default {
-    props: ['filter', 'filter_option_id'],
+    props: ['filter_option_id', 'optionUrl', 'filterData'],
 
     data(){
         return {
-            filterOption: null,
+            filterOption: {data:{}},
+            optionProductsUrl: null,
             mutable:{
                 selectedProducts:[],
                 products: null,
@@ -36,30 +50,34 @@ export default {
 
     mounted(){
         this.loadProducts()
-        this.loadFilterOption()
+        if (this.optionUrl){
+            this.loadFilterOption()
+        }
     },
 
     methods:{
         loadFilterOption(){
-            const url = this.filter.url('option', {
-                filter_option_id:this.filter_option_id
-            })
-            this.getFilterOption({url}).then((option)=>{
-                this.filterOption = option
-                this.mutable.selectedProducts = this.filterOption.data.products
+            this.getFilterOption({url:this.optionUrl}).then((option)=>{
+                this.filterOption = option.data
+                this.optionProductsUrl = option.url('products')
+                this.mutable.selectedProducts = option.data.products
             })
         },
 
         loadProducts(){
-            this.getProducts({refresh:true}).then(products=>{
+            this.getProducts().then(products=>{
+                return this.getProductResources({
+                    product_ids:products.data.product_ids
+                })
+            }).then(resources=>{
                 this.mutable.products = _.map(p=>{
                     return p.data
-                })(products.embedded('products'))
+                })(resources)
             })
         },
 
         saveSelection(){
-            const url = this.filterOption.url('products')
+            const url = this.optionProductsUrl
             const data = {'products': [...this.mutable.selectedProducts]}
             this.putFilterOptionProducts({url, data})
         },
@@ -73,6 +91,7 @@ export default {
 
         ...mapActions({
             getProducts: 'api/getProducts',
+            getProductResources: 'api/getProductResources',
             getFilterOption: 'api/getFilterOption',
             putFilterOptionProducts: 'api/putFilterOptionProducts',
         }),

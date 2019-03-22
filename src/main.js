@@ -28,17 +28,19 @@ new Vue({
     el: '#app',
     created(){
         this.versionReset()
-        //localStorage.clear()
         this.$store.dispatch('api/getRoot')
     },
     methods:{
         versionReset(){
-            // Clear the state if the version changes. This ensures
-            // that clients are not stuck with a state that is inconsistent 
-            // with latest changes.
+            /* Clear the state if the version changes. This ensures
+             that clients are not stuck with a state that is inconsistent 
+             with latest changes.
+             */
+            // if versions are the same return
             if(localStorage.getItem('VERSION') == VERSION){
                 return
             }
+            // otherwise clear all
             this.$store.commit('api/resetApi')
             this.$store.commit('inquiry/resetInquiry')
             localStorage.setItem('VERSION', VERSION)
