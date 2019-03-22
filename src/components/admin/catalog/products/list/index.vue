@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import {map,flow,filter,toPairs, every,each,intersection} from 'lodash/fp'
+import {map,flow,filter,toPairs,every,each,intersection} from 'lodash/fp'
 import Vue from 'vue'
 import {mapActions, mapMutations, mapState} from 'vuex'
 import productTable from './table'
@@ -88,7 +88,7 @@ export default {
     mounted(){
         this.getProductSchema().then(()=>{
             this.getProducts().then(products=>{
-                this.getProductDetails({
+                this.getProductResources({
                     product_ids:products.data.product_ids
                 }).then(products=>{
                     this.products = map(p=>{
@@ -138,7 +138,7 @@ export default {
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
             getProducts: 'api/getProducts',
-            getProductDetails: 'api/getProductDetails',
+            getProductResources: 'api/getProductResources',
             getFilters: 'api/getFilters',
         }),
 
