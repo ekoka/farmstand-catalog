@@ -10,21 +10,49 @@
             </li>
         </ul>
     </nav> <!-- breadcrumb -->
-    <div class="columns">
-        <div class="column is-8">
+    <div>
+        <div class="level">
+            <div class="level-left">
+            </div>
+            <div class="level-right">
+                <div class="level-item">
+                    <button class="button">
+                        Cancel
+                    </button>
+                    <button class="button is-link" :class="buttonClass" @click="saveProduct">
+                        Save your changes
+                    </button>
+                </div><!-- level-item -->
+            </div><!-- level-right -->
+        </div><!-- level -->
+
+
+        <div>
         <template v-if="ready">
 
+            <!--
             <visibility @toggled="toggleVisibility" 
-                :visible="mutable.product.visible">
+                :visible="mutable.product.data.visible">
             </visibility>
+            -->
 
             <div class="box">
-                <field v-for="fieldSchema, key in productSchema.key('fields')"
-                    :key="key" 
-                    :schema="fieldSchema" 
-                    v-model="mutable.product.data.fields[key]"
-                    @updated="changed=true">
-                </field>
+                <template v-if="product_id">
+                    <field v-for="field, i in mutable.product.fields"
+                        :key="i" 
+                        :schema="getFieldSchema(field)" 
+                        v-model="mutable.product.fields[i]"
+                        @updated="changed=true">
+                    </field>
+                </template>
+                <template v-else>
+                    <field v-for="schema, i in this.productSchema.key('fields')"
+                        :key="i" 
+                        :schema="schema" 
+                        v-model="mutable.product.fields[i]"
+                        @updated="changed=true">
+                    </field>
+                </template>
             </div><!-- box -->
 
             <product-images 
@@ -38,15 +66,6 @@
                 @productFilters:update="updateFilters">
             </filters>
 
-            <div class="form-controls" :class="{'is-hidden': !changed}">
-                <button class="button is-link" :class="buttonClass" @click="saveProduct">
-                    Save your changes
-                </button>
-                <button class="button">
-                    Cancel
-                </button>
-            </div><!-- form-controls -->
-
         </template>
         </div><!-- column -->
     </div><!-- columns -->
@@ -56,12 +75,12 @@
 <script>
 import Field from './field'
 import ProductImages from './images'
-import Visibility from './visibility'
+//import Visibility from './visibility'
 import Filters from './filters'
 import {mapActions, mapGetters} from 'vuex'
-import _ from 'lodash/fp'
+import {unset,find} from 'lodash/fp'
 export default {
-    components: {Visibility, Filters, Field, ProductImages},
+    components: {Filters, Field, ProductImages},
     props: ['product_id'],
     data(){
         return {
@@ -76,7 +95,7 @@ export default {
             // that affect the overall behavior of the page.
             ready: false,
 
-            // this flag signals that the data inside product.data.fields has
+            // this flag signals that the data inside product.fields has
             // changed. It's primarily used to display the "Save/Cancel"
             // buttons. 
             changed: false,
@@ -91,10 +110,8 @@ export default {
 
             mutable: {
                 product: {
-                    data: {
-                        fields: [],
-                    },
-                    visible: false,
+                    fields: [],
+                    //visible: false,
                 },
                 images: [],
                 filters: [],
@@ -102,24 +119,21 @@ export default {
         }
     },
 
-    mounted(){
-        // we first load the product schema (we currently
-        // have only one.
-        this.getProductSchema().then(schema=>{
-            // once it's loaded we load the product
-            this.loadProduct(this.product_id)
-        })
-    },
-
     watch:{
         '$route.params.product_id': {
             handler(product_id){
-                this.loadProduct(product_id)
-            }
+                this.getProductSchema().then(schema=>{
+                    // once it's loaded we load the product
+                    this.loadProduct(this.product_id)
+                })
+                
+            },
+            immediate: true,
         },
     },
 
     computed:{
+
         buttonClass(){
             const loading = 'is-loading'
             const notLoading = ''
@@ -134,6 +148,22 @@ export default {
     },
 
     methods:{
+        getFieldSchema(f){
+            // first try to find schema based on name of field
+            let schema = find(s=>{
+                return s.name==f.name
+            })(this.productSchema.key('fields'))
+            if (schema){
+                return schema
+            }
+
+            // then try to find schema based on field type
+            schema = find(s=>{
+                return s.field_type==f.field_type
+            })
+            return schema
+        },
+
         loadProduct(product_id){
             // existing product
             if(product_id){
@@ -142,8 +172,7 @@ export default {
                 // otherwise with the `refresh:true` option.
                 this.getProduct({
                     product_id, 
-                    refresh:1
-                }).then((product) => {
+                }).then(product => {
                     // the `HAL.data` property is a getter method 
                     // that returns a *copy* of the resource's original
                     // data, using the JSON.parse(JSON.stringify(obj)) 
@@ -178,7 +207,7 @@ export default {
             } else {
             // new product
                 this.productSchema.key('fields').map(s=>{
-                    this.mutable.product.data.fields.push({
+                    this.mutable.product.fields.push({
                         value: null,
                         name: s.name,
                         field_type: s.field_type,
@@ -197,7 +226,7 @@ export default {
             this.submitted = true
             const product_id = this.mutable.product.product_id
             // 
-            const data = _.unset('images', this.mutable.product)
+            const data = unset('images', this.mutable.product)
             const images = this.mutable.images
             const filters = this.mutable.filters
 
@@ -214,11 +243,6 @@ export default {
                         product_id,
                         images
                     })
-                }).then(()=>{
-                    this.getProduct({
-                        product_id, 
-                        refresh:1,
-                    })
                 })
             } else {
                 return this.postProduct({
@@ -234,13 +258,8 @@ export default {
                     })
                     return product.data.product_id
                 }).then(product_id=>{
-                    this.getProduct({
-                        product_id, 
-                        refresh:1,
-                    }).then(()=>{
-                        this.redirectToProductPage({
-                            product_id
-                        })
+                    this.redirectToProductPage({
+                        product_id
                     })
                 })
             }
@@ -266,27 +285,28 @@ export default {
             this.$set(this.mutable, 'filters', filters)
         },
 
-        toggleVisibility(value){
-            if(this.mutable.product.product_id){
-                const data = {
-                    visible: value
-                }
-                this.patchProduct({
-                    data, 
-                    product_id: this.mutable.product.product_id
-                }).then(()=>{
-                    // if we got here then maybe all was well
-                    this.mutable.product.visible = value
-                }).catch(error=>{
-                    console.log(error)
-                    // a message should be emitted here letting user
-                    // know that they should try again later. e.g. 
-                    // network problems.
-                })
-            } else {
-                this.mutable.product.visible = value
-            }
-        },
+        //toggleVisibility(value){
+        //    if(this.mutable.product.product_id){
+        //        const data = {
+        //            name:visible, 
+        //            value
+        //        }
+        //        this.patchProduct({
+        //            data, 
+        //            product_id: this.mutable.product.product_id
+        //        }).then(()=>{
+        //            // if we got here then maybe all was well
+        //            this.mutable.product.data.visible = value
+        //        }).catch(error=>{
+        //            console.log(error)
+        //            // a message should be emitted here letting user
+        //            // know that they should try again later. e.g. 
+        //            // network problems.
+        //        })
+        //    } else {
+        //        this.mutable.product.data.visible = value
+        //    }
+        //},
 
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
@@ -302,11 +322,3 @@ export default {
     },
 }
 </script>
-
-<style>
-.form-controls {
-    position: fixed;
-    top: 150px;
-    right: 60px;
-}
-</style>

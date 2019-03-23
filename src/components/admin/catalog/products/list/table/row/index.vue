@@ -34,7 +34,7 @@
     <div class="prod-item column is-2">
         <!-- <status-switch :options="visibilitySwitch" :value="this.rowData.visible"/>-->
             <toggle 
-                :initValue="rowData.visible" 
+                :initValue="rowData.visible.value" 
                 @toggled='toggleVisibility($event)' 
                 class="is-small" 
                 :css="{false: 'is-warning', true:'is-success'}">
@@ -61,7 +61,7 @@
 
 <script>
 //import statusSwitch from '@/components/admin/elements/status-switch'
-import _ from 'lodash/fp'
+import {compose, filter, find, each, map} from 'lodash/fp'
 import toggle from './toggle'
 import {mapActions} from 'vuex'
 export default {
@@ -77,25 +77,31 @@ export default {
         }
     },
     computed:{
+        visible(){
+            const visible = find(f=>{
+                f.name=='visible'
+            })(this.mutable.product.fields)
+            if (visible){
+                return visible.value
+            }
+            return false
+        },
         rowData(){
             const data = {
-                visible: this.mutable.product.visible,
+                visible: this.visible,
                 product_id: this.mutable.product.product_id,
             }
             if(this.mutable.product.images.length){
                 data['image'] = this.mutable.product.images[0]['1:1']
             }
-            _.map((f) => {
+            const addtodata = each(f => {
                 data[f.name] = f
-            })(_.filter((f)=>{
+            })
+            const selectfields = filter(f=>{
                 return ['name', 'number', 'available',].includes(f.name)
-            })(this.mutable.product.data.fields))
-                    
-            //this.mutable.product.data.fields.filter((f) =>{
-            //    return ['name', 'number', 'available',].includes(f.name)
-            //}).map((f) => {
-            //    data[f.name] = f
-            //})
+            })
+
+            compose(addtodata, selectfields)(this.mutable.product.fields)
             return data
         },
     },
@@ -107,12 +113,14 @@ export default {
                 this.getProduct({
                     product_id:this.mutable.product.product_id,
                     partial: 0,
-                }).then((product) => {
-                    const fields = product.data.data.fields
-                    this.description = fields.find((f) => {
-                        console.log(f.name)
+                }).then(product => {
+                    const fields = product.data.fields
+                    description = find(f => {
                         return f.name == 'description'
-                    }).value
+                    })(fields)
+                    if (description){
+                        this.description = description.value
+                    }
                 })
             }
         },
@@ -125,7 +133,7 @@ export default {
         },
 
         toggleAvailability(value){
-            const available = _.find(f=>{
+            const available = find(f=>{
                 return f.name=='available'
             })(this.mutable.product.data.fields)
             available.value = value
@@ -140,11 +148,6 @@ export default {
             }).then(()=>{
                 // if we got here then maybe all was well
                 //this.mutable.product.visible = value
-            }).catch(error=>{
-                console.log(error)
-                // a message should be emitted here letting user
-                // know that they should try again later. e.g. 
-                // network problems.
             })
         },
 

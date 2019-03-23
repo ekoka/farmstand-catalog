@@ -9,8 +9,8 @@ export function Cache(storage){
     return new CacheManager(storage)
 }
 
-export function Buffer(storage, buffersize=70, maxtime=300){
-    return new BufferedStorage(storage, buffersize, maxtime)
+export function Buffer(storage, buffersize, maxTime){
+    return new BufferedStorage(storage, buffersize, maxTime)
 }
 
 // this is the set of chars used to create new keys in for the Lock
@@ -112,19 +112,23 @@ class LockFactory{
 class BufferedStorage {
 
     // 70 entries, maximum 5 minutes old
-    constructor(storage, bufferSize=70, maxtime=300){
+    constructor(storage, bufferSize, maxTime){
+
+        const defaultBufferSize = 70
+        const defaultMaxTime = 300
+
         // the resource 
         this.storage = storage
         // keep a reference to the stack housing the data
         this.stack = storage.stack
         
         // the default max size of the buffer
-        this.bufferSize = bufferSize
+        this.bufferSize = bufferSize || storage.bufferSize || defaultBufferSize 
         // the lock factory for safe asynchronous access during read/write
         this.lock = new LockFactory(this.storage)
         // default maximum time a resource should stay in the storage (in 
         // second)
-        this.maxtime = maxtime
+        this.maxTime = maxTime || storage.maxTime || defaultMaxTime
         // first, trim stale data
         this.trim()
     }
@@ -288,7 +292,7 @@ class BufferedStorage {
                 // end of array
                 break 
             }
-            let maxts = container.timestamp + this.maxtime
+            let maxts = container.timestamp + this.maxTime
             if(maxts <= now){
                 this._popIndex(i)
             } else {

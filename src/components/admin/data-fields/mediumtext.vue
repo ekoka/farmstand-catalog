@@ -20,7 +20,7 @@ export default {
     props:['field', 'schema'],
     data (){
         return {
-            mutable:this.field
+            mutable:this.field 
         }
     },
     watch: {

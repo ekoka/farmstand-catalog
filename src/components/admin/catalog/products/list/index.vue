@@ -92,13 +92,12 @@ export default {
                     product_ids:products.data.product_ids
                 }).then(products=>{
                     this.products = map(p=>{
+                        console.dir(p.data)
                         return p.data
                     })(products)
                     this.ready = true 
                 }).then(()=>{
                     this.enableFilters()
-                }).catch(error=>{
-                    console.log(error)
                 })
             })
         })

@@ -1,10 +1,7 @@
-import _ from 'lodash/fp'
-
 import flow from 'lodash/fp/flow'
 import compose from 'lodash/fp/compose'
 import map from 'lodash/fp/map'
 import reduce from 'lodash/fp/reduce'
-import filter from 'lodash/fp/filter'
 import concat from 'lodash/fp/concat'
 import difference from 'lodash/fp/difference'
 import each from 'lodash/fp/each'
@@ -63,13 +60,7 @@ export default {
         },
 
         removeProduct(state, {product_id=null}){
-            const domain = HAL(state.domain)
-            if (product_id){
-                // Remove product resource with different 
-                // `partial` params. 
-                let url = domain.url('product', {product_id})
-                Cache(state.cache).clear(url)
-            }
+            Buffer(state.productResources).remove({product_id})
         },
 
         clearProductCollection(state){
@@ -82,10 +73,8 @@ export default {
             Cache(state.cache).store(url, product)
         },
 
-        addProductResourceToCollection(state, {path, productResource}){
-            if (!state.productResources.lock){
-                state.productResources = {lock:[], stack:[]}
-            }
+        addProductResourceToCollection(state, {product_id, productResource}){
+            const path = {product_id}
             Buffer(state.productResources).store(path, productResource)
         },
 
@@ -184,12 +173,13 @@ export default {
             if (product_id){
                 url = getters.domain.url('product', {product_id})
             }
-            return getters.http({url, auth:true}).then((response)=>{
+            return getters.http({url, auth:true}).then(response=>{
+                console.log('inside getProduct')
                 // halify
                 const product = HAL(response.data)
-                const path = product.key('product_id')
+                const product_id = product.key('product_id')
                 const productResource = product.resource
-                commit('addProductResourceToCollection', {path,productResource})
+                commit('addProductResourceToCollection', {product_id,productResource})
                 return product
             })
         },
@@ -203,7 +193,7 @@ export default {
                 url,
                 auth: true,
             }).then(response=>{
-                return _.concat(rv, _.map(p=>{
+                return concat(rv, map(p=>{
                     let url = getters.domain.url('product', {
                         product_id: p.data.product_id})
                     commit('setProduct', {url, product:p.resource})
@@ -213,9 +203,6 @@ export default {
         },
 
         getProductResources({getters, state, commit, rootState}, {product_ids}){
-            if(!state.productResources.stack){
-                state.productResources = {stack:[], lock:[]}
-            }
             const buffer = Buffer(state.productResources)
             const halify = map(p=>{
                 return HAL(p)
@@ -243,9 +230,9 @@ export default {
                 auth:true
             }).then(response=>{
                 const addNewResources = each(p=>{
-                    const path = {'product_id': p.key('product_id')}
+                    const product_id = p.key('product_id')
                     commit('addProductResourceToCollection', {
-                        path, productResource:p.resource
+                        product_id, productResource:p.resource
                     })
                 })
                 const resources = HAL(response.data)

@@ -45,10 +45,9 @@ export default {
         },
 
         getProductImages({getters, dispatch}, {product_id}){
-            return dispatch('getProduct', {
-                product_id, 
-                partial:0
-            }).then(product=>{
+            return dispatch('getProductResources', {
+                product_ids:[product_id]
+            }).then(([product])=>{
                 const url = product.url('images')
                 return getters.http({
                     url,
