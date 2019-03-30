@@ -25,7 +25,7 @@
         
     <div class="field has-addons" v-for="o,i in mutable.options">
         <div class="control">
-            <button class="button" title="Remove this option" @click="removeOption(i)"><span class="icon is-small" :class="{'has-text-danger': o.filter_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
+            <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.filter_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
                 <span>remove</span>
             
             </button>
@@ -115,18 +115,23 @@ export default {
             })(Object.keys(this.modalComponent))
         },
 
-        removeOption(optionIndex){
-            let answer = (e)=>{
+        removeOption(optionIndex, option){
+            let remove = (e)=>{
                 if(e==true){
                     this.mutable.options.splice(optionIndex, 1)
                 }
-                this.resetModalComponent()
+                //this.resetModalComponent()
             }
-            this.modalComponent = {
-                component:Message,
-                params:{},
-                events: {answer},
+            if(option.filter_option_id){
+                this.modalComponent = {
+                    component:Message,
+                    params:{},
+                    events: {answer:remove},
+                }
+                return
             }
+            remove(true)
+
         },
 
         openProductSelection(filter_option_id){
@@ -142,7 +147,7 @@ export default {
                     filterData,
                 },
                 events:{close(){
-                        this.resetModalComponent()
+                        //this.resetModalComponent()
                     },
                 },
             }

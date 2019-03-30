@@ -21,8 +21,17 @@
                 </div>
             </div>
         </div>
-        <div class="field">
-            <button class="button" @click="saveSelection">save</button>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button" @click="$emit('close')">
+                    Close
+                </button>
+            </div>
+            <div class="control">
+                <button class="button is-link" @click="saveSelection">
+                    Save
+                </button>
+            </div>
         </div>
     </div><!-- card-content -->
 </div><!-- card -->
@@ -85,7 +94,7 @@ export default {
         field(product, field){
             const f = _.find(f=>{
                 return f.name==field
-            })(product.data.fields)
+            })(product.fields)
             return f.value
         },
 

@@ -3,33 +3,43 @@
     <top-nav/>
 
     <section class="section">
-        <div class="columns">
-            <div class="column is-4-tablet is-3-desktop is-2-widescreen">
-                <left-nav active="catalog"/>
-                <filter-vertical v-for="fs,key in filterSets" :filterSet="fs" :key="key" v-model="filters[fs.key('filter_set_id')]"/>
-                <smallcart/>
-            </div>
-            <div class="column">
-                <product-table :products="products" :fieldNames="fieldNames" :fields="schema.fields"/>
-            </div><!-- column -->
-        </div><!-- columns -->
+        <div class='container'>
+            <div class="columns">
+                <div class="column is-4-tablet is-3-desktop is-2-widescreen">
+                    <p class="subtitle is-6">Narrow results by</p>
+                    <!--<left-nav active="catalog"/>-->
+                    <filter-vertical v-for="f,i in filters" :key="i" :filter="f"/>
+                    <smallcart/>
+                </div>
+                <div class="column">
+                    <product-table 
+                        :products="products" 
+                        :fieldNames="fieldNames" 
+                        :fields="schema.fields"/>
+                </div><!-- column -->
+            </div><!-- columns -->
+        </div><!-- container -->
     </section><!-- section -->
 </div>
 </template>
 
 <script>
+import {map} from 'lodash/fp'
 import smallcart from './inquiry/smallcart'
 import topNav from './elements/top-nav'
 import leftNav from './elements/left-nav'
 import filterVertical from './elements/filter-vertical'
 import productTable from './elements/product-table'
-import {mapActions, mapGetters, mapMutations} from 'vuex'
+import {mapActions, mapGetters} from 'vuex'
+
 export default {
-    components: { smallcart, topNav, leftNav, filterVertical, productTable,},
+    components: { 
+        smallcart, topNav, leftNav,
+        filterVertical, productTable,},
+
     data(){
         return {
             filters:{},
-            filterSets: [],
             schema: {},
             categories:[],
             products: [],
@@ -37,23 +47,24 @@ export default {
     },
 
     watch: {
-        filters: {
-            deep: true,
-            handler(selected){
-                let sets = Object.keys(selected).filter(s=>{
-                    return selected[s].length 
-                })
-                let filters = Object.values(selected).reduce((ff, f)=>{
-                    let rv = (ff && ff.length) ? new Set(ff.concat(f)) : new Set(f)
-                    return [...rv]
-                })
-                this.getPublicProducts({params:{filters, sets}
-                }).then(products=>{
-                    this.products = products.embedded('products')
-                })
-            }
-        },
+        //filters: {
+        //    deep: true,
+        //    handler(selected){
+        //        let filters = Object.keys(selected).filter(s=>{
+        //            return selected[s].length 
+        //        })
+        //        let options = Object.values(selected).reduce((ff, f)=>{
+        //            let rv = (ff && ff.length) ? new Set(ff.concat(f)) : new Set(f)
+        //            return [...rv]
+        //        })
+        //        this.getPublicProducts({params:{options, filters}
+        //        }).then(products=>{
+        //            this.products = products.keys('products')
+        //        })
+        //    }
+        //},
     },
+
     computed:{
         fieldNames(){
             if (this.schema.fields){
@@ -77,22 +88,25 @@ export default {
         }),
     },
 
-    created(){
+    mounted(){
 
-        this.getPublicRoot({
-            tenant:this.$store.getters['subdomain'],
-        }).then(()=>{
+        this.getPublicRoot().then(()=>{
             return this.getPublicProductSchema()
         }).then(schema=>{
             this.schema = schema.data
         }).then(()=>{
             return this.getPublicProducts()
         }).then(products=>{
-            this.products = products.embedded('products')
+            const product_ids = products.key('products')
+            return this.getPublicProductResources({product_ids})
+        }).then(products=>{
+            this.products = map(p=>{
+                return p.data
+            })(products)
         }).then(()=>{
-            return this.getPublicFilterSets()
-        }).then(filterSets=>{
-            this.filterSets = filterSets.embedded('filter_sets')
+            return this.getPublicFilters()
+        }).then(filters=>{
+            this.filters = map(f=>f.data)(filters.embedded('filters'))
         })
     },
 
@@ -115,16 +129,10 @@ export default {
             getPublicRoot:'api/getPublicRoot',
             getPublicProducts:'api/getPublicProducts',
             getPublicProductSchema:'api/getPublicProductSchema',
-            getPublicFilterSets: 'api/getPublicFilterSets',
+            getPublicProductResources:'api/getPublicProductResources',
+            getPublicFilters: 'api/getPublicFilters',
             addProduct: 'inquiry/addProduct',
             removeProduct: 'inquiry/removeProduct',
-        }),
-        //...mapGetters({
-        //    productAdded: 'inquiry/productAdded',
-        //}),
-        ...mapMutations({
-            //addProduct: 'inquiry/addProduct',
-            //removeProduct: 'inquiry/removeProduct',
         }),
     },
 }

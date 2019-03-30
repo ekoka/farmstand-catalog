@@ -1,36 +1,14 @@
-import flow from 'lodash/fp/flow'
-import compose from 'lodash/fp/compose'
-import map from 'lodash/fp/map'
-import reduce from 'lodash/fp/reduce'
-import concat from 'lodash/fp/concat'
-import difference from 'lodash/fp/difference'
-import each from 'lodash/fp/each'
-import union from 'lodash/fp/union'
+/* lodash */
+import {compose, map, reduce, difference,
+    each, union} from 'lodash/fp'
 
 import {HAL} from '@/utils/hal'
-import {Cache, Buffer} from '@/utils/cache'
-
-/*
- * How to handle product collection
- *  - product collection is not a resource per say. It's just a cached
- *  dump that contains both products and partial products.
- *  - when getting the product list resource, each partial product in the
- *  list is placed in the product collection.
- *  - as well, when getting a product's details the resource is also
- *  placed in the collection.
- *  - then everytime info on a product is needed, whether partial or detailed,
- *  product collection is the primary source.
- *  - In that way the product's list resource is only affected by product
- *  addition and product removal.
- *  - maybe there should be a separate product_details resource with its own
- *  endpoint (get_product_details) that can take a list of product_ids.
- * 
- */
+import {Buffer} from '@/utils/cache'
 
 export default {
     state:{
         productSchema:null,
-        productResources: {stack: [], lock:[]},
+        productCache: {stack: [], lock:[]},
     },
     getters:{
         productSchema(state){
@@ -48,48 +26,28 @@ export default {
     mutations:{
         setProductSchema(state, {productSchema}){
             state.productSchema = productSchema
-            let ps = HAL(productSchema)
-            //state.productSchema = ps.resource
-            Cache(state.cache).store(ps.self, ps.resource)
-        },
-
-        setProducts(state, {products}){
-            HAL(products).embedded('product_ids').forEach(p=>{
-                Cache(state.cache).store(p.self, p.resource)
-            })
         },
 
         removeProduct(state, {product_id=null}){
-            Buffer(state.productResources).remove({product_id})
+            Buffer(state.productCache).remove({product_id})
         },
 
-        clearProductCollection(state){
-            const domain = HAL(state.domain)
-            // clear product collection
-            Cache(state.cache).clear(domain.url('products'))
-        },
-
-        setProduct(state, {url, product}){
-            Cache(state.cache).store(url, product)
-        },
-
-        addProductResourceToCollection(state, {product_id, productResource}){
+        setProduct(state, {product}){
+            const product_id = HAL(product).key('product_id')
             const path = {product_id}
-            Buffer(state.productResources).store(path, productResource)
+            Buffer(state.productCache).store(path, product)
         },
-
-
     },
 
     actions:{
-        putProductSchema({getters, dispatch, commit},{data}){
-            const url = getters.domain.url('product_schema')
-            return getters.http({
-                url, data, method:'put', auth:true,
-            }).then(resp=>{
-                return dispatch('getProductSchema')
-            })
-        },
+        //putProductSchema({getters, dispatch, commit},{data}){
+        //    const url = getters.domain.url('product_schema')
+        //    return getters.http({
+        //        url, data, method:'put', auth:true,
+        //    }).then(resp=>{
+        //        return dispatch('getProductSchema')
+        //    })
+        //},
 
         getProductSchema({commit, getters}){
             const url = getters.domain.url('product_schema')
@@ -107,11 +65,7 @@ export default {
                 method:'post', 
                 auth:true
             }).then(response=>{
-                url = HAL(response.data).url('location')
-                // Remove entire product collection from cache.
-                // commit('clearProductCollection')
-                // get product
-                return dispatch('getProduct', {url})
+                return HAL(response.data)
             })
         },
 
@@ -123,8 +77,6 @@ export default {
                 data, 
                 auth:true
             }).then((response) => {
-                // clear the cached list of products
-                // commit('clearProductCollection')
                 // remove cached product resource.
                 commit('removeProduct', {product_id})
             })
@@ -142,8 +94,6 @@ export default {
                 data, 
                 auth:true
             }).then((response) => {
-                // clear the cached list of products
-                // commit('clearProductCollection')
                 // remove cached product resource.
                 commit('removeProduct', {product_id})
             })
@@ -153,9 +103,9 @@ export default {
             // we don't delete by url because we can generate the url
             // from the ID, the reverse is more difficult
             let url = getters.domain.url('product', {product_id})
-            return getters.http({url, method:'delete', auth:true}).then(r=>{
-                // clear cached product collection 
-                // commit('clearProductCollection')
+            return getters.http({
+                url, method:'delete', auth:true
+            }).then(r=>{
                 // remove cached product resource
                 commit('removeProduct', {product_id})
             })
@@ -174,36 +124,30 @@ export default {
                 url = getters.domain.url('product', {product_id})
             }
             return getters.http({url, auth:true}).then(response=>{
-                console.log('inside getProduct')
                 // halify
-                const product = HAL(response.data)
-                const product_id = product.key('product_id')
-                const productResource = product.resource
-                commit('addProductResourceToCollection', {product_id,productResource})
-                return product
+                commit('setProduct', {product:response.data})
+                return HAL(response.data)
             })
         },
 
+        getProductJson({getters}, {product_id}){
+            const url = getters.domain.url('product_json', {product_id})
+            return getters.http({url,auth:true}).then(response=>{
+                return response.data
+            })
+        },
 
-        getProductDetails({getters, commit}, {product_ids=[]}={}){
-            let rv  = []
-            let url = getters.domain.url(
-                'product_details', null, {pid:product_ids})
+        putProductJson({getters}, {product_id, data}){
+            const url = getters.domain.url('product_json', {product_id})
             return getters.http({
-                url,
-                auth: true,
+                url,auth:true,data,method:'put'
             }).then(response=>{
-                return concat(rv, map(p=>{
-                    let url = getters.domain.url('product', {
-                        product_id: p.data.product_id})
-                    commit('setProduct', {url, product:p.resource})
-                    return p
-                })(HAL(response.data).embedded('products')))
+                return response.data
             })
         },
 
         getProductResources({getters, state, commit, rootState}, {product_ids}){
-            const buffer = Buffer(state.productResources)
+            const buffer = Buffer(state.productCache)
             const halify = map(p=>{
                 return HAL(p)
             })
@@ -230,10 +174,7 @@ export default {
                 auth:true
             }).then(response=>{
                 const addNewResources = each(p=>{
-                    const product_id = p.key('product_id')
-                    commit('addProductResourceToCollection', {
-                        product_id, productResource:p.resource
-                    })
+                    commit('setProduct', {product:p.resource})
                 })
                 const resources = HAL(response.data)
                 addNewResources(resources.embedded('products'))

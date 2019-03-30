@@ -28,6 +28,9 @@ export default new Vuex.Store({
         urlSubdomain(state, getters){
             return URI(window.location.href).subdomain()
         },
+        subdomain(state, getters){
+            return getters.urlSubdomain
+        }
     },
     plugins: [createPersistedState()],
 })

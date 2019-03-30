@@ -247,6 +247,9 @@ export default {
             } else {
                 return this.postProduct({
                     data
+                }).then(response=>{
+                    let url = response.url('location')
+                    return this.getProduct({url})
                 }).then(product=>{
                     this.putProductFilterOptions({
                         product_id:product.data.product_id,

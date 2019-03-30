@@ -1,16 +1,16 @@
 <template>
     <div class="filter">
         <div class="filter-header has-icon-right">
-            <h3 class="subtitle is-5">
-                {{filterSet.key('label')}}
-                <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
+            <h3 @click="toggleExpansion" class="subtitle is-5">
+                {{filter.label}}
+                <span class="icon"><i class="mdi" :class="{'mdi-chevron-down': expanded, 'mdi-chevron-right':!expanded}"></i></span>
             </h3>
         </div><!-- filter-header -->
-        <div class="filter-content">
-            <div class="filter-item" v-for="f in filterSet.key('filters')">
+        <div v-if="expanded" class="filter-content">
+            <div class="filter-item" v-for="o,i in filter.options">
                 <label class="filter-item-label">
-                    <input v-model="mutable.filters" :value="f.filter_id" type="checkbox">
-                    {{f.label}}
+                    <input v-model="mutable.options" :value="o.filter_option_id" type="checkbox">
+                    {{o.label}}
                 </label><!-- filter-item-label -->
             </div><!-- filter-item -->
         </div><!-- filter-content -->
@@ -20,24 +20,33 @@
 <script>
 export default {
     model: {
-        prop: 'filters',
-        event: 'changed',
+        prop: 'filter',
+        event: 'filter:updated',
     },
-    props: ['filterSet', 'filters'],
+    props: ['filter'],
     data (){
         return {
+            expanded: false,
             mutable:{
-                filters: this.filters || [],
+                options: this.options || [],
             },
         }
     },
+    mounted(){
+        this.options = this.filter.options
+    },
 
     watch:{
-        'mutable.filters': {
+        'mutable.options': {
             deep: true,
             handler(v){
-                this.$emit('changed', v)
+                this.$emit('options:updated', v)
             }
+        }
+    },
+    methods:{
+        toggleExpansion(){
+            this.expanded = !this.expanded
         }
     },
 

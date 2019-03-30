@@ -19,9 +19,9 @@
         <!-- <status-switch :options="availabilitySwitch" :value="this.rowData.available.value"/> -->
             <toggle 
                 class="is-info is-small" 
+                :css="{false: 'is-outlined'}"
                 @toggled="toggleAvailability($event)"
-                :initValue="rowData.available.value" 
-                :css="{false: 'is-outlined'}">
+                :initValue="rowData.available.value" >
                 <template slot="on">
                     available
                 </template>
@@ -34,10 +34,10 @@
     <div class="prod-item column is-2">
         <!-- <status-switch :options="visibilitySwitch" :value="this.rowData.visible"/>-->
             <toggle 
-                :initValue="rowData.visible.value" 
-                @toggled='toggleVisibility($event)' 
                 class="is-small" 
-                :css="{false: 'is-warning', true:'is-success'}">
+                :css="{false: 'is-warning', true:'is-success'}"
+                :initValue="rowData.visible.value" 
+                @toggled='toggleVisibility($event)' >
                 <template slot="on">
                    published 
                 </template>
@@ -77,18 +77,8 @@ export default {
         }
     },
     computed:{
-        visible(){
-            const visible = find(f=>{
-                f.name=='visible'
-            })(this.mutable.product.fields)
-            if (visible){
-                return visible.value
-            }
-            return false
-        },
         rowData(){
             const data = {
-                visible: this.visible,
                 product_id: this.mutable.product.product_id,
             }
             if(this.mutable.product.images.length){
@@ -98,7 +88,7 @@ export default {
                 data[f.name] = f
             })
             const selectfields = filter(f=>{
-                return ['name', 'number', 'available',].includes(f.name)
+                return ['name', 'number', 'available', 'visible',].includes(f.name)
             })
 
             compose(addtodata, selectfields)(this.mutable.product.fields)
@@ -135,37 +125,22 @@ export default {
         toggleAvailability(value){
             const available = find(f=>{
                 return f.name=='available'
-            })(this.mutable.product.data.fields)
+            })(this.mutable.product.fields)
             available.value = value
-            const data = {
-                data: {
-                    fields: [available]
-                }
-            }
             this.patchProduct({
-                data, 
+                data: {fields:{fields: [available]}},
                 product_id: this.mutable.product.product_id
-            }).then(()=>{
-                // if we got here then maybe all was well
-                //this.mutable.product.visible = value
             })
         },
 
         toggleVisibility(value){
-            const data = {
-                visible: value
-            }
+            const visible = find(f=>{
+                return f.name=='visible'
+            })(this.mutable.product.fields)
+            visible.value = value
             this.patchProduct({
-                data, 
+                data: {fields:{fields: [visible]}},
                 product_id: this.mutable.product.product_id
-            }).then(()=>{
-                // if we got here then maybe all was well
-                this.mutable.product.visible = value
-            }).catch(error=>{
-                console.log(error)
-                // a message should be emitted here letting user
-                // know that they should try again later. e.g. 
-                // network problems.
             })
         },
 

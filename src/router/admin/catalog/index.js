@@ -3,6 +3,7 @@ import Catalog from '@/components/admin/catalog'
 import ProductIndex from '@/components/admin/catalog/products'
 import ProductList from '@/components/admin/catalog/products/list'
 import ProductItem from '@/components/admin/catalog/products/item'
+import ProductJson from '@/components/admin/catalog/products/item/json'
 
 
 import FilterIndex from '@/components/admin/catalog/filters'
@@ -35,6 +36,12 @@ export default {
                     name:'AdminEditProduct',
                     path:':product_id', 
                     component: ProductItem, 
+                    props:true
+                },
+                {
+                    name:'AdminEditProductJson',
+                    path:':product_id/json', 
+                    component: ProductJson, 
                     props:true
                 },
             ],

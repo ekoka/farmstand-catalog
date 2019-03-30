@@ -1,78 +1,137 @@
 <template>
-<div class="columns is-multiline">
-    <div v-for="p, k in products" class="column is-8">
-        <article class="box">
-            <div class="media">
-                <div class="media-left">
-                    <img src="images/product.jpg" width="80">
-                </div><!-- media-left -->
+<div>
+    <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+            <div class="level-item has-text-weight-semibold">
+                All
+            </div>
+            <div class="level-item">
+                <a>
+                    <span class="icon has-text-warning">
+                        <i class="mdi mdi-18px mdi-star"></i>
+                    </span>Favorites
+                </a>
+            </div>
+            <div class="level-item">
+                <a class="">
+                    <span class="icon has-text-danger">
+                        <i class="mdi mdi-minus-circle"></i>
+                    </span>Hidden
+                </a>
+            </div>
+        </div>
+    </div>
+    <article class="box" v-for="p,k in products">
+        <div class="media">
+            <div class="media-left">
+                <img :src="image(p, 'thumb')" width="80">
+            </div><!-- media-left -->
 
-                <div class="media-content">
-                    <p class="title is-5 is-spaced is-marginless">
-                        <a href="#">
-                            {{p.key('fields')[0]}}
-                        </a>
-                    </p>
-                    <p class="subtitle is-marginless">
-                        {{p.key('fields')[1]}}
-                    </p>
-                    <p class="content is-small">
-                        {{p.key('fields')[2]}}
-                        <br>
-                        {{p.key('fields')[3]}}
-                        <br>
-                        {{p.key('fields')[4]}}
-                        <div v-if="expandedProducts[p.data.product_id]" class="">
-                            Expanded content
+            <div class="media-content">
+                <div class="level">
+                    <div class="level-left">
+                        <div class="level-item">
+                            <p class="title is-5 is-spaced is-marginless">
+                                <a href="#">{{getFieldValue(p, 'name')}}</a>
+                            </p>
                         </div>
-                        <button v-if="productAdded(p.data.product_id)" 
-                            @click="showRfqForm(p.data.product_id)"
-                            class="button is-warning is-small"
-                            :class="{'is-invisible': rfqshow[p.data.product_id]}" >
-                            Added to RFQ
-                        </button>
-                        <template v-else>
-                            <button title="Add to Request for Quotation" class="button is-small is-link" :class="{'is-invisible': rfqshow[p.data.product_id]}" @click="showRfqForm(p.data.product_id)">
-                                Add to RFQ
+                    </div>
+
+                    <div class="level-right">
+                        <div class="level-item">
+                            <button v-if="productAdded(p.product_id)" 
+                                class="button is-warning is-small"
+                                @click="toggleRfqPane(p.product_id)">
+                                Added to RFQ
                             </button>
-                            <button title="Ask a question" class="button is-small is-link is-outlined" :class="{'is-invisible': infoshow[p.data.product_id]}" @click="showInfoForm(p.data.product_id)">
-                                Ask a question
+                            <button v-else
+                                title="Inquire about this product" 
+                                class="button is-link is-outlined is-small"
+                                @click="toggleRfqPane(p.product_id)">
+                                <span>Inquire</span>
                             </button>
-                        </template>
-                        <button class="button is-small" @click="toggleExpandProduct(p.data.product_id)"><span class="icon"><i class="mdi" :class="chevronUpDown(p.data.product_id)"></i></span></button>
-                    </p>
-                </div><!-- media-content -->
-            </div><!-- media -->
-            <div v-if="rfqshow[p.data.product_id]==true" class="media-content">
-                <inquiry-form :product="p" v-model="rfqshow[p.data.product_id]"/>
+                        </div><!-- level-item -->
+                    </div><!-- level-right -->
+                </div><!-- level -->
+                <div class="level">
+                    <div class="level-left">
+                        <p class="subtitle is-marginless is-italic">
+                            # {{getFieldValue(p, 'number')}}
+                        </p>
+                    </div><!-- level-left -->
+                    <div class="level-right">
+                    </div><!-- level-right -->
+                </div>
+
+            </div><!-- media-content -->
+        </div><!-- media -->
+
+        <inquiry-form 
+            v-if="rfqPane[p.product_id]"
+            :product_id="p.product_id" 
+            @hide="rfqPane[p.product_id]=false">
+        </inquiry-form>
+
+        <div v-if="expandedProducts[p.product_id]">
+            <p>{{getFieldValue(p,'description')}}</p>
+        </div>
+
+        <div class="level">
+            <div class="level-left">
+                <div class="level-item">
+                    <button class="button is-white is-small">
+                        <span class="icon has-text-warning">
+                            <i class="mdi mdi-18px mdi-star"></i>
+                        </span> 
+                        <span>
+                            Favorite
+                        </span>
+                    </button>
+                </div>
+                <div class="level-item">
+                    <a class="button is-white is-small">
+                        <span class="icon has-text-danger is-small">
+                            <i class="mdi mdi-minus-circle-outline"></i>
+                        </span>
+                        <span>Hide</span>
+                    </a>
+                </div>
+            </div><!-- level-left -->
+            <div class="level-right">
+                <div class="level-item">
+                    <a class="is-size-7 " @click="toggleExpandProduct(p.product_id)">
+                        <span>More details...</span>
+                        <span class="icon">
+                            <i class="mdi mdi-chevron-double-down"></i>
+                        </span>
+                    </a>
+                </div><!-- level-item -->
             </div>
-            <div v-if="infoshow[p.data.product_id]==true" class="media-content">
-                <info-form :product="p"/>
-            </div>
-        </article>
-    </div><!-- column -->
+        </div><!-- level -->
+    </article>
 </div>
 </template>
 
 <script>
+import {find} from 'lodash/fp'
 import Vue from 'vue'
-import {mapActions, mapGetters, mapMutations} from 'vuex'
+import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
 import inquiryForm from './inquiry-form'
-import infoForm from './info-form'
 export default {
 
     props: ['products', 'fieldNames', 'fields'],
 
     data(){
         return {
-            rfqshow:{},
-            infoshow:{},
+            activeTab: {},
+            rfqPane:{},
             expandedProducts: {},
         }
     },
 
     components: {
-        inquiryForm, infoForm,
+        inquiryForm,
     },
 
     computed:{
@@ -85,45 +144,45 @@ export default {
             return 0
         },
         ...mapGetters({
-            productAdded: 'inquiry/productAdded',
+            productAdded: 'inquiry/productAdded'
         }),
+        //...mapState({
+        //    inqProducts: state=>state.inquiry.products,
+        //}),
     },
 
     methods: {
-        fetchFields(product){
-            let rv = [];
-            let fields = product.key('fields')
-            for (let i=0; i<this.fieldLength;i++){
-                rv[i] = fields[i] || ''
+        image(product, format){
+            if(product.images.length){
+               return product.images[0]['1:1'][format]
             }
-            return rv
         },
+        getField(product, field){
+            return find(f=>{
+                return f.name==field
+            })(product.fields)
+        },
+
+        getFieldValue(product, field){
+            return this.getField(product, field).value
+        },
+
         chevronUpDown(product_id){
-            let expanded = this.expandedProducts[product_id]
+            const expanded = this.expandedProducts[product_id]
             return {
                 'mdi-chevron-double-down': !expanded,
                 'mdi-chevron-double-up': expanded,
             }
         },
+
         toggleExpandProduct(product_id){
-            let state = this.expandedProducts[product_id] || false
-            Vue.set(this.expandedProducts, product_id, !state)
+            const state = this.expandedProducts[product_id] || false
+            this.$set(this.expandedProducts, product_id, !state)
         },
 
-        showRfqForm(product_id){
-            Vue.set(this.infoshow, product_id, false)
-            Vue.set(this.rfqshow, product_id, true)
+        toggleRfqPane(product_id){
+            this.$set(this.rfqPane, product_id, !this.rfqPane[product_id])
         },
-    
-        showInfoForm(product_id){
-            Vue.set(this.rfqshow, product_id, false)
-            Vue.set(this.infoshow, product_id, true)
-        },
-
-
-        ...mapActions({
-            removeProduct: 'inquiry/removeProduct',
-        }),
     },
 }
 </script>

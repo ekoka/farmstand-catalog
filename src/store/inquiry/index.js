@@ -1,62 +1,51 @@
+import {find, findIndex} from 'lodash/fp'
+import Vue from 'vue'
+
 const Inquiry = {
     namespaced: true,
+
     state: {
-        products:[],
+        products: [],
         billingAddress: {},
         shippingAddress: {},
         comments:null,
     },
-    getters: {
-        productAdded(state, getters){
-            return function(product_id){
-                return -1!=getters.productIndex(product_id)
-            }
-        },
 
-        productIndex(state){
+    getters: {
+        productAdded(state){
             return function(product_id){
-                return state.products.findIndex(p=>{
-                    if (!p){
-                        return
-                    }
-                    return p.product_id==product_id
-                })
+                return find(p=>{
+                    return p.product_id==product_id 
+                })(state.products)
             }
         },
     },
+
     mutations: {
         resetInquiry(state){
             initInquiry({state})
         },
-        addProduct(state, {product}){
-            state.products.push(product)
-        },
-        removeProduct(state, {index}){
+
+        addProduct(state, {rfq}){
+            const index = findIndex(p=>{
+                return p.product_id==rfq.product_id
+            })(state.products)
             if(index==-1){
-                return
+                state.products.push(rfq)
+            } else {
+                state.products[index] = rfq
             }
-            state.products.splice(index,1)
+            state.products = [...state.products]
+            //Vue.set(state.products, product_id, rfq)
         },
-        pingMutation(state, {}){
-            // simply because vuex-persistedstate listens to mutations
-        }
-    },
-    actions: {
-        addProduct({commit, getters}, {product}){
-            const data = {
-                product_id: product.product_id,
-                fields: product.fields,
-                quantity: null,
-                comments: null,
+
+        removeProduct(state, {product_id}){
+            const index = findIndex(p=>{
+                return p.product_id==product_id
+            })(state.products)
+            if (index!=-1){
+                state.products.splice(index,1)
             }
-            if (getters.productAdded(data.product_id)){
-                return
-            }
-            commit('addProduct', {product:data})
-        },
-        removeProduct({getters, commit}, {product}){
-            const index = getters.productIndex(product.product_id)
-            commit('removeProduct', {index})
         },
     },
 }
