@@ -30,7 +30,7 @@ export default new Vuex.Store({
         },
         subdomain(state, getters){
             return getters.urlSubdomain
-        }
+        },
     },
     plugins: [createPersistedState()],
 })

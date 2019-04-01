@@ -40,11 +40,16 @@
 
                     <div class="level-right">
                         <div class="level-item">
-                            <button v-if="productAdded(p.product_id)" 
-                                class="button is-warning is-small"
-                                @click="toggleRfqPane(p.product_id)">
-                                Added to RFQ
-                            </button>
+                            <div v-if="productAdded(p.product_id)" class="field has-addons">
+                                <button
+                                    class="button is-warning is-small"
+                                    @click="toggleRfqPane(p.product_id)">
+                                    Added to RFQ
+                                </button>
+                                <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
+                                    x  
+                                </button>
+                            </div>
                             <button v-else
                                 title="Inquire about this product" 
                                 class="button is-link is-outlined is-small"
@@ -183,6 +188,10 @@ export default {
         toggleRfqPane(product_id){
             this.$set(this.rfqPane, product_id, !this.rfqPane[product_id])
         },
+
+        ...mapMutations({
+            removeProduct: 'inquiry/removeProduct',
+        }),
     },
 }
 </script>

@@ -17,15 +17,15 @@
                     <label class="label">Do you have questions or comments about this item?</label>
                 </div>
                 <div class="control">
-                    <textarea v-model="comments" class="textarea"></textarea>
+                    <textarea @input="commentsEdited=true" v-model="comments" class="textarea"></textarea>
                 </div>
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
-                <div class="control">
+                <div v-if="commentsEdited" class="control">
                     <button class="button is-primary is-outlined is-small">Send questions / comments</button>
                 </div>
                 <div class="control">
-                    <button class="button is-small" @click="closeForm">Close</button>
+                    <button class="button is-small" @click="closeForm">Cancel</button>
                 </div>
             </div><!-- field -->
         </div><!-- questions -->
@@ -35,19 +35,19 @@
                     <label class="label">Requested quantity</label>
                 </div>
                 <div class="control">
-                    <input class="input" v-model="rfq.quantity"/>
+                    <input @input="rfqEdited=true" class="input" v-model="rfq.quantity"/>
                 </div>
             </div><!-- field -->
             <div class="field">
                 <div class="control">
-                    <label class="label">Do you have questions or comments about this item?</label>
+                    <label class="label">Other questions or comments about this item?</label>
                 </div>
                 <div class="control">
-                    <textarea v-model="rfq.comments" class="textarea"></textarea>
+                    <textarea @input="rfqEdited=true" v-model="rfq.comments" class="textarea"></textarea>
                 </div>
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
-                <div class="control">
+                <div v-if="rfqEdited" class="control">
                     <button class="button is-small is-warning" 
                         @click="addProductToRfq()">
                         <span v-if="productAdded(product_id)" class="">
@@ -64,7 +64,7 @@
                     </button>
                 </div>
                 <div class="control">
-                    <button class="button is-small" @click="closeForm">Close</button>
+                    <button class="button is-small" @click="closeForm">Cancel</button>
                 </div>
             </div><!-- field -->
         </div><!-- rfq -->
@@ -82,6 +82,8 @@ export default {
 
     data(){
         return {
+            rfqEdited: false,
+            commentsEdited: false,
             rfq: {
                 quantity:null,
                 comments:null,

@@ -7,4 +7,5 @@ export const API_HOST = 'https://api.productlist.local'
 export const API_ROOT = "https://api.productlist.local/api/v1/root"
 export const PUBLIC_API_ROOT = "https://api.productlist.local/api/v1/public/root"
 
-export const PRODUCTLIST_INDEX = 'http://localhost:8081'
+//export const PRODUCTLIST_INDEX = 'http://localhost:8081'
+export const PRODUCTLIST_INDEX = 'http://productlist.local:8081'
