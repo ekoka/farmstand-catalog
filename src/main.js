@@ -39,8 +39,6 @@ new Vue({
     mounted(){
         this.versionReset()
         this.checkIsLoggedIn().then(()=>{
-
-            //console.log(this.$store.getters['subdomain'])
             //return this.$store.dispatch('api/getDomain', {
             //    domain:this.$store.getters['subdomain']
             //})
@@ -72,13 +70,11 @@ new Vue({
                     // we found an account indeed.
                     // check if it matches the cookie
                     if (account.data.account_id==account_id){
-                        console.log('account match')
                         // both accounts match! we're done here, this is 
                         // a returning user.
                         this.ready = true 
                         return 
                     } 
-                    console.log('account not match')
                 }
                 // if we're here it means one of two things:
                 // - either there was a mismatch between account_id in
@@ -95,6 +91,13 @@ new Vue({
                 this.redirectToAccountAdmin()
                 return 
             }
+            // account was not found in cookie, meaning user is not logged
+            // in. Let's ensure a clean state with no lingering account 
+            // information.
+            // Normally we shouldn't need this, but one never knows what
+            // a user does with their browser.
+            await this.$store.dispatch('api/resetApi')
+            
             // no account_id in cookie, we're done. Let subcomponents
             // handle this situation.
             this.ready = true
@@ -103,10 +106,9 @@ new Vue({
         authenticate: async function (){
             const query = URI(window.location.search).query(true)
             if(query.access_token){
-                console.log('access_token in query string')
                 // if access_token was provided
                 // reset all resources
-                this.$store.commit('api/resetApi')
+                await this.$store.dispatch('api/resetApi')
                 // and set the new access token
                 this.$store.commit('api/setAccessToken', {
                     accessToken:query.access_token
@@ -126,7 +128,6 @@ new Vue({
             try {
                 profile = await this.$store.dispatch('api/getProfile')
             }catch(e){
-                console.log('problem loading profile')
                 // if we get here it means the access token 
                 // doesn't have a matching profile.
                 // let's just return, we'll let each component handles
@@ -141,12 +142,9 @@ new Vue({
                     account_id:profile.data.account_id
                 })
             }catch(e){
-                console.log('problem loading account')
-                console.log(e)
                 // we normally shouldn't end up here;
                 // in case we do, let's just abort the whole thing;
-                this.$store.commit('api/resetApi')
-                await this.$store.dispatch('api/getRoot')
+                await this.$store.dispatch('api/resetApi')
             }
             // not really needed here
             //await this.$store.dispatch('api/getDomain', {
@@ -177,10 +175,11 @@ new Vue({
                 return
             }
             // otherwise clear all
-            this.$store.commit('api/resetApi')
-            //this.$store.commit('inquiry/resetInquiry')
-            localStorage.setItem('VERSION', VERSION)
-            window.location.reload()
+            this.$store.dispatch('api/resetApi').then(()=>{
+                //this.$store.commit('inquiry/resetInquiry')
+                localStorage.setItem('VERSION', VERSION)
+                window.location.reload()
+            })
         }
     },
 
@@ -191,9 +190,3 @@ new Vue({
     template: '<App :ready="ready"/>'
 
 })
-
-
-window.onerror = function(message, source, lineno, colno, error) {
-  console.log('Exception: ', error)
-}
-

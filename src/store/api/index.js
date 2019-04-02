@@ -6,39 +6,48 @@ import filters from './filters'
 import images from './images'
 import publicapi from './publicapi'
 import {HAL} from '@/utils/hal'
-import {Cache} from '@/utils/cache'
 import {API_ROOT, API_HOST} from '@/assets/js/config'
 
-/*
-cache API:
 
-- store(uri, value)
-- cache(key)
-    returns value stored at storage[key] 
-- fetch(uri)
+const jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
+const mkstate = ()=>{ 
+    // deep copy the init state from each submodule 
+    // as opposed to simply just copying the 1st level references.
+    // this step is useful, for modules that make use of caching,
+    // since the cache is a nested object.
+    return {
+        root: null,
+        ...jsoncopy(accounts.state),
+        ...jsoncopy(filters.state),
+        ...jsoncopy(products.state),
+        ...jsoncopy(inquiries.state),
+        ...jsoncopy(images.state),
+        ...jsoncopy(publicapi.state),
+    }
+}
 
-- remove(uri)
-    delete storage[key][version]
-
-- clear(uri)
-    delete storage[key]
-
-- reset(uri)
-    alias for clear(uri)
-*/
+const initApi = (state) => {
+    const initState = mkstate() 
+    Object.keys(initState).forEach(k=>{
+        // reinitialize state
+        state[k] = initState[k]
+    })
+}
 
 
 const API = {
     namespaced: true,
 
-    state:{}, // initialization of state happens in initApi()
+    /* Do not put any attribute in `state{}` here!
+     *
+     * It will be overwritten since initialization of `state`
+     * happens in initApi().
+     * You should place your desired attributes either in the 
+     * `mkstate()` function or in one of the submodules.
+     * */
+    state:{},  // Warning /!\ Do not put anything here /!\
 
     getters: {
-        cache(state){
-            return ({key})=>{
-                return Cache(state.cache).fetch(key)
-            }
-        },
 
         http(state, getters){
             return (req={url, method:'get', data:undefined, auth:false})=>{
@@ -69,13 +78,6 @@ const API = {
         ...images.getters,
     },
     mutations: {
-        cache(state, {key, value}){
-            Cache(state.cache).store(key, value)
-        },
-
-        uncache(state, {key}){
-            Cache(state.cache).remove(key)
-        },
 
         setRoot(state, {root}){
             state.root = root
@@ -89,9 +91,8 @@ const API = {
         ...images.mutations,
 
         resetApi(state){
-            initApi({state, skip:['root']})
-            //initApi({state})
-        }
+            initApi(state) 
+        },
     },
         
     actions: {
@@ -103,6 +104,12 @@ const API = {
                 return HAL(response.data)
             })
         },
+
+        resetApi({commit, dispatch}){
+            commit('resetApi')
+            return dispatch('getRoot')
+        },
+
         ...accounts.actions,
         ...filters.actions,
         ...products.actions,
@@ -112,33 +119,6 @@ const API = {
     },
 }
 
-function initApi({state, skip=[]}){
-    const jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
-    let initState = {
-        cache: {},
-        root: null,
-        // deep copy the state from each submodule as opposed to simply just
-        // copying the 1st level references.
-        // TODO: is this step really necessary?
-        ...jsoncopy(accounts.state),
-        ...jsoncopy(filters.state),
-        ...jsoncopy(products.state),
-        ...jsoncopy(inquiries.state),
-        ...jsoncopy(images.state),
-        ...jsoncopy(publicapi.state),
-    }
-    
-    // delete everything not in the skip list
-    // or reset to initState
-    const allKeys = Object.keys(state).concat(Object.keys(initState))
-    allKeys.forEach(k=>{
-        if (skip.includes(k)){
-            return // skip
-        }
-        state[k] = initState[k]
-    })
-}
-
-initApi({state:API.state})
-
+// initialize the API state for first time before exporting.
+initApi(API.state)
 export default API
