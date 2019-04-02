@@ -10,13 +10,19 @@ export default {
 
     getters: {
         account(state){
-            return HAL(state.account)
+            if(state.account){
+                return HAL(state.account)
+            }
         },
         domain(state){
-            return HAL(state.domain)
+            if (state.domain){
+                return HAL(state.domain)
+            }
         },
         profile(state){
-            return HAL(state.profile)
+            if (state.profile){
+                return HAL(state.profile)
+            }
         },
     },
 
@@ -24,6 +30,11 @@ export default {
         setAccount(state, {account}){
             state.account = account
         },
+
+        unsetAccount(state){
+            state.account = null
+        },
+
         setDomain(state, {domain}){
             state.domain = domain
         },
@@ -34,6 +45,10 @@ export default {
 
         setProfile(state, {profile}){
             state.profile = profile
+        },
+
+        unsetProfile(state){
+            state.profile = null
         },
     },
 

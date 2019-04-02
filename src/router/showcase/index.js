@@ -4,7 +4,7 @@ import Inquiry from '@/components/showcase/inquiry'
 
 export default {
     name: 'Showcase', 
-    path: '/', 
+    path: '/catalog', 
     component: Showcase, 
     children:[
         {

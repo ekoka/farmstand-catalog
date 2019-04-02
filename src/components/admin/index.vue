@@ -1,8 +1,8 @@
 <template>
-<div>
+<div v-if="ready">
     <navbar />
     <section class="section"> 
-        <router-view/>
+        <router-view />
     </section>
 </div>
 </template>
@@ -16,25 +16,44 @@ import navbar from './elements/navbar'
 export default {
     components: {navbar,},
 
-    created(){
-        const query = URI(window.location.search).query(true)
-        let access_token = query.access_token
-
-        if (access_token){
-            this.setAccessToken({accessToken:access_token})
+    data(){
+        return {
+            ready: false
         }
+    },
 
-        let lang = query.lang
-        this.getRoot().then(root=>{
-            return this.getProfile()
-        }).then(profile=>{
-            return this.getAccount({account_id:profile.data.account_id})
-        }).then(account=>{
-            //this.domain = domain.data
-            return this.getDomain({
-                domain:this.$store.getters['urlSubdomain']
+    created(){
+        const account = this.$store.getters['api/account']
+        if(!account){
+            // not logged in
+            this.$router.push({name:'Index'})
+            return
+        }
+        this.getRoot().then(()=>{
+            this.getDomain({
+                domain:this.$store.getters['subdomain']
             })
+        }).then(()=>{
+            this.ready = true
         })
+        //const query = URI(window.location.search).query(true)
+        //let access_token = query.access_token
+
+        //if (access_token){
+        //    this.setAccessToken({accessToken:access_token})
+        //}
+
+        //let lang = query.lang
+        //this.getRoot().then(root=>{
+        //    return this.getProfile()
+        //}).then(profile=>{
+        //    return this.getAccount({account_id:profile.data.account_id})
+        //}).then(account=>{
+        //    //this.domain = domain.data
+        //    return this.getDomain({
+        //        domain:this.$store.getters['urlSubdomain']
+        //    })
+        //})
         
         //.then(account=>{
         //            this.account = account.data

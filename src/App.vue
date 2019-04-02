@@ -1,10 +1,11 @@
 <template>
-    <router-view />
+    <router-view v-if="ready"/>
 </template>
 
 <script>
 export default {
-  name: 'App'
+    name: 'App',
+    props: ['ready'],
 }
 </script>
 
