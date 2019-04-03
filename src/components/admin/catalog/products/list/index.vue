@@ -121,13 +121,13 @@ export default {
         enableFilters(){
             // load filter data in admin/products store
             this.getFilters().then(filters=>{
-                filters = map(f=>{
-                    return f.data
-                })(filters.embedded('filters'))
-                this.setFilters({filters})
+                const filter_ids = filters.key('filter_ids')
+                return this.getFilterResources({filter_ids})
+            }).then(filters=>{
+                this.setFilters({filters:map(f=>f.data)(filters)})
+                // enable filter component in sidebar
+                this.showFilters({value:true})
             })
-            // enable filter component in sidebar
-            this.showFilters({value:true})
         },
 
         disableFilters(){
@@ -139,6 +139,7 @@ export default {
             getProducts: 'api/getProducts',
             getProductResources: 'api/getProductResources',
             getFilters: 'api/getFilters',
+            getFilterResources: 'api/getFilterResources',
         }),
 
         ...mapMutations({
