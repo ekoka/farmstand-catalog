@@ -1,25 +1,28 @@
 import {HAL} from '@/utils/hal' // helper to navigate HAL API resources
 import {Cache} from '@/utils/cache' // helper to manipulate a cache
-import _ from 'lodash/fp'
+import {find} from 'lodash/fp'
+import {Buffer} from '@/utils/cache'
+import {map, reduce, difference, each, union} from 'lodash/fp'
+
 
 export default {
-    state:{},
+    state:{
+        filterCache: {stack:[], lock:[]},
+    },
     getters:{
-        filters(state, getters){
+        filters(state){
             return ({filter_id=null}={})=>{
-                const url = getters.domain.url('filters')
-                const filters = HAL(getters.cache({key:url}))
+                if (state.filters){
+                    const filters = HAL(state.filters)
+                }
                 if(!filter_id){
                     // if no filter_id is specified, return all filters
                     return filters
                 } else {
                     // only return filter associated with filter_id
-                    if (filters){
-                        let filter = _.find(f=>{
-                            return f.key('filter_id')===filter_id
-                        })(filters.embedded('filters'))
-                        return filter
-                    }
+                    return find(f=>{
+                        return f.key('filter_id')===filter_id
+                    })(filters.embedded('filters'))
                 }
             }
         },
@@ -29,22 +32,18 @@ export default {
         setFilters(state, {filters}){
             // filters is an API resource in HAL format 
             // use the helper to navigate it
-            filters = HAL(filters)
-
-            // first store the filter list in cache 
-            // filters.self is a shortcut to filters.url('self')
-            // filters.resource is the original JSON from the http response
-            Cache(state.cache).store(filters.self, filters.resource)
-
-            // store each filter in cache
-            filters.embedded('filters').forEach(f=>{
-                Cache(state.cache).store(f.self, f.resource)
-            })
+            state.filters = filters
         },
 
-        removeFilter(state, {filters, filter_id}){
-            //filters. 
-        }
+        removeFilter(state, {filter_id=null}){
+            Buffer(state.filterCache).remove({filter_id})
+        },
+
+        setFilter(state, {filter}){
+            const filter_id = HAL(filter).key('filter_id')
+            const path = {filter_id}
+            Buffer(state.filterCache).store(path, filter)
+        },
     },
 
 
@@ -66,30 +65,86 @@ export default {
             })
         },
 
-        getFilters({getters, commit}){
+        getFilters({getters, commit}, {params}={}){
             const url = getters.domain.url('filters')
-            return getters.http({
-                url,
-                auth: true,
-            }).then(response=>{
-                commit('setFilters', {filters:response.data})
-                return getters.filters()
-            }).catch(error=>{
-                console.log(error)
-            })
-        },
-
-        getFilter({getters, commit}, {filter_id}){
-            const url = getters.filters().url('filter', {filter_id})
-
-            return getters.http({
-                url,
-                auth:true,
-            }).then(response=>{
-                commit('cache', {key:url, value:response.data})
+            return getters.http({url, auth:true}).then(response=>{
                 return HAL(response.data)
             })
         },
+
+        //getFilterResources({getters, commit}){
+        //    const url = getters.domain.url('filters')
+        //    return getters.http({
+        //        url,
+        //        auth: true,
+        //    }).then(response=>{
+        //        commit('setFilters', {filters:response.data})
+        //        return getters.filters()
+        //    }).catch(error=>{
+        //        console.log(error)
+        //    })
+        //},        
+        getFilterResources({getters, state, commit, rootState}, {filter_ids}){
+            const buffer = Buffer(state.filterCache)
+            const halify = map(f=>{
+                return HAL(f)
+            })
+            const finder = reduce((accumulator, filter_id)=>{
+                const resource = buffer.fetch({filter_id})
+                if(resource){
+                    accumulator.found.push(resource)
+                    accumulator.foundIds.push(filter_id)
+                }
+                return accumulator
+            }, {found:[], foundIds:[]})
+            const {found, foundIds} = finder(filter_ids)
+            const notfound = difference(filter_ids, foundIds)
+
+            if(notfound.length==0){
+                return halify(found)
+            }
+                
+            const url = getters.domain.url('filter_resources', null, {
+                fid:notfound
+            })
+            return getters.http({
+                url,
+                auth:true
+            }).then(response=>{
+                const addNewResources = each(f=>{
+                    commit('setFilter', {filter:f.resource})
+                })
+                const resources = HAL(response.data)
+                addNewResources(resources.embedded('filters'))
+                return union(halify(found), resources.embedded('filters'))
+            })
+        },
+
+
+
+        //getFilter({getters, commit}, {filter_id}){
+        //    const url = getters.filters().url('filter', {filter_id})
+
+        //    return getters.http({
+        //        url,
+        //        auth:true,
+        //    }).then(response=>{
+        //        return HAL(response.data)
+        //    })
+        //},
+
+        getFilter({getters, commit},{url, filter_id}){
+            // always returns a fresh copy of filter resource
+            if (filter_id){
+                url = getters.domain.url('filter', {filter_id})
+            }
+            return getters.http({url, auth:true}).then(response=>{
+                // halify
+                commit('setFilter', {filter:response.data})
+                return HAL(response.data)
+            })
+        },
+
         
         putFilter({getters, dispatch}, {filter_id, data}){
             let url = getters.filters({filter_id}).self
@@ -104,17 +159,14 @@ export default {
         },
 
         deleteFilter({getters, commit}, {filter_id}){
-            const url = getters.filters().url('filter', {filter_id})
+            // we don't delete by url because we can generate the url
+            // from the ID, the reverse is more difficult
+            let url = getters.domain.url('filter', {filter_id})
             return getters.http({
-                url, 
-                method:'delete',
-                auth:true,
-            }).then(resp=>{
-                commit('removeFilter', {
-                    filters: getters.filters(),
-                    filter_id
-                })
-                commit('uncache', {key:url})
+                url, method:'delete', auth:true
+            }).then(r=>{
+                // remove cached filter resource
+                commit('removeFilter', {filter_id})
             })
         },
         

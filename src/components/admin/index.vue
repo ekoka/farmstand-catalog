@@ -31,7 +31,7 @@ export default {
         }
         this.getRoot().then(()=>{
             this.getDomain({
-                domain:this.$store.getters['subdomain']
+                domain:this.$store.getters.subdomain
             })
         }).then(()=>{
             this.ready = true

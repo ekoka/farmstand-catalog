@@ -114,7 +114,6 @@ export default {
         getPublicFilters({getters, commit}){
             const url = getters.publicRoot.url('public_filters')
             return getters.http({url}).then(response=>{
-                commit('cache', {key:url, value:response.data})
                 return HAL(response.data)
             }).catch(error=>{
                 console.log(error)

@@ -25,6 +25,7 @@
 <script>
 import filterTable from './table'
 import _ from 'lodash/fp'
+import {each} from 'lodash/fp'
 import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
@@ -41,12 +42,17 @@ export default {
 
     methods: {
         loadFilters(){
-            this.getFilters({refresh:true}).then((filters)=>{
-                filters.embedded('filters').forEach(f=>{
-                    this.filters.push(f.data)
+            this.getFilters().then(filters=>{
+                this.getFilterResources({
+                    filter_ids:filters.data.filter_ids
+                }).then(filters=>{
+                    each(f=>{
+                        this.filters.push(f.data)
+                    })(filters)
                 })
             })
         },
+
         options(filter){
             return filter.embedded('options').map(f=>{
                 return f.data
@@ -59,7 +65,7 @@ export default {
 
         ...mapActions({
             getFilters:'api/getFilters',
-            //deleteFilter:'api/deleteFilter',
+            getFilterResources:'api/getFilterResources',
         })
     }
 
