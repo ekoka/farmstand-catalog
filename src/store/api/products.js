@@ -70,7 +70,7 @@ export default {
         },
 
         putProduct({getters, dispatch, commit}, {product_id, data}){
-            let url = getters.domain.url('product', {product_id})
+            const url = getters.domain.url('product', {product_id})
             return getters.http({
                 url, 
                 method:'put', 

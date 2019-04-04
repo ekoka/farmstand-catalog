@@ -47,9 +47,9 @@
                 </div>
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
-                <div v-if="rfqEdited" class="control">
+                <div v-if="showRfqButton" class="control">
                     <button class="button is-small is-warning" 
-                        @click="addProductToRfq()">
+                        @click="addProductToRfq(productAdded(product_id))">
                         <span v-if="productAdded(product_id)" class="">
                             Update Request for quotation
                         </span>
@@ -75,7 +75,6 @@
 <script>
 import {mapMutations,mapGetters,mapState} from 'vuex'
 export default {
-
     model: {
         event: 'hide'
     },
@@ -84,6 +83,7 @@ export default {
         return {
             rfqEdited: false,
             commentsEdited: false,
+            toggle: false,
             rfq: {
                 quantity:null,
                 comments:null,
@@ -101,6 +101,7 @@ export default {
                 quantity:product.quantity, 
                 comments:product.comments
             }
+            this.toggle = this.rfqFormEmpty
             this.activeTab = 'rfq'
         }
     },
@@ -108,6 +109,22 @@ export default {
     props: ['product_id', 'rfqshow'],
 
     computed:{
+        rfqFormEmpty(){
+            const rv = !(this.rfq.quantity || this.rfq.comments)
+            return rv
+        },
+        showRfqButton(){
+            this.toggle // just forcing the reevaluation of this computed property
+            if(this.rfqFormEmpty){
+                return false
+            }
+            if(this.rfqEdited){
+                return true
+            }
+            if(!this.productAdded(this.product_id)){
+                return true
+            }
+        },
         ...mapGetters({
             productAdded: 'inquiry/productAdded',
         }),
@@ -122,15 +139,36 @@ export default {
             this.$emit('hide', false)
         },
 
-        addProductToRfq(){
+        addProductToRfq(update){
+            this.rfqEdited = false
             const rfq = {product_id:this.product_id, ...this.rfq}
             this.addProduct({rfq})
-            this.$emit('hide', false)
+            //this.$emit('hide', false)
+            this.$eventBus.$emit('message-sent-'+this.product_id, {
+                message:update?'Updated':'Added',
+                options:{
+                    color: 'is-warning',
+                    timeout: .9,
+                    close: false,
+                },
+            })
+            this.toggle = true
         },
 
         removeProductFromRfq(){
+            this.rfqEdited = false
             this.removeProduct({product_id:this.product_id})
-            this.$emit('hide', false)
+            this.$eventBus.$emit('message-sent-'+this.product_id, {
+                message:'Removed',
+                options:{
+                    color: 'is-danger',
+                    timeout: .9,
+                    close: false,
+                },
+            })
+            this.toggle = false
+
+            //this.$emit('hide', false)
         },
 
         ...mapMutations({

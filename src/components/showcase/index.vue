@@ -1,7 +1,9 @@
 <template>
 <div>
     <top-nav/>
-
+    <notification eventName="message-sent" 
+        :defaults="{timeout:2}"> 
+    </notification>
     <section class="section">
         <div class='container'>
             <div class="columns">
@@ -31,11 +33,14 @@ import leftNav from './elements/left-nav'
 import filterVertical from './elements/filter-vertical'
 import productTable from './elements/product-table'
 import {mapActions, mapGetters} from 'vuex'
+import notification from '@/components/utils/messaging/notification'
 
 export default {
     components: { 
         smallcart, topNav, leftNav,
-        filterVertical, productTable,},
+        filterVertical, productTable,
+        notification,
+    },
 
     data(){
         return {

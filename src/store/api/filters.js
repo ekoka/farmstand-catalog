@@ -146,15 +146,15 @@ export default {
         },
 
         
-        putFilter({getters, dispatch}, {filter_id, data}){
-            let url = getters.filters({filter_id}).self
+        putFilter({getters, commit}, {filter_id, data}){
+            const url = getters.domain.url('filter', {filter_id})
             return getters.http({
                 url,
                 method:'put',
                 data,
                 auth:true,
             }).then(resp=>{
-                return dispatch('getFilter', {filter_id})
+                return commit('removeFilter', {filter_id})
             })
         },
 

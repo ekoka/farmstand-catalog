@@ -1,10 +1,10 @@
 <template>
-<div class="fixed-top">
-    <div v-for="m in messages" :key="m.key" class="message" :class="m.css">
-        <div class="message-header">
-            <p>{{m.message}}</p>
-            &nbsp;&nbsp;<button @click="popMessage(m.key)" class="delete"></button>
-        </div>
+<div :class="position">
+    <div v-for="m in messages" >
+        <span :key="m.key" class="tag" :class="m.css">
+            {{m.message}}
+            <button v-if="m.close" @click="popMessage(m.key)" class="delete"></button>
+        </span>
     </div>
 </div>
 </template>
@@ -24,26 +24,28 @@ export default {
     computed: {
         defaultTimeout(){
             return this.defaults.timeout || 3 // in seconds
-        }
+        },
+        position(){
+            const position = this.defaults.position || 'fixed-top'
+            return 'notification-is-' + position
+        },
     },
 
     mounted(){
-        console.log(this.eventName)
         this.$eventBus.$on(this.eventName, (e)=>{
-            console.log('heard the message')
             const css = this.setCss(e.options)
 
             const timeout = this.setTimeout(e.options && e.options.timeout)
-            console.log('timeout is ', timeout)
-            const settings = this.settings(e.options)
+            const close = e.options && e.options.close
+            
             const message = {
                 css, 
                 message:e.message, 
+                close: close===false?false:true,  
                 timeout,
                 // we use a timeout as a key for the message, not perfect
                 // but for this purpose it works
                 key: Date.now(),
-                settings, 
             }
             if(timeout!=Infinity){
                 setTimeout(()=>{
@@ -65,7 +67,8 @@ export default {
     methods:{
         setCss(options){
             return join(' ')([
-                this.color(options),
+                options.color || '',
+                options.size || '',
             ])
         },
 
@@ -74,17 +77,6 @@ export default {
                 return Infinity
             }
             return (timeout || this.defaultTimeout) * 1000
-        },
-
-        color(options){
-            if(options.color){
-                return options.color || 'is-primary'
-            }
-            return ''
-        },
-
-        settings(options){
-            return {}
         },
 
         popMessage(key){
@@ -98,12 +90,16 @@ export default {
 </script>
 
 <style>
-.fixed-top {
+.notification-is-fixed-top {
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
     top: 10%;
     /*width: 33%;*/
     z-index: 10;
+}
+
+.notification-is-relative {
+    position: relative;
 }
 </style>

@@ -37,6 +37,12 @@
                             </p>
                         </div>
                     </div>
+                    <div class="level-left">
+                        <div class="level-item">
+                            <notification :eventName="'message-sent-'+p.product_id" :defaults="{position: 'relative'}">
+                            </notification>
+                        </div>
+                    </div>
 
                     <div class="level-right">
                         <div class="level-item">
@@ -123,6 +129,7 @@ import {find} from 'lodash/fp'
 import Vue from 'vue'
 import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
 import inquiryForm from './inquiry-form'
+import notification from '@/components/utils/messaging/notification'
 export default {
 
     props: ['products', 'fieldNames', 'fields'],
@@ -136,7 +143,7 @@ export default {
     },
 
     components: {
-        inquiryForm,
+        inquiryForm, notification,
     },
 
     computed:{
