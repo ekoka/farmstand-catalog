@@ -190,3 +190,7 @@ new Vue({
     template: '<App :ready="ready"/>'
 
 })
+
+window.onerror = function(message, source, lineno, colno, error) {
+  console.log('Exception: ', error)
+}

@@ -11,20 +11,22 @@
         </ul>
     </nav> <!-- breadcrumb -->
     <div>
-        <div class="level">
-            <div class="level-left">
-            </div>
-            <div class="level-right">
-                <div class="level-item">
-                    <button class="button">
-                        Cancel
-                    </button>
-                    <button class="button is-link" :class="buttonClass" @click="saveProduct">
-                        Save your changes
-                    </button>
-                </div><!-- level-item -->
-            </div><!-- level-right -->
-        </div><!-- level -->
+        <div class="content sticky-product-buttons">
+            <div class="level">
+                <div class="level-left">
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <button class="button">
+                            Cancel
+                        </button>
+                        <button class="button is-link" :class="buttonClass" @click="saveProduct">
+                            Save your changes
+                        </button>
+                    </div><!-- level-item -->
+                </div><!-- level-right -->
+            </div><!-- level -->
+        </div>
 
 
         <div>
@@ -243,6 +245,13 @@ export default {
                         product_id,
                         images
                     })
+                    this.$eventBus.$emit('notification-message', {
+                        message: 'SAVED',
+                        options:{
+                            timeout: 3,
+                            color: 'is-warning',
+                        },
+                    })
                 })
             } else {
                 return this.postProduct({
@@ -263,6 +272,13 @@ export default {
                 }).then(product_id=>{
                     this.redirectToProductPage({
                         product_id
+                    })
+                    this.$eventBus.$emit('notification-message', {
+                        message: 'Product saved.',
+                        options:{
+                            timeout: 2,
+                            color: 'is-warning',
+                        },
                     })
                 })
             }
@@ -325,3 +341,11 @@ export default {
     },
 }
 </script>
+
+<style>
+.sticky-product-buttons {
+    position: sticky;
+    top: 5%;
+    z-index: 9;
+}
+</style>

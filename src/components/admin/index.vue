@@ -8,9 +8,15 @@
 </template>
 
 <script>
+
+
+
+
+
+
+import cookies from '@/utils/cookies'
 import URI from 'urijs'
 import {mapActions, mapMutations} from 'vuex'
-
 import navbar from './elements/navbar'
 
 export default {
@@ -30,37 +36,33 @@ export default {
             return
         }
         this.getRoot().then(()=>{
-            this.getDomain({
+            return this.getDomain({
                 domain:this.$store.getters.subdomain
             })
         }).then(()=>{
             this.ready = true
         })
-        //const query = URI(window.location.search).query(true)
-        //let access_token = query.access_token
-
-        //if (access_token){
-        //    this.setAccessToken({accessToken:access_token})
-        //}
-
-        //let lang = query.lang
-        //this.getRoot().then(root=>{
-        //    return this.getProfile()
-        //}).then(profile=>{
-        //    return this.getAccount({account_id:profile.data.account_id})
-        //}).then(account=>{
-        //    //this.domain = domain.data
-        //    return this.getDomain({
-        //        domain:this.$store.getters['urlSubdomain']
-        //    })
-        //})
-        
-        //.then(account=>{
-        //            this.account = account.data
-        //        })
-        //    })
-        //})
     },
+
+    mounted(){
+        const watchLoggedState = ()=>{
+            // are we logged in?
+            const account_id = cookies.getCookie('account_id')
+            //if(!this.$store.state['loggedIn']){
+            if(!account_id){
+                this.ready = false
+                // clear the state again, just in case the cookie was
+                // removed by another app than this one (e.g. subdomain).
+                this.$store.dispatch('api/resetApi').then(()=>{
+                    this.$router.push({name:'Index'})
+                })
+            }
+            setTimeout(watchLoggedState, 2000)
+        }
+        watchLoggedState()
+    },
+
+
     methods:{
         ...mapActions({
             'getRoot': 'api/getRoot',

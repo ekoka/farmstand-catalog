@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import _ from 'lodash/fp'
+import {each} from 'lodash/fp'
 import {mapMutations, mapState} from 'vuex'
 export default {
 
@@ -27,17 +27,17 @@ export default {
 
     watch:{
         'mutable.selectedFilterOptions':{
-            deep:true,
             handler(){
                 this.setProductFilters({
                     filters: {...this.mutable.selectedFilterOptions},
                 })
-            }
+            },
+            deep:true,
         }
     },
 
     mounted(){
-        _.each(f=>{
+        each(f=>{
             this.$set(this.mutable.selectedFilterOptions, f.filter_id, [])
         })(this.filters)
     },

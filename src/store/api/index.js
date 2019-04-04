@@ -38,9 +38,9 @@ const initApi = (state) => {
 const API = {
     namespaced: true,
 
-    /* Do not put any attribute in `state{}` here!
+    /* Do not put any attributes in the `state{}` here!
      *
-     * It will be overwritten since initialization of `state`
+     * They will be overwritten since initialization of `state`
      * happens in initApi().
      * You should place your desired attributes either in the 
      * `mkstate()` function or in one of the submodules.
