@@ -116,11 +116,10 @@ export default {
         },
 
         removeOption(optionIndex, option){
-            let remove = (e)=>{
+            const remove = (e)=>{
                 if(e==true){
                     this.mutable.options.splice(optionIndex, 1)
                 }
-                //this.resetModalComponent()
             }
             if(option.filter_option_id){
                 this.modalComponent = {
@@ -130,6 +129,8 @@ export default {
                 }
                 return
             }
+            // we only get here if no filter_option_id,
+            // in which case we just remove.
             remove(true)
 
         },
@@ -147,7 +148,6 @@ export default {
                     filterData,
                 },
                 events:{close(){
-                        //this.resetModalComponent()
                     },
                 },
             }

@@ -1,5 +1,8 @@
 <template>
 <div>
+    <confirmation :active.sync="activeConfirmation" :handlers="{true:removeHandler}">
+        Do yo want to remove this grouping <span class="is-size-6">(any existing associations with products will be severed)</span>?
+    </confirmation>
     <nav class="breadcrumb">
         <ul>
             <li>
@@ -82,14 +85,15 @@
 </template>
 
 <script>
-import _ from 'lodash/fp'
 import OptionList from './options'
 import Tooltip from '@/components/admin/elements/tooltip'
 import {mapActions} from 'vuex'
+import confirmation from '@/components/utils/messaging/confirmation'
 export default {
     components: {
         OptionList,
         Tooltip,
+        confirmation,
     },
 
     // we don't use props here because for some reason they're not being updated 
@@ -121,6 +125,7 @@ export default {
                     options: [],
                 },
             },
+            activeConfirmation: false,
         }
     },
 
@@ -200,7 +205,13 @@ export default {
 
         removeFilter(){
             if(this.filter_id){
-                return this.deleteFilter({
+                this.activeConfirmation = true
+            }
+        },
+
+        removeHandler(e){
+            if(this.filter_id && e){
+                this.deleteFilter({
                     filter_id:this.filter_id
                 }).then(resp=>{
                     this.$router.push({name: 'AdminFilterList'})
