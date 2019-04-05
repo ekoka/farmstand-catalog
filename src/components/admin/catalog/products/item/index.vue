@@ -11,18 +11,28 @@
         </ul>
     </nav> <!-- breadcrumb -->
     <div>
-        <div class="content sticky-product-buttons">
+        <div class="content sticky-level">
             <div class="level">
                 <div class="level-left">
                 </div>
+                <div class="level-left">
+                    <notification eventName="notification-product-saved" :defaults="{position: 'relative'}">
+                    </notification>
+                </div>
                 <div class="level-right">
                     <div class="level-item">
-                        <button class="button">
-                            Cancel
-                        </button>
-                        <button class="button is-link" :class="buttonClass" @click="saveProduct">
-                            Save your changes
-                        </button>
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-link" :class="buttonClass" @click="saveProduct">
+                                    Save your changes
+                                </button>
+                            </div>
+                        </div>
                     </div><!-- level-item -->
                 </div><!-- level-right -->
             </div><!-- level -->
@@ -63,10 +73,10 @@
                 @changed="changed=true">
             </product-images>
 
-            <filters :product="mutable.product" 
-                :productFilters="mutable.filters" 
-                @productFilters:update="updateFilters">
-            </filters>
+            <groups :product="mutable.product" 
+                :productGroups="mutable.groups" 
+                @productGroups:update="updateGroups">
+            </groups>
 
         </template>
         </div><!-- column -->
@@ -78,11 +88,12 @@
 import Field from './field'
 import ProductImages from './images'
 //import Visibility from './visibility'
-import Filters from './filters'
+import Groups from './groups'
 import {mapActions, mapGetters} from 'vuex'
 import {unset,find} from 'lodash/fp'
+import notification from '@/components/utils/messaging/notification'
 export default {
-    components: {Filters, Field, ProductImages},
+    components: {Groups, Field, ProductImages, notification},
     props: ['product_id'],
     data(){
         return {
@@ -116,7 +127,7 @@ export default {
                     //visible: false,
                 },
                 images: [],
-                filters: [],
+                groups: [],
             },
         }
     },
@@ -184,8 +195,8 @@ export default {
                     // This will be handy when the time comes to implement
                     // the "Cancel edit" feature.
                     this.mutable.product = product.data
-                    this.mutable.filters = this.mutable.product.filters
-                    delete this.mutable.product.filters 
+                    this.mutable.groups = this.mutable.product.groups
+                    delete this.mutable.product.groups 
                     //Object.keys(resource.data).forEach((k) => {
                     //    // instead of directly assigning `product=resource`
                     //    // we rather assign each value to a `product`'s key.
@@ -195,8 +206,8 @@ export default {
                     //    // we'd lose the reactivity.
                     //    this.product[k] = resource.data[k]
                     //})
-                    //this.originalProductFilters = resource.embedded('filters').map(f=>{
-                    //    return f.key('filter_id')
+                    //this.originalProductGroups = resource.embedded('groups').map(f=>{
+                    //    return f.key('group_id')
                     //})
 
                     // See explanation on the `ready` flag in the `data`
@@ -230,25 +241,27 @@ export default {
             // 
             const data = unset('images', this.mutable.product)
             const images = this.mutable.images
-            const filters = this.mutable.filters
+            const groups = this.mutable.groups
 
             if(product_id){
                 return this.putProduct({
                     product_id, 
                     data
                 }).then(()=>{
-                    this.putProductFilterOptions({
+                    this.putProductGroupOptions({
                         product_id,
-                        data:{filters},
+                        data:{groups},
                     })
                     this.putProductImages({
                         product_id,
                         images
                     })
-                    this.$eventBus.$emit('notification-message', {
-                        message: 'SAVED',
+                    this.$eventBus.$emit('notification-product-saved', {
+                        message: 'Saved',
                         options:{
-                            timeout: 3,
+                            close: false,
+                            size: 'is-medium',
+                            timeout: 2,
                             color: 'is-warning',
                         },
                     })
@@ -260,9 +273,9 @@ export default {
                     let url = response.url('location')
                     return this.getProduct({url})
                 }).then(product=>{
-                    this.putProductFilterOptions({
+                    this.putProductGroupOptions({
                         product_id:product.data.product_id,
-                        data:{filters},
+                        data:{groups},
                     })
                     this.putProductImages({
                         product_id:product.data.product_id,
@@ -273,9 +286,11 @@ export default {
                     this.redirectToProductPage({
                         product_id
                     })
-                    this.$eventBus.$emit('notification-message', {
-                        message: 'Product saved.',
+                    this.$eventBus.$emit('notification-product-saved', {
+                        message: 'Added',
                         options:{
+                            close: false,
+                            size: 'is-medium',
                             timeout: 2,
                             color: 'is-warning',
                         },
@@ -299,33 +314,10 @@ export default {
             return rv || defaultLabel
         },
 
-        updateFilters(filters){
+        updateGroups(groups){
             this.changed = true
-            this.$set(this.mutable, 'filters', filters)
+            this.$set(this.mutable, 'groups', groups)
         },
-
-        //toggleVisibility(value){
-        //    if(this.mutable.product.product_id){
-        //        const data = {
-        //            name:visible, 
-        //            value
-        //        }
-        //        this.patchProduct({
-        //            data, 
-        //            product_id: this.mutable.product.product_id
-        //        }).then(()=>{
-        //            // if we got here then maybe all was well
-        //            this.mutable.product.data.visible = value
-        //        }).catch(error=>{
-        //            console.log(error)
-        //            // a message should be emitted here letting user
-        //            // know that they should try again later. e.g. 
-        //            // network problems.
-        //        })
-        //    } else {
-        //        this.mutable.product.data.visible = value
-        //    }
-        //},
 
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
@@ -333,17 +325,17 @@ export default {
             putProduct: 'api/putProduct',
             patchProduct: 'api/patchProduct',
             postProduct: 'api/postProduct',
-            getFilterSets: 'api/getFilterSets',
+            getGroupSets: 'api/getGroupSets',
             putProductImages: 'api/putProductImages',
             deleteProduct: 'api/deleteProduct',
-            putProductFilterOptions: 'api/putProductFilterOptions',
+            putProductGroupOptions: 'api/putProductGroupOptions',
         }),
     },
 }
 </script>
 
 <style>
-.sticky-product-buttons {
+.sticky-level {
     position: sticky;
     top: 5%;
     z-index: 9;

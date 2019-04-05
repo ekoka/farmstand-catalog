@@ -23,10 +23,10 @@ export default {
 
     computed: {
         defaultTimeout(){
-            return this.defaults.timeout || 3 // in seconds
+            return this.defaults && this.defaults.timeout || 3 // in seconds
         },
         position(){
-            const position = this.defaults.position || 'fixed-top'
+            const position = this.defaults && this.defaults.position || 'relative'
             return 'notification-is-' + position
         },
     },

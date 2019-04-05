@@ -14,18 +14,20 @@
         </ul>
     </nav> <!-- breadcrumb -->
 
-    <div class="box">
+    <div class="content sticky-level">
         <div class="level">
             <div class="level-left">
+            </div>
+            <div class="level-left">
+                <notification eventName="notification-group-saved">
+                </notification>
+            </div>
+            <div class="level-right">
                 <div class="level-item">
-                    <div class="field">
+                    <div class="field is-grouped">
                         <div class="control">
                             <button class="button is-danger is-outlined" @click="removeGroup">Delete this group</button>
                         </div>
-                    </div>
-                </div>
-                <div class="level-item">
-                    <div class="field">
                         <div class="control">
                             <button class="button is-link" @click="saveGroup">Save your changes</button>
                         </div>
@@ -33,6 +35,10 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="box">
+
         <div class="field ">
             <div class="control">
                 <label class="label">Name</label>
@@ -89,11 +95,13 @@ import OptionList from './options'
 import Tooltip from '@/components/admin/elements/tooltip'
 import {mapActions} from 'vuex'
 import confirmation from '@/components/utils/messaging/confirmation'
+import notification from '@/components/utils/messaging/notification'
 export default {
     components: {
         OptionList,
         Tooltip,
         confirmation,
+        notification,
     },
 
     // we don't use props here because for some reason they're not being updated 
@@ -182,6 +190,15 @@ export default {
                             group_id: f.data.group_id
                         },
                     })
+                }).then(()=>{
+                    this.$eventBus.$emit('notification-group-saved', {
+                        message: 'Added',
+                        options:{
+                            close: false,
+                            timeout: 1,
+                            size: 'is-medium',
+                        }
+                    })
                 })
             } else { // if this.group_id is set
                 // updating an existing group
@@ -189,7 +206,17 @@ export default {
                     group_id:this.group_id,
                     data,
                 }).then(()=>{
-                    this.loadGroup()
+                    return this.loadGroup()
+                }).then(()=>{
+                    this.$eventBus.$emit('notification-group-saved', {
+                        message: 'Saved',
+                        options:{
+                            close: false,
+                            timeout: 1,
+                            size: 'is-medium',
+                            color: 'is-warning',
+                        }
+                    })
                 })
             }
         },
@@ -230,3 +257,11 @@ export default {
 
 }
 </script>
+
+<style>
+.sticky-level {
+    position: sticky;
+    top: 5%;
+    z-index: 9;
+}
+</style>

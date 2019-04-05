@@ -5,11 +5,11 @@
 
         <h4>Product</h4>
 
-        <h4>Filter options</h4>
-        <div v-for="o, i in filter.options">
+        <h4>Group options</h4>
+        <div v-for="o, i in group.options">
             <label>
                 <input type="checkbox" 
-                    :value="o.filter_option_id" 
+                    :value="o.group_option_id" 
                     v-model="mutable.productOptions">
                 {{o.data.label}}
             </label>
@@ -23,7 +23,7 @@ import _ from 'lodash/fp'
 import {mapActions} from 'vuex' 
 
 export default {
-    props: ['filter', 'product', 'productOptions'],
+    props: ['group', 'product', 'productOptions'],
 
     data(){
         return {
