@@ -1,6 +1,6 @@
 <template>
 <div>
-    <h1 class="title">Filters</h1>
+    <h1 class="title">Groups</h1>
     <div class="level">
         <div class="level-left">
             <div class="level-item is-hidden-tablet-only">
@@ -13,59 +13,59 @@
         </div><!-- level-left -->
         <div class="level-right">
             <div class="level-item">
-                <router-link class="button is-link" :to="{name:'AdminNewFilter'}">Add a new filter</router-link>
+                <router-link class="button is-link" :to="{name:'AdminNewGroup'}">Add a new group</router-link>
             </div><!-- level-item -->
         </div><!-- level-right -->
     </div><!-- level -->
-    <filter-table :filters="filters"></filter-table>
+    <group-table :groups="groups"></group-table>
     <!--<product-table v-if="ready" v-model="products" />-->
 </div>
 </template>
 
 <script>
-import filterTable from './table'
+import groupTable from './table'
 import _ from 'lodash/fp'
 import {each} from 'lodash/fp'
 import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
         return {
-            filters:[]
+            groups:[]
         }
     },
     components: {
-        filterTable
+        groupTable
     },
     mounted(){
-        this.loadFilters()
+        this.loadGroups()
     },
 
     methods: {
-        loadFilters(){
-            this.getFilters().then(filters=>{
-                this.getFilterResources({
-                    filter_ids:filters.data.filter_ids
-                }).then(filters=>{
+        loadGroups(){
+            this.getGroups().then(groups=>{
+                this.getGroupResources({
+                    group_ids:groups.data.group_ids
+                }).then(groups=>{
                     each(f=>{
-                        this.filters.push(f.data)
-                    })(filters)
+                        this.groups.push(f.data)
+                    })(groups)
                 })
             })
         },
 
-        options(filter){
-            return filter.embedded('options').map(f=>{
+        options(group){
+            return group.embedded('options').map(f=>{
                 return f.data
             })
         },
 
-        removeFilter(filter_id){
-            this.deleteFilter({filter_id})
+        removeGroup(group_id){
+            this.deleteGroup({group_id})
         },
 
         ...mapActions({
-            getFilters:'api/getFilters',
-            getFilterResources:'api/getFilterResources',
+            getGroups:'api/getGroups',
+            getGroupResources:'api/getGroupResources',
         })
     }
 

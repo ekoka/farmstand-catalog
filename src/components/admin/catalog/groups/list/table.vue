@@ -1,14 +1,14 @@
 <template>
 <div>
-    <div v-if="filters.length==0" class="is-size-4">
-        You have no filters yet.
+    <div v-if="groups.length==0" class="is-size-4">
+        You have no group yet.
     </div>
     <div v-else class="card">
         <div class="card-content">
-            <div v-for="f,i in filters" class="media">
+            <div v-for="f,i in groups" class="media">
                 <div class="media-left">
                     <p class="title is-5 is-spaced">
-                        <router-link :to="{name: 'AdminEditFilter', params:{filter_id: f.filter_id}}">{{f.data.label}}</router-link>
+                        <router-link :to="{name: 'AdminEditGroup', params:{group_id: f.group_id}}">{{f.data.label}}</router-link>
                     </p>
                 </div>
                 <div class="media-content">
@@ -31,6 +31,6 @@
 
 <script>
 export default{
-    props: ['filters']
+    props: ['groups']
 }
 </script>

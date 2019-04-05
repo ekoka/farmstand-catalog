@@ -10,7 +10,7 @@
                 <div class="column is-4-tablet is-3-desktop is-2-widescreen">
                     <p class="subtitle is-6">Narrow results by</p>
                     <!--<left-nav active="catalog"/>-->
-                    <filter-vertical v-for="f,i in filters" :key="i" :filter="f"/>
+                    <group-vertical v-for="f,i in groups" :key="i" :group="f"/>
                     <smallcart/>
                 </div>
                 <div class="column">
@@ -30,7 +30,7 @@ import {map} from 'lodash/fp'
 import smallcart from './inquiry/smallcart'
 import topNav from './elements/top-nav'
 import leftNav from './elements/left-nav'
-import filterVertical from './elements/filter-vertical'
+import groupVertical from './elements/group-vertical'
 import productTable from './elements/product-table'
 import {mapActions, mapGetters} from 'vuex'
 import notification from '@/components/utils/messaging/notification'
@@ -38,13 +38,13 @@ import notification from '@/components/utils/messaging/notification'
 export default {
     components: { 
         smallcart, topNav, leftNav,
-        filterVertical, productTable,
+        groupVertical, productTable,
         notification,
     },
 
     data(){
         return {
-            filters:{},
+            groups:{},
             schema: {},
             categories:[],
             products: [],
@@ -52,17 +52,17 @@ export default {
     },
 
     watch: {
-        //filters: {
+        //groups: {
         //    deep: true,
         //    handler(selected){
-        //        let filters = Object.keys(selected).filter(s=>{
+        //        let groups = Object.keys(selected).group(s=>{
         //            return selected[s].length 
         //        })
         //        let options = Object.values(selected).reduce((ff, f)=>{
         //            let rv = (ff && ff.length) ? new Set(ff.concat(f)) : new Set(f)
         //            return [...rv]
         //        })
-        //        this.getPublicProducts({params:{options, filters}
+        //        this.getPublicProducts({params:{options, groups}
         //        }).then(products=>{
         //            this.products = products.keys('products')
         //        })
@@ -109,9 +109,9 @@ export default {
                 return p.data
             })(products)
         }).then(()=>{
-            return this.getPublicFilters()
-        }).then(filters=>{
-            this.filters = map(f=>f.data)(filters.embedded('filters'))
+            return this.getPublicGroups()
+        }).then(groups=>{
+            this.groups = map(f=>f.data)(groups.embedded('groups'))
         })
     },
 
@@ -135,7 +135,7 @@ export default {
             getPublicProducts:'api/getPublicProducts',
             getPublicProductSchema:'api/getPublicProductSchema',
             getPublicProductResources:'api/getPublicProductResources',
-            getPublicFilters: 'api/getPublicFilters',
+            getPublicGroups: 'api/getPublicGroups',
             addProduct: 'inquiry/addProduct',
             removeProduct: 'inquiry/removeProduct',
         }),

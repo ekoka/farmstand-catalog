@@ -111,8 +111,8 @@ export default {
             })
         },
 
-        getPublicFilters({getters, commit}){
-            const url = getters.publicRoot.url('public_filters')
+        getPublicGroups({getters, commit}){
+            const url = getters.publicRoot.url('public_groups')
             return getters.http({url}).then(response=>{
                 return HAL(response.data)
             }).catch(error=>{

@@ -2,7 +2,7 @@ import axios from 'axios'
 import accounts from './accounts'
 import products from './products'
 import inquiries from './inquiries'
-import filters from './filters'
+import groups from './groups'
 import images from './images'
 import publicapi from './publicapi'
 import {HAL} from '@/utils/hal'
@@ -18,7 +18,7 @@ const mkstate = ()=>{
     return {
         root: null,
         ...jsoncopy(accounts.state),
-        ...jsoncopy(filters.state),
+        ...jsoncopy(groups.state),
         ...jsoncopy(products.state),
         ...jsoncopy(inquiries.state),
         ...jsoncopy(images.state),
@@ -73,7 +73,7 @@ const API = {
         ...accounts.getters,
         ...products.getters,
         ...inquiries.getters,
-        ...filters.getters,
+        ...groups.getters,
         ...publicapi.getters,
         ...images.getters,
     },
@@ -86,7 +86,7 @@ const API = {
         ...accounts.mutations,
         ...products.mutations,
         ...inquiries.mutations,
-        ...filters.mutations,
+        ...groups.mutations,
         ...publicapi.mutations,
         ...images.mutations,
 
@@ -111,7 +111,7 @@ const API = {
         },
 
         ...accounts.actions,
-        ...filters.actions,
+        ...groups.actions,
         ...products.actions,
         ...inquiries.actions,
         ...images.actions,

@@ -1,29 +1,29 @@
 <template>
-    <div class="filter">
-        <div class="filter-header has-icon-right">
+    <div class="group">
+        <div class="group-header has-icon-right">
             <h3 @click="toggleExpansion" class="subtitle is-5">
-                {{filter.label}}
+                {{group.label}}
                 <span class="icon"><i class="mdi" :class="{'mdi-chevron-down': expanded, 'mdi-chevron-right':!expanded}"></i></span>
             </h3>
-        </div><!-- filter-header -->
-        <div v-if="expanded" class="filter-content">
-            <div class="filter-item" v-for="o,i in filter.options">
-                <label class="filter-item-label">
-                    <input v-model="mutable.options" :value="o.filter_option_id" type="checkbox">
+        </div><!-- group-header -->
+        <div v-if="expanded" class="group-content">
+            <div class="group-item" v-for="o,i in group.options">
+                <label class="group-item-label">
+                    <input v-model="mutable.options" :value="o.group_option_id" type="checkbox">
                     {{o.label}}
-                </label><!-- filter-item-label -->
-            </div><!-- filter-item -->
-        </div><!-- filter-content -->
-    </div><!-- filter -->
+                </label><!-- group-item-label -->
+            </div><!-- group-item -->
+        </div><!-- group-content -->
+    </div><!-- group -->
 </template>
 
 <script>
 export default {
     model: {
-        prop: 'filter',
-        event: 'filter:updated',
+        prop: 'group',
+        event: 'group:updated',
     },
-    props: ['filter'],
+    props: ['group'],
     data (){
         return {
             expanded: false,
@@ -33,7 +33,7 @@ export default {
         }
     },
     mounted(){
-        this.options = this.filter.options
+        this.options = this.group.options
     },
 
     watch:{
@@ -54,7 +54,7 @@ export default {
 </script>
 
 <style>
-.filter {
+.group {
     display: flex;
     width: 14em;
     flex-direction: column; 
@@ -62,27 +62,27 @@ export default {
 
 }
 
-.filter .filter-header{
+.group .group-header{
     cursor: pointer;
 }
 
-.filter .filter-header.has-icon-right{
+.group .group-header.has-icon-right{
     padding-right: 10px;
     position: relative;
 }
 
-.filter .filter-header.has-icon-right .icon{
+.group .group-header.has-icon-right .icon{
     position: absolute;
     top: 3px;
     right: 3px;
 }
 
-.filter .filter-content{
+.group .group-content{
     position: relative;
     top: 5px;
 }
 
-.filter .filter-item{
+.group .group-item{
     position: relative;
     left: 10px;
     width: 100%;
@@ -90,11 +90,11 @@ export default {
     margin-top: 3px;
 }
 
-.filter .filter-item-label{
+.group .group-item-label{
     display: block;
 }
 
-.filter * {
+.group * {
     /*border: 1px solid black;*/
 }
 </style>

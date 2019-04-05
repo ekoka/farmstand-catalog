@@ -1,10 +1,10 @@
 <template>
 <div>
-    <div v-for="f, i in filters"> 
+    <div v-for="f, i in groups"> 
         <h2 class="subtitle">{{f.data.label}}</h2>
         <div v-for="o,i in f.options">
             <label>
-                <input type="checkbox" :value="o.filter_option_id" v-model="mutable.selectedFilterOptions[f.filter_id]">
+                <input type="checkbox" :value="o.group_option_id" v-model="mutable.selectedGroupOptions[f.group_id]">
                 {{o.data.label}}
             </label>
         </div>
@@ -20,16 +20,16 @@ export default {
     data(){
         return {
             mutable:{
-                selectedFilterOptions:{}
+                selectedGroupOptions:{}
             }
         }
     },
 
     watch:{
-        'mutable.selectedFilterOptions':{
+        'mutable.selectedGroupOptions':{
             handler(){
-                this.setProductFilters({
-                    filters: {...this.mutable.selectedFilterOptions},
+                this.setProductGroups({
+                    groups: {...this.mutable.selectedGroupOptions},
                 })
             },
             deep:true,
@@ -38,19 +38,19 @@ export default {
 
     mounted(){
         each(f=>{
-            this.$set(this.mutable.selectedFilterOptions, f.filter_id, [])
-        })(this.filters)
+            this.$set(this.mutable.selectedGroupOptions, f.group_id, [])
+        })(this.groups)
     },
 
     computed:{
         ...mapState('admin/products', {
-            filters: 'filters'
+            groups: 'groups'
         }),
     },
 
     methods:{
         ...mapMutations('admin/products', {
-            setProductFilters: 'setProductFilters'
+            setProductGroups: 'setProductGroups'
         }),
     }
 }

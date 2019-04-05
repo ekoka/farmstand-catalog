@@ -6,9 +6,9 @@ import ProductItem from '@/components/admin/catalog/products/item'
 import ProductJson from '@/components/admin/catalog/products/item/json'
 
 
-import FilterIndex from '@/components/admin/catalog/filters'
-import FilterList from '@/components/admin/catalog/filters/list'
-import FilterItem from '@/components/admin/catalog/filters/item'
+import GroupIndex from '@/components/admin/catalog/groups'
+import GroupList from '@/components/admin/catalog/groups/list'
+import GroupItem from '@/components/admin/catalog/groups/item'
 
 
 export default {
@@ -46,26 +46,26 @@ export default {
                 },
             ],
         },
-        // Filters
+        // Groups
         {
-            path: 'filters',
-            component: FilterIndex,
+            path: 'groups',
+            component: GroupIndex,
             children: [
                 {
                     path: '', 
-                    name:'AdminFilterList',
-                    component: FilterList,
+                    name:'AdminGroupList',
+                    component: GroupList,
                 },
                 {
                     path:'new',
-                    component:FilterItem, 
-                    name:'AdminNewFilter', 
+                    component:GroupItem, 
+                    name:'AdminNewGroup', 
                     props:true,
                 },
                 {
-                    path:':filter_id',
-                    component:FilterItem,
-                    name:'AdminEditFilter',
+                    path:':group_id',
+                    component:GroupItem,
+                    name:'AdminEditGroup',
                     props:true,
                 },
             ]

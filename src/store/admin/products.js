@@ -2,25 +2,25 @@ export default {
     namespaced: true,
 
     state:{
-        showFilters: false,
-        filters: [],
-        productFilters: {},
+        showGroups: false,
+        groups: [],
+        productGroups: {},
     },
 
     getters:{
     },
 
     mutations:{
-        showFilters(state, {value}){
-            state.showFilters = value
+        showGroups(state, {value}){
+            state.showGroups = value
         },
 
-        setFilters(state, {filters}){
-            state.filters = filters 
+        setGroups(state, {groups}){
+            state.groups = groups 
         },
 
-        setProductFilters(state, {filters}){
-            state.productFilters = filters || {}
+        setProductGroups(state, {groups}){
+            state.productGroups = groups || {}
         },
     },
 

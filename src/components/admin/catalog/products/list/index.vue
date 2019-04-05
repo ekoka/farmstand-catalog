@@ -34,7 +34,7 @@
 
     </div><!-- level -->
 
-    <product-table v-if="ready" :products="filteredProducts" />
+    <product-table v-if="ready" :products="groupedProducts" />
 </div>
 </template>
 
@@ -62,10 +62,10 @@ export default {
 
     computed:{
         ...mapState('admin/products', {
-            productFilters: 'productFilters'
+            productGroups: 'productGroups'
         }),
 
-        filteredProducts(){
+        groupedProducts(){
             return filter(p=>{
                 return flow(
                     toPairs, // filters to tuple of (fname, flist)
@@ -73,14 +73,14 @@ export default {
                         let valid = 1
                         if(flist.length){
                             valid = 0
-                            valid = intersection(flist)(p.filters[fname] || []).length
+                            valid = intersection(flist)(p.groups[fname] || []).length
                         }
                         return valid
                     }),
                     every(v=>{
                         return v
                     })
-                )(this.productFilters)
+                )(this.productGroups)
             })(this.products)
         },
     },
@@ -97,54 +97,54 @@ export default {
                     })(products)
                     this.ready = true 
                 }).then(()=>{
-                    this.enableFilters()
+                    this.enableGroups()
                 })
             })
         })
     },
 
     destroyed(){
-        this.disableFilters()
+        this.disableGroups()
     },
 
     methods: {
-        filterProduct(p){
+        groupProduct(p){
             let valid = 1
             forIn(foptions, fname => {
                 if(foptions.length){
                     valid = 0 
-                    valid = intersection(foptions)(p.filters[fname] || []).length
+                    valid = intersection(foptions)(p.groups[fname] || []).length
                 }
             })
             return valid
         },
-        enableFilters(){
-            // load filter data in admin/products store
-            this.getFilters().then(filters=>{
-                const filter_ids = filters.key('filter_ids')
-                return this.getFilterResources({filter_ids})
-            }).then(filters=>{
-                this.setFilters({filters:map(f=>f.data)(filters)})
-                // enable filter component in sidebar
-                this.showFilters({value:true})
+        enableGroups(){
+            // load group data in admin/products store
+            this.getGroups().then(groups=>{
+                const group_ids = groups.key('group_ids')
+                return this.getGroupResources({group_ids})
+            }).then(groups=>{
+                this.setGroups({groups:map(f=>f.data)(groups)})
+                // enable group component in sidebar
+                this.showGroups({value:true})
             })
         },
 
-        disableFilters(){
-            this.showFilters({value:false})
+        disableGroups(){
+            this.showGroups({value:false})
         },
 
         ...mapActions({
             getProductSchema: 'api/getProductSchema',
             getProducts: 'api/getProducts',
             getProductResources: 'api/getProductResources',
-            getFilters: 'api/getFilters',
-            getFilterResources: 'api/getFilterResources',
+            getGroups: 'api/getGroups',
+            getGroupResources: 'api/getGroupResources',
         }),
 
         ...mapMutations({
-            showFilters: 'admin/products/showFilters',
-            setFilters: 'admin/products/setFilters',
+            showGroups: 'admin/products/showGroups',
+            setGroups: 'admin/products/setGroups',
         }),
     },
 }

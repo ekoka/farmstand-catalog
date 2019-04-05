@@ -4,7 +4,6 @@ import Domain from '@/components/admin/domain'
 // routes
 import Catalog from './catalog'
 import Users from './users'
-import Settings from './settings'
 import Inquiries from './inquiries'
 
 
@@ -22,6 +21,5 @@ export default {
             path:'domain', 
             props: true
         },
-        Settings,
     ]
 }

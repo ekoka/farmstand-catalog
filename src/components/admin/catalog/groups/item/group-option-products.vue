@@ -4,11 +4,11 @@
         <div class="level">
             <div class="level-left">
                 <h4 class="title is-3">
-                    {{filterData.label}}
+                    {{groupData.label}}
                 </h4>
             </div>
         </div>
-        <h4 class="subtitle is-5">Products linked to option <span class="is-text-4 has-text-weight-semibold is-italic">{{filterOption.data.label}}</span></h4>
+        <h4 class="subtitle is-5">Products linked to option <span class="is-text-4 has-text-weight-semibold is-italic">{{groupOption.data.label}}</span></h4>
         <div class="columns is-multiline">
             <div v-for="p, i in mutable.products" class="column is-one-third">
                 <div class="field">
@@ -43,11 +43,11 @@ import {mapActions} from 'vuex'
 import {HAL} from '@/utils/hal'
 
 export default {
-    props: ['filter_option_id', 'optionUrl', 'filterData'],
+    props: ['group_option_id', 'optionUrl', 'groupData'],
 
     data(){
         return {
-            filterOption: {data:{}},
+            groupOption: {data:{}},
             optionProductsUrl: null,
             mutable:{
                 selectedProducts:[],
@@ -60,14 +60,14 @@ export default {
     mounted(){
         this.loadProducts()
         if (this.optionUrl){
-            this.loadFilterOption()
+            this.loadGroupOption()
         }
     },
 
     methods:{
-        loadFilterOption(){
-            this.getFilterOption({url:this.optionUrl}).then((option)=>{
-                this.filterOption = option.data
+        loadGroupOption(){
+            this.getGroupOption({url:this.optionUrl}).then((option)=>{
+                this.groupOption = option.data
                 this.optionProductsUrl = option.url('products')
                 this.mutable.selectedProducts = option.data.products
             })
@@ -88,7 +88,7 @@ export default {
         saveSelection(){
             const url = this.optionProductsUrl
             const data = {'products': [...this.mutable.selectedProducts]}
-            this.putFilterOptionProducts({url, data})
+            this.putGroupOptionProducts({url, data})
         },
 
         field(product, field){
@@ -101,8 +101,8 @@ export default {
         ...mapActions({
             getProducts: 'api/getProducts',
             getProductResources: 'api/getProductResources',
-            getFilterOption: 'api/getFilterOption',
-            putFilterOptionProducts: 'api/putFilterOptionProducts',
+            getGroupOption: 'api/getGroupOption',
+            putGroupOptionProducts: 'api/putGroupOptionProducts',
         }),
 
     },

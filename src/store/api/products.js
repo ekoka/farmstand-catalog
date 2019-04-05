@@ -166,7 +166,7 @@ export default {
                 return halify(found)
             }
                 
-            let url = getters.domain.url('product_resources', null, {
+            const url = getters.domain.url('product_resources', null, {
                 pid:notfound
             })
             return getters.http({
@@ -182,9 +182,9 @@ export default {
             })
         },
 
-        putProductFilterOptions({getters, dispatch}, {product_id, data}){
+        putProductGroupOptions({getters, dispatch}, {product_id, data}){
             return dispatch('getProduct', {product_id}).then(product=>{
-                const url = product.url('filters')
+                const url = product.url('groups')
                 return getters.http({
                     url,
                     auth:true,

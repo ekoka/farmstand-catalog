@@ -25,7 +25,7 @@
         
     <div class="field has-addons" v-for="o,i in mutable.options">
         <div class="control">
-            <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.filter_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
+            <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.group_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
                 <span>remove</span>
             
             </button>
@@ -37,8 +37,8 @@
         <div class="control">
             <button 
                 class="button is-text is-outlined" 
-                :disabled="!o.filter_option_id"
-                @click="openProductSelection(o.filter_option_id)">
+                :disabled="!o.group_option_id"
+                @click="openProductSelection(o.group_option_id)">
                 select products
             </button>
         </div><!-- control -->
@@ -51,16 +51,16 @@
 import _ from 'lodash/fp'
 import Message from './message'
 import Modal from '@/components/admin/elements/modal'
-import FilterOptionProducts from './filter-option-products'
+import GroupOptionProducts from './group-option-products'
 import {HAL} from '@/utils/hal'
 
 export default {
     components: {
         Modal,
         Message,
-        FilterOptionProducts
+        GroupOptionProducts
     },
-    props: ['options', 'filterResource'],
+    props: ['options', 'groupResource'],
 
     data(){
         return {
@@ -121,7 +121,7 @@ export default {
                     this.mutable.options.splice(optionIndex, 1)
                 }
             }
-            if(option.filter_option_id){
+            if(option.group_option_id){
                 this.modalComponent = {
                     component:Message,
                     params:{},
@@ -129,23 +129,23 @@ export default {
                 }
                 return
             }
-            // we only get here if no filter_option_id,
+            // we only get here if no group_option_id,
             // in which case we just remove.
             remove(true)
 
         },
 
-        openProductSelection(filter_option_id){
-            const filter = HAL(this.filterResource)
-            const optionUrl = filter.url('option', {filter_option_id })
-            const filterData = filter.key('data')
+        openProductSelection(group_option_id){
+            const group = HAL(this.groupResource)
+            const optionUrl = group.url('option', {group_option_id })
+            const groupData = group.key('data')
 
             this.modalComponent = {
-                component: FilterOptionProducts,
+                component: GroupOptionProducts,
                 params:{
-                    filter_option_id, 
+                    group_option_id, 
                     optionUrl,
-                    filterData,
+                    groupData,
                 },
                 events:{close(){
                     },

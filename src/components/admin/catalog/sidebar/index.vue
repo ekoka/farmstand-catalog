@@ -15,15 +15,15 @@
             </li>
 
             <li>
-                <router-link :to="{name:'AdminFilterList'}" active-class="is-active">
-                    <span>Filters</span>
+                <router-link :to="{name:'AdminGroupList'}" active-class="is-active">
+                    <span>Groups</span>
                 </router-link>
             </li>
 
         </ul>
     </nav><!-- menu -->
 
-    <productFilters v-if="showFilters"></productFilters>
+    <productGroups v-if="showGroups"></productGroups>
 
 </div><!-- column -->
 </template>
@@ -32,17 +32,17 @@
 import Vue from 'vue'
 import {mapState} from 'vuex'
 
-import productFilters from '../products/list/filters'
+import productGroups from '../products/list/groups'
 
 export default {
 
     components:{
-        productFilters,
+        productGroups,
     },
 
     computed:{
         ...mapState('admin/products', {
-            showFilters: 'showFilters',
+            showGroups: 'showGroups',
         })
     },
 
