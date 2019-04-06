@@ -1,6 +1,8 @@
 <template>
 <div>
-    <confirmation :active.sync="activeConfirmation" :handlers="{true:removeHandler}">
+    <confirmation 
+        :active.sync="activeConfirmation" 
+        @confirmation="removeHandler">
         Do yo want to remove this grouping <span class="is-size-6">(any existing associations with products will be severed)</span>?
     </confirmation>
     <nav class="breadcrumb">
@@ -14,7 +16,7 @@
         </ul>
     </nav> <!-- breadcrumb -->
 
-    <div class="content sticky-level">
+    <stickycontent>
         <div class="level">
             <div class="level-left">
             </div>
@@ -35,7 +37,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </stickycontent>
 
     <div class="box">
 
@@ -96,12 +98,14 @@ import Tooltip from '@/components/admin/elements/tooltip'
 import {mapActions} from 'vuex'
 import confirmation from '@/components/utils/messaging/confirmation'
 import notification from '@/components/utils/messaging/notification'
+import stickycontent from '@/components/utils/sticky-content'
 export default {
     components: {
         OptionList,
         Tooltip,
         confirmation,
         notification,
+        stickycontent,
     },
 
     // we don't use props here because for some reason they're not being updated 
@@ -197,6 +201,7 @@ export default {
                             close: false,
                             timeout: 1,
                             size: 'is-medium',
+                            color: 'is-warning',
                         }
                     })
                 })
@@ -257,11 +262,3 @@ export default {
 
 }
 </script>
-
-<style>
-.sticky-level {
-    position: sticky;
-    top: 5%;
-    z-index: 9;
-}
-</style>

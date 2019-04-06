@@ -1,57 +1,43 @@
 <template>
-<div class="modal" :class="{'is-active': modalActive}">
-    <div class="modal-background" @click="closeModal"></div>
-    <button class="modal-close is-large" aria-label="close" @click="closeModal"></button>
+<div class="modal" :class="{'is-active': active}">
+    <div class="modal-background" @click="close"></div>
+    <button v-if="button" class="modal-close is-large" 
+        aria-label="close" 
+        @click="close">
+    </button>
     <div class="modal-content">
-        <component :is="component" 
-            v-bind="params" 
-            v-on="events"
-            @close="closeModal" >
-            <slot></slot>
-        </component>
+        <slot></slot>
     </div>
 </div>
 </template>
 
 <script>
 export default {
-    props: ['modalComponent', 'listenFor', 'params'],
-
-    data(){
-        return {
-            events:{},
-            modalActive: false,
-            component: null,
-        }
+    props: {
+        active: {
+            type: Boolean,
+            default: false,
+        },
+        button: {
+            type: Boolean,
+            default: true,
+        },
     },
 
     watch: {
-        modalComponent: {
-            handler(value){
-                this.setup()
-                if(value){
-                    this.modalActive = true
-                    this.component = this.modalComponent
+        active: {
+            handler(v){
+                console.log('active is now ', v)
+                if(!v){
+                    this.close() 
                 }
             },
-            immediate: true,
         },
     },
 
     methods:{
-        setup(){
-            if(this.listenFor && this.listenFor.length){
-                this.listenFor.forEach(evntName=>{
-                    this.events[evntName] = (e)=>{this.$emit(evntName, e)}
-                })
-            }
-        },
-        closeModal(){
-            this.modalActive = false
-            this.component = null
-            this.$emit('closeModal')
-            this.$emit('update:modalComponent', null)
-            this.$emit('close')
+        close(){
+            this.$emit('update:active', false)
         },
     },
 }

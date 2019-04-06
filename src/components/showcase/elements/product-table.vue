@@ -53,7 +53,9 @@
                                     Added to RFQ
                                 </button>
                                 <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
-                                    x  
+                                    <span class="icon is-small">
+                                        <i class="mdi mdi-close"></i>
+                                    </span>
                                 </button>
                             </div>
                             <button v-else

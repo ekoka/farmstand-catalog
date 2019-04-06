@@ -18,7 +18,12 @@
 
 <script>
 export default {
-    props: ['answer', 'options'],
+    props: {
+        options:{
+            type: Object,
+            default: ()=>{ return {}},
+        },
+    },
 
     methods:{
         confirmation(value){
