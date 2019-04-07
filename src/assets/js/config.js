@@ -6,6 +6,8 @@ export const DOMAIN_HOST_TEMPLATE = 'https://{domain}.productlist.local:8082'
 export const API_HOST = 'https://api.productlist.local'
 export const API_ROOT = "https://api.productlist.local/api/v1/root"
 export const PUBLIC_API_ROOT = "https://api.productlist.local/api/v1/public/root"
+// alias
+export const API_PUBLIC_ROOT = PUBLIC_API_ROOT
 
 //export const PRODUCTLIST_INDEX = 'http://localhost:8081'
 export const PRODUCTLIST_INDEX = 'http://productlist.local:8081'

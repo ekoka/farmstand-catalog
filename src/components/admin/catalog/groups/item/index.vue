@@ -64,10 +64,13 @@
                 </label>
             </div>
         </div><!-- field -->
+    </div>
+    <div class="box">
+        <h5 class="subtitle is-4">Options for <em>{{mutable.group.data.label}}</em> group</h5>
         <div class="field is-grouped is-grouped-left">
             <div class="control">
                 <label class="label">
-                    Can a product be linked to more than one option? 
+                    Can one product be linked to multiple options?
                 </label>
             </div>
             <div class="control">
@@ -84,11 +87,11 @@
             </div>
             <tooltip>How many simultaneous options can a product be associated with. For example, in a "Category" group each product could belong to multiple categories. On the other hand a "Maker" group could be set up such that each product can only be linked to a single manufacturer. Note that once a group has been saved, it can only be changed from Single to Multiple choice, not the other way around.</tooltip>
         </div><!-- field -->
+        <option-list v-if="ready" 
+            :groupResource="groupResource"
+            :options.sync="mutable.group.options">
+        </option-list>
     </div>
-    <option-list class="box" v-if="ready" 
-        :groupResource="groupResource"
-        :options.sync="mutable.group.options">
-    </option-list>
 </div>
 </template>
 

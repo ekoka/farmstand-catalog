@@ -27,7 +27,6 @@ export default {
     watch: {
         active: {
             handler(v){
-                console.log('active is now ', v)
                 if(!v){
                     this.close() 
                 }

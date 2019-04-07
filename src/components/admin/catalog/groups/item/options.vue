@@ -10,9 +10,6 @@
     <div class="level">
         <div class="level-left">
             <div class="level-item">
-                <h5 class="subtitle is-4">Category options</h5>
-            </div>
-            <div class="level-item">
                 <button @click="addOption" class="button is-link is-outlined">
                     <span class="icon is-small">
                         <i class="mdi mdi-plus-circle-outline"></i>
