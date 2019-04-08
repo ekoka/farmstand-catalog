@@ -13,3 +13,4 @@ gitmessage.gitcommit
 *.ntvs*
 *.njsproj
 *.sln
+src/assets/js/config.js
