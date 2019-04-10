@@ -23,7 +23,7 @@
                             type="file">
                             <span class="file-cta">
                                 <span class="file-icon">
-                                    <i class="mdi mdi-upload"></i>
+                                    <i class="iconify mdi" data-icon="mdi-upload"></i>
                                 </span><!-- file-icon -->
                                 <span class="file-label">
                                     Upload new images&hellip;

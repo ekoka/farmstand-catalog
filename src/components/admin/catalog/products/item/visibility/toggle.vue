@@ -1,7 +1,7 @@
 <template>
 <button class="button is-size-6 has-text-weight-bold" :class="buttonClass" :title="buttonTitle">
     <span class="icon is-size-5">
-        <i class="mdi" :class="iconClass"></i>
+        <i class="iconify mdi" :data-icon="iconClass"></i>
     </span>
     <span class="is-size-6">
         <template v-if='visible'>This product is currently displayed in the catalog</template>

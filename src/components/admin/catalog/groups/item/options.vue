@@ -12,7 +12,7 @@
             <div class="level-item">
                 <button @click="addOption" class="button is-link is-outlined">
                     <span class="icon is-small">
-                        <i class="mdi mdi-plus-circle-outline"></i>
+                        <i class="iconify mdi" data-icon="mdi-plus-circle-outline"></i>
                     </span>
                     <span>Add one</span>
                 </button>
@@ -22,7 +22,7 @@
         
     <div class="field has-addons" v-for="o,i in mutable.options">
         <div class="control">
-            <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.group_option_id}" ><i class="mdi mdi-minus-circle-outline"></i></span>
+            <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.group_option_id}" ><i class="iconify mdi" data-icon="mdi-minus-circle-outline"></i></span>
                 <span>remove</span>
             
             </button>

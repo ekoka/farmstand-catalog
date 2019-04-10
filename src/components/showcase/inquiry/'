@@ -5,7 +5,7 @@
             <div>
                 {{getFieldValue(p, 'number')}} {{getFieldValue(p, 'name')}}
                 <a @click="removeProduct({product_id:p.product_id})" class="button is-danger is-inverted">
-                    <span class="icon"><i class="mdi mdi-close-circle"></i></span> 
+                    <span class="icon"><i class="iconify mdi" data-icon="mdi-close-circle"></i></span> 
                 </a>
             </div>
         </li>

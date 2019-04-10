@@ -5,7 +5,7 @@
         <img :src="i.aspect_ratios['1:1']['thumb']" />
         <button class="button" @click="removeImage(i)">
             <span class="icon">
-                <i class="mdi mdi-close-box"></i>
+                <i class="iconify mdi" data-icon="mdi-close-box"></i>
             </span>
         </button>
     </span>

@@ -49,7 +49,7 @@
     </div><!-- prod-item -->
     <div class="prod-item column is-1">
         <button class="button is-small" @click="expand">
-            <span class="icon"><i class="mdi" :class="{'mdi-plus': !expanded,'mdi-minus': expanded}"></i></span>
+            <span class="icon"><i class="iconify mdi" :data-icon="{'mdi-plus': !expanded,'mdi-minus': expanded}"></i></span>
         </button>
     </div><!-- prod-item -->
     <div v-if="expanded" class="column is-full">

@@ -3,7 +3,7 @@
     <span class="icon" 
         @mouseover="showMessage=true" 
         @mouseleave="showMessage=false" >
-        <i class="mdi mdi-help-circle-outline"></i>
+        <i class="iconify mdi" data-icon="mdi-help-circle-outline"></i>
         <!--
         mdi-help-box
         mdi-help-circle

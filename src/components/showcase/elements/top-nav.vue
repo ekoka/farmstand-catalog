@@ -15,7 +15,7 @@
             <div class="navbar-start">
                 <router-link class="navbar-item" :to="{name: 'Showcase'}">
                     <span class="icon has-text-primary">
-                        <i class="mdi mdi-book-open-page-variant"></i>
+                        <i class="iconify mdi" data-icon="mdi-book-open-page-variant"></i>
                             <!-- notebook -->
                     </span>
                     <span class="is-hidden-touch is-hidden-widescreen">
@@ -28,7 +28,7 @@
                 <router-link class="navbar-item" 
                     :to="{name: 'ShowcaseInquiry'}">
                     <span class="icon has-text-info">
-                        <i class="mdi mdi-message-bulleted"></i>
+                        <i class="iconify mdi" data-icon="mdi-message-bulleted"></i>
                         <!--
                         mdi-package-variant
                         mdi-comment-text-outline

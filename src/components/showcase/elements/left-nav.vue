@@ -7,7 +7,7 @@
         <li>
             <router-link :to="{name: 'Catalog'}" :class="{'is-active': active=='catalog'}">
                 <span class="icon">
-                    <i class="mdi mdi-notebook"></i>
+                    <i class="iconify mdi" data-icon="mdi-notebook"></i>
                 </span>
                Catalog 
             </router-link>
@@ -16,7 +16,7 @@
         <li>
             <router-link :to="{name: 'CatalogInquiry'}" :class="{'is-active': active=='inquiry'}">
                 <span class="icon">
-                    <i class="mdi mdi-message-bulleted"></i>
+                    <i class="iconify mdi" data-icon="mdi-message-bulleted"></i>
                     <!--
                     mdi-package-variant
                     mdi-comment-text-outline

@@ -7,7 +7,7 @@
                 {{this.selectedValue.label}}
             </span>
             <span class="icon">
-                <i class="mdi mdi-chevron-double-down"></i>
+                <i class="iconify mdi" data-icon="mdi-chevron-double-down"></i>
             </span>
         </a>
         <p v-else> ------ </p>

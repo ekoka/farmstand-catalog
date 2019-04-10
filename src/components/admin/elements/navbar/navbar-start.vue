@@ -2,7 +2,7 @@
 <div class="navbar-start">
     <router-link class="navbar-item is-active" :to="{name: 'AdminProductList'}">
         <span class="icon has-text-primary">
-            <i class="mdi mdi-book-open-page-variant"></i>
+            <i class="iconify mdi" data-icon="mdi-book-open-page-variant"></i>
                 <!-- notebook -->
         </span>
         <span class="is-hidden-touch is-hidden-widescreen">
@@ -16,7 +16,7 @@
 
     <router-link class="navbar-item" :to="{name: 'AdminUserList'}">
         <span class="icon has-text-danger">
-            <i class="mdi mdi-account"></i>
+            <i class="iconify mdi" data-icon="mdi-account"></i>
             <!--
             mdi-package-variant
             mdi-comment-text-outline
@@ -37,7 +37,7 @@
 
     <router-link class="navbar-item" :to="{name: 'AdminInquiries'}">
         <span class="icon has-text-info">
-            <i class="mdi mdi-message-bulleted"></i>
+            <i class="iconify mdi" data-icon="mdi-message-bulleted"></i>
             <!--
             mdi-package-variant
             mdi-comment-text-outline

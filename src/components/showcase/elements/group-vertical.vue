@@ -3,7 +3,7 @@
         <div class="group-header has-icon-right">
             <h3 @click="toggleExpansion" class="subtitle is-5">
                 {{group.label}}
-                <span class="icon"><i class="mdi" :class="{'mdi-chevron-down': expanded, 'mdi-chevron-right':!expanded}"></i></span>
+                <span class="icon"><i class="iconify mdi" :data-icon="{'mdi-chevron-down': expanded, 'mdi-chevron-right':!expanded}"></i></span>
             </h3>
         </div><!-- group-header -->
         <div v-if="expanded" class="group-content">

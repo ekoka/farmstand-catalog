@@ -9,14 +9,14 @@
             <div class="level-item">
                 <a>
                     <span class="icon has-text-warning">
-                        <i class="mdi mdi-18px mdi-star"></i>
+                        <i class="iconify mdi" data-icon="mdi-18px mdi-star"></i>
                     </span>Favorites
                 </a>
             </div>
             <div class="level-item">
                 <a class="">
                     <span class="icon has-text-danger">
-                        <i class="mdi mdi-minus-circle"></i>
+                        <i class="iconify mdi" data-icon="mdi-minus-circle"></i>
                     </span>Hidden
                 </a>
             </div>
@@ -54,7 +54,7 @@
                                 </button>
                                 <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
                                     <span class="icon is-small">
-                                        <i class="mdi mdi-close"></i>
+                                        <i class="iconfiy mdi" data-icon="mdi-close"></i>
                                     </span>
                                 </button>
                             </div>
@@ -95,7 +95,7 @@
                 <div class="level-item">
                     <button class="button is-white is-small">
                         <span class="icon has-text-warning">
-                            <i class="mdi mdi-18px mdi-star"></i>
+                            <i class="iconfiy mdi" data-icon="mdi-18px mdi-star"></i>
                         </span> 
                         <span>
                             Favorite
@@ -105,7 +105,7 @@
                 <div class="level-item">
                     <a class="button is-white is-small">
                         <span class="icon has-text-danger is-small">
-                            <i class="mdi mdi-minus-circle-outline"></i>
+                            <i class="iconify mdi" data-icon="mdi-minus-circle-outline"></i>
                         </span>
                         <span>Hide</span>
                     </a>
@@ -116,7 +116,7 @@
                     <a class="is-size-7 " @click="toggleExpandProduct(p.product_id)">
                         <span>More details...</span>
                         <span class="icon">
-                            <i class="mdi mdi-chevron-double-down"></i>
+                            <i class="iconify mdi" data-icon="mdi-chevron-double-down"></i>
                         </span>
                     </a>
                 </div><!-- level-item -->

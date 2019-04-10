@@ -9,7 +9,7 @@
                 <div>
                         <a target="_blank" :href="accountUrl">
                         <span class="icon is-small">
-                            <i class="mdi mdi-account-circle"></i>
+                            <i class="iconify mdi" data-icon="mdi-account-circle"></i>
                         </span>
                         Go to your account
                     </a>
