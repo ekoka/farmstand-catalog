@@ -49,23 +49,37 @@
     </div><!-- prod-item -->
     <div class="prod-item column is-1">
         <button class="button is-small" @click="expand">
-            <span class="icon"><i class="iconify mdi" :data-icon="{'mdi-plus': !expanded,'mdi-minus': expanded}"></i></span>
+            <template v-if="expanded">
+                <span class="icon">
+                    <i class="iconify mdi" data-icon="mdi-minus"></i>
+                </span>
+            </template>
+            <template v-else>
+                <span class="icon">
+                    <i class="iconify mdi" data-icon="mdi-plus"></i>
+                </span>
+            </template>
         </button>
     </div><!-- prod-item -->
     <div v-if="expanded" class="column is-full">
         <p class="subtitle is-5">Description:</p>
-        <p>{{description}}</p>
+        <p>{{rowData.description.value}}</p>
     </div>
 </div><!-- prod-row -->
 </template>
 
 <script>
 //import statusSwitch from '@/components/admin/elements/status-switch'
-import {compose, filter, find, each, map} from 'lodash/fp'
-import toggle from './toggle'
+import compose from 'lodash/fp/compose'
+import filter from 'lodash/fp/filter'
+import find from 'lodash/fp/find'
+import each from 'lodash/fp/each'
+import map from 'lodash/fp/map'
 import {mapActions} from 'vuex'
 export default {
-    components: { toggle},
+    components: { 
+        toggle: ()=>import('./toggle'),
+    },
     props: ['product'],
     data(){
         return {
@@ -73,7 +87,7 @@ export default {
                 product: {...this.product},
             },
             expanded: false,
-            description: null,
+            //description: null,
         }
     },
     computed:{
@@ -88,7 +102,9 @@ export default {
                 data[f.name] = f
             })
             const selectfields = filter(f=>{
-                return ['name', 'number', 'available', 'visible',].includes(f.name)
+                return ['name', 'number', 'available', 'visible','description'].includes(
+                    f.name
+                )
             })
 
             compose(addtodata, selectfields)(this.mutable.product.fields)
@@ -99,20 +115,20 @@ export default {
     methods: {
         expand(){
             this.expanded=!this.expanded
-            if (this.expanded && !this.description){
-                this.getProduct({
-                    product_id:this.mutable.product.product_id,
-                    partial: 0,
-                }).then(product => {
-                    const fields = product.data.fields
-                    description = find(f => {
-                        return f.name == 'description'
-                    })(fields)
-                    if (description){
-                        this.description = description.value
-                    }
-                })
-            }
+            //if (this.expanded && !this.description){
+            //    this.getProduct({
+            //        product_id:this.mutable.product.product_id,
+            //        partial: 0,
+            //    }).then(product => {
+            //        const fields = product.data.fields
+            //        description = find(f => {
+            //            return f.name == 'description'
+            //        })(fields)
+            //        if (description){
+            //            this.description = description.value
+            //        }
+            //    })
+            //}
         },
 
         tag(status){

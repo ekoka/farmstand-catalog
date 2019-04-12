@@ -31,7 +31,3 @@
     </div><!-- prod-item -->
 </div><!-- prod-row -->
 </template>
-
-<script>
-export default {}
-</script> 

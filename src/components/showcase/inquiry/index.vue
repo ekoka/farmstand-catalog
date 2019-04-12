@@ -21,15 +21,16 @@
 </template>
 
 <script>
-import topNav from '../elements/top-nav'
-import leftNav from '../elements/left-nav'
-import cart from './cart'
-import addresses from './addresses'
-import comments from './comments'
 import {mapActions, mapState} from 'vuex'
 
 export default {
-    components: {cart, addresses, comments, topNav, leftNav,},
+    components: {
+        topNav: ()=>import  ( '../elements/top-nav'),
+        leftNav: ()=>import  ( '../elements/left-nav'),
+        cart: ()=>import  ( './cart'),
+        addresses: ()=>import  ( './addresses'),
+        comments: ()=>import  ( './comments'),
+    },
 
 
     computed:{

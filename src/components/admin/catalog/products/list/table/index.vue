@@ -15,10 +15,11 @@
 </template>
 
 <script>
-import productRow from './row'
-import productTableHeader from './header'
 export default {
-    components: {productRow, productTableHeader},
+    components: {
+        productRow: ()=>import  ( './row'),
+        productTableHeader: ()=>import  ( './header'),
+    },
     props: ['products'],
 
     watch:{

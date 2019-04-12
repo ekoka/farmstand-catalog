@@ -11,7 +11,6 @@
 </template>
 
 <script>
-import Status from './status'
 export default {
     props: ['visible'],
     computed:{

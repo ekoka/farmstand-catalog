@@ -7,10 +7,11 @@
 </template>
 
 <script>
-import modal from '@/components/utils/modal'
-import truefalse from './truefalse'
 export default {
-    components: {modal, truefalse,},
+    components: {
+        modal: ()=>import  ( '@/components/utils/modal'),
+        truefalse: ()=>import  ( './truefalse'),
+    },
 
     props: ['active'],
 

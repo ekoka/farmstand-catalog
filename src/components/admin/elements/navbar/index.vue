@@ -33,7 +33,10 @@ import navbarStart from './navbar-start'
 import navbarEnd from './navbar-end'
 
 export default {
-    components: { navbarStart, navbarEnd, }
+    components: { 
+        navbarStart, 
+        navbarEnd, 
+    }
 
 }
 </script>

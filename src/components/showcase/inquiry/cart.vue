@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
+import {mapActions, mapState, mapMutations} from 'vuex'
 export default {
 
     computed:{

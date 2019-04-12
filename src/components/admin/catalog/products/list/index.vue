@@ -39,18 +39,19 @@
 </template>
 
 <script>
-import {map,flow,filter,toPairs,every,each,intersection} from 'lodash/fp'
+import map from 'lodash/fp/map'
+import flow from 'lodash/fp/flow'
+import filter from 'lodash/fp/filter'
+import toPairs from 'lodash/fp/toPairs'
+import every from 'lodash/fp/every'
+import each from 'lodash/fp/each'
+import intersection from 'lodash/fp/intersection'
 import Vue from 'vue'
 import {mapActions, mapMutations, mapState} from 'vuex'
-import productTable from './table'
-
-//const _ = wrapperLodash
-
-//mixin(_, {map, compose, filter, forIn, intersection})
 
 export default {
     components: {
-        productTable,
+        productTable: ()=>import('./table'),
     },
 
     data(){
@@ -92,7 +93,6 @@ export default {
                     product_ids:products.data.product_ids
                 }).then(products=>{
                     this.products = map(p=>{
-                        console.dir(p.data)
                         return p.data
                     })(products)
                     this.ready = true 

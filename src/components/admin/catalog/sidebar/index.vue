@@ -32,12 +32,10 @@
 import Vue from 'vue'
 import {mapState} from 'vuex'
 
-import productGroups from '../products/list/groups'
-
 export default {
 
     components:{
-        productGroups,
+        productGroups: ()=>import  ( '../products/list/groups'),
     },
 
     computed:{

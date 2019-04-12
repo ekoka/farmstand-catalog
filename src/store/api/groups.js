@@ -1,9 +1,11 @@
 import {HAL} from '@/utils/hal' // helper to navigate HAL API resources
-import {Cache} from '@/utils/cache' // helper to manipulate a cache
-import {find} from 'lodash/fp'
 import {Buffer} from '@/utils/cache'
-import {map, reduce, difference, each, union} from 'lodash/fp'
-
+import find from 'lodash/fp/find'
+import map from 'lodash/fp/map'
+import reduce from 'lodash/fp/reduce'
+import difference from 'lodash/fp/difference'
+import each from 'lodash/fp/each'
+import union from 'lodash/fp/union'
 
 export default {
     state:{

@@ -8,19 +8,14 @@
 </template>
 
 <script>
-
-
-
-
-
-
 import cookies from '@/utils/cookies'
 import URI from 'urijs'
 import {mapActions, mapMutations} from 'vuex'
-import navbar from './elements/navbar'
 
 export default {
-    components: {navbar,},
+    components: {
+        navbar: ()=>import('./elements/navbar'),
+    },
 
     data(){
         return {

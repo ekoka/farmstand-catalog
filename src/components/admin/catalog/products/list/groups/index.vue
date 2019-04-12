@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {each} from 'lodash/fp'
+import each from 'lodash/fp/each'
 import {mapMutations, mapState} from 'vuex'
 export default {
 

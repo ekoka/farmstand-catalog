@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import CurrentStatus from './status'
-import Toggle from './toggle'
 export default {
     model: {
         prop: 'visible', 
@@ -24,8 +22,8 @@ export default {
     props: ['visible'],
 
     components: {
-        CurrentStatus,
-        Toggle,
+        CurrentStatus: ()=>import  ( './status'),
+        Toggle: ()=>import  ( './toggle'),
     },
 
     methods:{

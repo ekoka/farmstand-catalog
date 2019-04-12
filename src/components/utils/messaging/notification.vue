@@ -10,7 +10,8 @@
 </template>
 
 <script>
-import {join, remove} from 'lodash/fp'
+import join from 'lodash/fp/join'
+import remove from 'lodash/fp/remove'
 export default {
 
     props: ['eventName', 'defaults'],

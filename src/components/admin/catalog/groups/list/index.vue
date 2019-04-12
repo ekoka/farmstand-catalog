@@ -23,9 +23,7 @@
 </template>
 
 <script>
-import groupTable from './table'
-import _ from 'lodash/fp'
-import {each} from 'lodash/fp'
+import each from 'lodash/fp/each'
 import {mapActions, mapGetters} from 'vuex'
 export default {
     data(){
@@ -34,7 +32,7 @@ export default {
         }
     },
     components: {
-        groupTable
+        groupTable: ()=>import  ( './table'),
     },
     mounted(){
         this.loadGroups()

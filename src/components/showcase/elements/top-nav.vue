@@ -87,12 +87,3 @@
         </div><!-- navbar-menu -->
     </nav>
 </template
-
-<script>
-import {mapActions} from 'vuex'
-
-export default {
-    methods:{
-    }
-}
-</script>

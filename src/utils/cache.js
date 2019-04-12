@@ -1,4 +1,3 @@
-import _ from 'lodash/fp'
 import findIndex from 'lodash/fp/findIndex'
 import find from 'lodash/fp/find'
 import times from 'lodash/fp/times'

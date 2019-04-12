@@ -1,6 +1,7 @@
-import _ from 'lodash'
+import map from 'lodash/fp/map'
+import find from 'lodash/fp/find'
 import URI from 'urijs'
-import URITemplate from 'urijs/src/URITemplate'
+import expand from 'urijs/src/URITemplate'
 
 // TODO: make 'host' configurable 
 import {API_HOST} from '../assets/js/config'
@@ -23,9 +24,9 @@ export class HALResource {
         let rv = {}
         Object.keys(embedded).forEach((k, i)=>{
             if (Array.isArray(embedded[k])){
-                rv[k] = _.map(embedded[k], (e)=>{
+                rv[k] = map(e=>{
                     return new HALResource(e)
-                })
+                })(embedded[k])
             } else {
                 rv[k] = new HALResource(embedded[k])
             }
@@ -105,7 +106,7 @@ export class HALResource {
         if (params==null) {
             params = {}
         }
-        let uri = URI.expand(href, params).search(qsparams)
+        const uri = URI.expand(href, params).search(qsparams)
         if(uri.is('absolute')){
             return uri.toString()
         }
@@ -117,9 +118,9 @@ export class HALResource {
     }
     
     get _namespaces(){
-        return _.map(this._curies, (c)=>{
+        return map(c=>{
             return c['name']
-        })
+        })(this._curies)
     }
 
     _namespacedRel(relation){
@@ -128,16 +129,16 @@ export class HALResource {
             return
         }
 
-        // look for first namespaced rel that matches
-        return  _.find(this._links, (lnk, rel)=>{
+        const key = find(rel=>{
             // skipping the 'curies' relation
             if (rel=='curies'){
                 return
             }
-            return _.find(this._namespaces, (ns)=>{
+            return find(ns=>{
                 return rel==ns + ':' + relation
-            })
-        })
+            })(this._namespaces)
+        })(Object.keys(this._links))
+        return this._links[key]
     }
 
     get data(){

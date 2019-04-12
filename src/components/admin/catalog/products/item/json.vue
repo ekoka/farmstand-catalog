@@ -40,7 +40,8 @@
 <script>
 //import Visibility from './visibility'
 import {mapActions, mapGetters} from 'vuex'
-import {unset,find} from 'lodash/fp'
+import unset from 'lodash/fp/unset'
+import find from 'lodash/fp/find'
 export default {
     props: ['product_id'],
     data(){

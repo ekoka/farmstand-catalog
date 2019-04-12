@@ -14,11 +14,10 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable'
-import _ from 'lodash/fp'
+import remove from 'lodash/fp/remove'
 export default {
     components: {
-        draggable,
+        draggable: ()=>import('vuedraggable'),
     },
     model:{
         prop: 'images',
@@ -43,7 +42,7 @@ export default {
 
     methods:{
         removeImage(i){
-            const imageList = _.remove(image=>{
+            const imageList = remove(image=>{
                 return image.image_id==i.image_id
             })(this.mutable.imageList)
             this.$set(this.mutable, 'imageList', imageList)

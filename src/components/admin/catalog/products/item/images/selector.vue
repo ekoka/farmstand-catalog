@@ -20,8 +20,11 @@
 
 <script>
 import {mapActions} from 'vuex'
-import _ from 'lodash/fp'
-import lodash from 'lodash'
+import map from 'lodash/fp/map'
+import includes from 'lodash/fp/includes'
+import pull from 'lodash/fp/pull'
+import filter from 'lodash/fp/filter'
+
 export default {
     data(){
         return {
@@ -51,7 +54,7 @@ export default {
                 sizes: ['thumb', 'medium'],
             }
             this.getImages({qsparams}).then(resp=>{
-                this.$set(this.mutable,'images', _.map(i=>{
+                this.$set(this.mutable,'images', map(i=>{
                     return i.data
                 })(resp.embedded('images')))
             })
@@ -59,8 +62,8 @@ export default {
         },
 
         toggleSelection(i){
-            if(_.includes(i.image_id)(this.mutable.selection)){
-                const selection = _.pull(i.image_id)(
+            if(includes(i.image_id)(this.mutable.selection)){
+                const selection = pull(i.image_id)(
                         this.mutable.selection)
                 this.$set(i, 'selected', false)
                 this.$set(this.mutable, 'selection', selection) 
@@ -71,8 +74,8 @@ export default {
         },
 
         done(){
-            const selection = _.filter(i=>{
-                return _.includes(i.image_id)(this.mutable.selection)
+            const selection = filter(i=>{
+                return includes(i.image_id)(this.mutable.selection)
             })(this.mutable.images)
             this.$emit('selected', selection)
             this.$emit('close', false)
@@ -82,8 +85,6 @@ export default {
             getImages: 'api/getImages'
         }),
     },
-
-
 }
 </script>
 

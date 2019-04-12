@@ -21,14 +21,13 @@
 </template>
 
 <script>
-import {map} from 'lodash/fp'
+import map from 'lodash/fp/map'
 import {mapActions, mapMutations, mapGetters, mapState} from 'vuex'
 
-import options from './options'
 
 export default {
     components: {
-        options,
+        options: ()=>import  ( './options'),
     },
     props: ['product', 'productGroups'],
     

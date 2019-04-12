@@ -19,9 +19,6 @@
 </template>
 
 <script>
-import _ from 'lodash/fp'
-import {mapActions} from 'vuex' 
-
 export default {
     props: ['group', 'product', 'productOptions'],
 

@@ -1,5 +1,4 @@
 import {HAL} from '@/utils/hal'
-import {Cache} from '@/utils/cache'
 export default {
     state: {},
     getters:{},

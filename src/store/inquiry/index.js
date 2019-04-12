@@ -1,4 +1,6 @@
-import {find, findIndex} from 'lodash/fp'
+import find from 'lodash/fp/find'
+import findIndex from 'lodash/fp/findIndex'
+
 import Vue from 'vue'
 
 const Inquiry = {

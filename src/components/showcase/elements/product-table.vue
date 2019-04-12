@@ -127,11 +127,9 @@
 </template>
 
 <script>
-import {find} from 'lodash/fp'
+import find from 'lodash/fp/find'
 import Vue from 'vue'
 import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
-import inquiryForm from './inquiry-form'
-import notification from '@/components/utils/messaging/notification'
 export default {
 
     props: ['products', 'fieldNames', 'fields'],
@@ -145,7 +143,8 @@ export default {
     },
 
     components: {
-        inquiryForm, notification,
+        inquiryForm: ()=>import  ( './inquiry-form'),
+        notification: ()=>import  ( '@/components/utils/messaging/notification'),
     },
 
     computed:{

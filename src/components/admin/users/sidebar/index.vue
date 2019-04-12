@@ -34,7 +34,7 @@
 </div><!-- column -->
 </template>
 <script>
-import {find} from 'lodash/fp'
+import find from 'lodash/fp/find'
 
 export default {
     computed: {
@@ -44,8 +44,6 @@ export default {
             const rv = find(name=>{
                 return this.$route.name==name
             })(routeNames)
-            console.log(this.$route.name)
-            console.log(rv)
             return rv
         }
     }

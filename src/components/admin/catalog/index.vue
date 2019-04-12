@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import sidebar from './sidebar'
 export default {
-    components : {sidebar}
+    components : {
+        sidebar: ()=>import('./sidebar'),
+    }
 }
 </script>

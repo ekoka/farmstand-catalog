@@ -3,7 +3,6 @@
 import Vue from 'vue'
 import store from './store'
 import router from './router'
-import App from './App'
 import './assets/css/main.scss'
 import URI from 'urijs'
 import cookies from '@/utils/cookies'
@@ -185,7 +184,9 @@ new Vue({
 
     store,
     router,
-    components: {App},
+    components: {
+        App: ()=> import('./App'),
+    },
     // App component is loaded only once bootstrapping is done 
     template: '<App :ready="ready"/>'
 

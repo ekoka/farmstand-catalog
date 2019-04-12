@@ -38,7 +38,8 @@
 </template>
 
 <script>
-import _ from 'lodash/fp'
+import map from 'lodash/fp/map'
+import find from 'lodash/fp/find'
 import {mapActions} from 'vuex' 
 import {HAL} from '@/utils/hal'
 
@@ -79,7 +80,7 @@ export default {
                     product_ids:products.data.product_ids
                 })
             }).then(resources=>{
-                this.mutable.products = _.map(p=>{
+                this.mutable.products = map(p=>{
                     return p.data
                 })(resources)
             })
@@ -92,7 +93,7 @@ export default {
         },
 
         field(product, field){
-            const f = _.find(f=>{
+            const f = find(f=>{
                 return f.name==field
             })(product.fields)
             return f.value

@@ -85,15 +85,21 @@
 </template>
 
 <script>
-import Field from './field'
-import ProductImages from './images'
+//import Field from './field'
+//import ProductImages from './images'
 //import Visibility from './visibility'
-import Groups from './groups'
+//import Groups from './groups'
 import {mapActions, mapGetters} from 'vuex'
-import {unset,find} from 'lodash/fp'
-import notification from '@/components/utils/messaging/notification'
+import unset from 'lodash/fp/unset'
+import find from 'lodash/fp/find'
+//import notification from '@/components/utils/messaging/notification'
 export default {
-    components: {Groups, Field, ProductImages, notification},
+    components: {
+        Groups:()=>import('./groups'), 
+        Field:()=>import('./field'), 
+        ProductImages: ()=>import('./images'), 
+        notification: ()=>import('@/components/utils/messaging/notification')
+    },
     props: ['product_id'],
     data(){
         return {

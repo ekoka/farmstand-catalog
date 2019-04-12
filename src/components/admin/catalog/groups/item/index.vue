@@ -96,19 +96,14 @@
 </template>
 
 <script>
-import OptionList from './options'
-import Tooltip from '@/components/admin/elements/tooltip'
 import {mapActions} from 'vuex'
-import confirmation from '@/components/utils/messaging/confirmation'
-import notification from '@/components/utils/messaging/notification'
-import stickycontent from '@/components/utils/sticky-content'
 export default {
     components: {
-        OptionList,
-        Tooltip,
-        confirmation,
-        notification,
-        stickycontent,
+        OptionList: ()=>import  ( './options'),
+        Tooltip: ()=>import  ( '@/components/admin/elements/tooltip'),
+        confirmation: ()=>import  ( '@/components/utils/messaging/confirmation'),
+        notification: ()=>import  ( '@/components/utils/messaging/notification'),
+        stickycontent: ()=>import  ( '@/components/utils/sticky-content'),
     },
 
     // we don't use props here because for some reason they're not being updated 

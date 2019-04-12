@@ -53,9 +53,8 @@
 <script>
 import {mapActions} from 'vuex'
 
-import thumbGrid from './grid'
-import imageSelector from './selector'
-import _ from 'lodash/fp'
+import reduce from 'lodash/fp/reduce'
+import map from 'lodash/fp/map'
 
 const acceptedTypes = [
     'image/png',
@@ -65,7 +64,10 @@ const acceptedTypes = [
 ]
 
 export default {
-    components: {thumbGrid, imageSelector,},
+    components: {
+        thumbGrid: ()=>import  ( './grid'),
+        imageSelector: ()=>import  ( './selector'),
+    },
 
     props: ['product_id', 'images'],
 
@@ -95,7 +97,7 @@ export default {
         fileNames(){
             let rv = 'No file chosen'
             if (this.selectedFiles && this.selectedFiles.length){
-                rv = _.reduce((acc, cur)=>{
+                rv = reduce((acc, cur)=>{
                     acc.push(cur.name)
                     return acc
                 }, [])(this.selectedFiles)
@@ -103,7 +105,7 @@ export default {
             return rv
         },
         fileTypes(){
-            return _.map(f=>{
+            return map(f=>{
                 return f.type
             })(this.selectedFiles)
         },
@@ -124,7 +126,7 @@ export default {
             handler(v){
                 // we only emit a 'changed' event if the `ready` flag is set 
                 // sync up the data
-                this.$emit('update:images', _.map(i=>{
+                this.$emit('update:images', map(i=>{
                     return i.image_id
                 })(v))
                 // return if still just loading base data
@@ -133,7 +135,7 @@ export default {
                 }
                 // any changes beyond base data load will be visible to parent
                 this.$emit('changed', true)
-                //this.$emit('changed', _.map(i=>{
+                //this.$emit('changed', map(i=>{
                 //    return i.image_id
                 //}, v))
                 
@@ -143,7 +145,7 @@ export default {
 
     methods: {
         updateChosenFiles(e){
-            _.map((f)=>{
+            map((f)=>{
                 this.selectedFiles.push(f)
             })(e.target.files || e.dataTransfer.files)
         },
@@ -167,7 +169,7 @@ export default {
         },
 
         mergeSelection(e){
-            _.map(i=>{
+            map(i=>{
                 this.mutable.images.push(i)
             })(e)
         },
@@ -176,7 +178,7 @@ export default {
             return this.getProductImages({
                 product_id
             }).then(resp=>{
-                _.map(i=>{
+                map(i=>{
                     this.mutable.images.push(i.data)
                 })(resp.embedded('images'))
             })

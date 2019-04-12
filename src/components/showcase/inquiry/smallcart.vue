@@ -24,8 +24,9 @@
 </template>
 
 <script>
-import {map,find} from 'lodash/fp'
-import {mapGetters, mapActions, mapState, mapMutations} from 'vuex'
+import map from 'lodash/fp/map'
+import find from 'lodash/fp/find'
+import {mapActions, mapState, mapMutations} from 'vuex'
 
 export default {
 

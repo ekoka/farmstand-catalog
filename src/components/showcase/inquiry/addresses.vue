@@ -172,38 +172,38 @@
 </template>
 
 <script>
-    import {mapState, mapActions, mapGetters, mapMutations} from 'vuex'
-    export default {
+import {mapState, mapMutations} from 'vuex'
+export default {
 
-        computed:{
-            ...mapState({
-                shippingAddress: state=>state.inquiry.shippingAddress,
-                billingAddress: state=>state.inquiry.billingAddress,
-            })
-        },
+    computed:{
+        ...mapState({
+            shippingAddress: state=>state.inquiry.shippingAddress,
+            billingAddress: state=>state.inquiry.billingAddress,
+        })
+    },
 
-        watch:{
-            billingAddress: {
-                deep: true,
-                handler(nv){
-                    this.pingMutation({})
-                },
+    watch:{
+        billingAddress: {
+            deep: true,
+            handler(nv){
+                this.pingMutation({})
             },
-            shippingAddress: {
-                deep: true,
-                handler(nv){
-                    this.pingMutation({})
-                },
-            }
         },
+        shippingAddress: {
+            deep: true,
+            handler(nv){
+                this.pingMutation({})
+            },
+        }
+    },
 
-        methods:{
-            ...mapMutations({
-                // only because vuex-persistedstate listens to mutations
-                pingMutation: 'inquiry/pingMutation',
-            }),
-        },
+    methods:{
+        ...mapMutations({
+            // only because vuex-persistedstate listens to mutations
+            pingMutation: 'inquiry/pingMutation',
+        }),
+    },
 
-    }
+}
 </script>
 

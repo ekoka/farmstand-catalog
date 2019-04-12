@@ -1,5 +1,9 @@
-import {compose, map, reduce, difference,
-    each, union} from 'lodash/fp'
+import compose from 'lodash/fp/compose'
+import map from 'lodash/fp/map'
+import reduce from 'lodash/fp/reduce'
+import difference from 'lodash/fp/difference'
+import each from 'lodash/fp/each'
+import union from 'lodash/fp/union'
 import {HAL} from '@/utils/hal'
 import {Buffer} from '@/utils/cache'
 

@@ -45,17 +45,14 @@
 </template>
 
 <script>
-import _ from 'lodash/fp'
-import Message from './message'
-import Modal from '@/components/admin/elements/modal'
-import GroupOptionProducts from './group-option-products'
+import each from 'lodash/fp/each'
 import {HAL} from '@/utils/hal'
 
 export default {
     components: {
-        Modal,
-        Message,
-        GroupOptionProducts
+        Message: ()=>import  ( './message'),
+        Modal: ()=>import  ( '@/components/admin/elements/modal'),
+        GroupOptionProducts: ()=>import  ( './group-option-products'),
     },
     props: ['options', 'groupResource'],
 
@@ -107,7 +104,7 @@ export default {
         },
 
         resetModalComponent(){
-            _.each(k=>{
+            each(k=>{
                 this.modalComponent[k] = null
             })(Object.keys(this.modalComponent))
         },

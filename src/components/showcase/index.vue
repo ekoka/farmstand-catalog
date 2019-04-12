@@ -26,20 +26,17 @@
 </template>
 
 <script>
-import {map} from 'lodash/fp'
-import smallcart from './inquiry/smallcart'
-import topNav from './elements/top-nav'
-import leftNav from './elements/left-nav'
-import groupVertical from './elements/group-vertical'
-import productTable from './elements/product-table'
+import map from 'lodash/fp/map'
 import {mapActions, mapGetters} from 'vuex'
-import notification from '@/components/utils/messaging/notification'
 
 export default {
     components: { 
-        smallcart, topNav, leftNav,
-        groupVertical, productTable,
-        notification,
+        smallcart: ()=>import  ( './inquiry/smallcart'),
+        topNav: ()=>import  ( './elements/top-nav'),
+        leftNav: ()=>import  ( './elements/left-nav'),
+        groupVertical: ()=>import  ( './elements/group-vertical'),
+        productTable: ()=>import  ( './elements/product-table'),
+        notification: ()=>import  ( '@/components/utils/messaging/notification'),
     },
 
     data(){
