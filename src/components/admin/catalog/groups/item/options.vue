@@ -1,12 +1,5 @@
 <template>
 <div>
-    <Modal v-if="modalComponent.component" :modalComponent.sync="modalComponent.component" 
-        :listenFor="Object.keys(modalComponent.events)"
-        :params="modalComponent.params"
-        v-on="modalComponent.events"
-        >
-    </Modal>
-
     <div class="level">
         <div class="level-left">
             <div class="level-item">
@@ -21,6 +14,11 @@
     </div>
         
     <div class="field has-addons" v-for="o,i in mutable.options">
+        <confirmation 
+            :active.sync="activeConfirmation" 
+            @confirmation="removeHandler($event, i)">
+            Do yo want to remove this option <span class="is-size-6">(any existing associations with products will be severed)</span>?
+        </confirmation>
         <div class="control">
             <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.group_option_id}" ><i class="iconify mdi" data-icon="mdi-minus-circle-outline"></i></span>
                 <span>remove</span>
@@ -50,18 +48,15 @@ import {HAL} from '@/utils/hal'
 
 export default {
     components: {
-        Message: ()=>import  ( './message'),
-        Modal: ()=>import  ( '@/components/admin/elements/modal'),
+        confirmation: ()=>import('@/components/utils/messaging/confirmation'),
         GroupOptionProducts: ()=>import  ( './group-option-products'),
     },
     props: ['options', 'groupResource'],
 
     data(){
         return {
-            // modal params
-            modalComponent: {},
-            //listenFor: [],
 
+            activeConfirmation: false,
             mutable: {
                 options:[],
             },
@@ -109,23 +104,20 @@ export default {
             })(Object.keys(this.modalComponent))
         },
 
-        removeOption(optionIndex, option){
-            const remove = (e)=>{
-                if(e==true){
-                    this.mutable.options.splice(optionIndex, 1)
-                }
+        removeHandler(confirmed, optionIndex){
+            if(confirmed){
+                this.mutable.options.splice(optionIndex, 1)
             }
+        },
+
+        removeOption(optionIndex, option){
             if(option.group_option_id){
-                this.modalComponent = {
-                    component:Message,
-                    params:{},
-                    events: {answer:remove},
-                }
+                this.activeConfirmation = true
                 return
             }
             // we only get here if no group_option_id,
             // in which case we just remove.
-            remove(true)
+            this.removeHandler(true, optionIndex)
 
         },
 

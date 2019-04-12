@@ -71,7 +71,6 @@ export default {
 
         getDomain({commit, getters}, {domain}={}){
             const url = getters.root.url('domain', {domain})
-            console.log(url)
             return getters.http({url, auth:true}).then(response=>{
                 commit('setDomain', {domain:response.data})
                 return HAL(response.data)
