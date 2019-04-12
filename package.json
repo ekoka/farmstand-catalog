@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Productlist",
   "author": "",
+  "sideEffects": ["*.css", "*.scss"],
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --port 8082 --allowedHosts .productlist.local --inline --progress --config build/webpack.dev.conf.js",
@@ -66,5 +67,12 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "babel": {
+    "presets": [
+        ["env", {
+            "modules": false
+        }]
+    ]
+  }
 }
