@@ -18,7 +18,7 @@
 export default {
     components: {
         productRow: ()=>import  ( './row'),
-        productTableHeader: ()=>import  ( './header'),
+        productTableHeader: ()=>import  ('./header'),
     },
     props: ['products'],
 
@@ -32,15 +32,15 @@ export default {
 .top-header .prod-row{
     border: 1px solid #dbdbdb;
     border-width: 0 0 2px;
-    padding-bottom: 10px;
-    margin-bottom: 12px;
+    padding-bottom: 10px !important;
+    margin-bottom: 12px !important;
 }
 
 .bottom-header .prod-row{
     border: 1px solid #dbdbdb;
     border-width: 2px 0 0;
-    padding-top: 10px;
-    margin-top: 12px;
+    padding-top: 10px !important;
+    margin-top: 12px !important;
 }
 
 .prod-body .prod-row:not(:last-child){
