@@ -1,8 +1,8 @@
-import UserIndex from '@/components/admin/users'
-import UserList from '@/components/admin/users/list'
-import UserItem from '@/components/admin/users/item'
-import AccessRequests from '@/components/admin/users/access-requests'
-import Invites from '@/components/admin/users/invites'
+const UserIndex= ()=>import  ( '@/components/admin/users')
+const UserList= ()=>import  ( '@/components/admin/users/list')
+const UserItem= ()=>import  ( '@/components/admin/users/item')
+const AccessRequests= ()=>import  ( '@/components/admin/users/access-requests')
+const Invites= ()=>import  ( '@/components/admin/users/invites')
 
 export default {
     path: 'users',

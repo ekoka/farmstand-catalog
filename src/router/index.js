@@ -3,8 +3,8 @@ import Router from 'vue-router'
 
 import Showcase from './showcase'
 import Admin from './admin'
-import Redirect from '@/components/redirect'
-import Index from '@/components/home'
+const Redirect = ()=>import  ( '@/components/redirect')
+const Index = ()=>import  ( '@/components/home')
 
 
 Vue.use(Router)

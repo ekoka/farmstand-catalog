@@ -1,14 +1,12 @@
 // components
-import Catalog from '@/components/admin/catalog'
-import ProductIndex from '@/components/admin/catalog/products'
-import ProductList from '@/components/admin/catalog/products/list'
-import ProductItem from '@/components/admin/catalog/products/item'
-import ProductJson from '@/components/admin/catalog/products/item/json'
-
-
-import GroupIndex from '@/components/admin/catalog/groups'
-import GroupList from '@/components/admin/catalog/groups/list'
-import GroupItem from '@/components/admin/catalog/groups/item'
+const Catalog= ()=>import  ( '@/components/admin/catalog')
+const ProductIndex= ()=>import  ( '@/components/admin/catalog/products')
+const ProductList= ()=>import  ( '@/components/admin/catalog/products/list')
+const ProductItem= ()=>import  ( '@/components/admin/catalog/products/item')
+const ProductJson= ()=>import  ( '@/components/admin/catalog/products/item/json')
+const GroupIndex= ()=>import  ( '@/components/admin/catalog/groups')
+const GroupList= ()=>import  ( '@/components/admin/catalog/groups/list')
+const GroupItem= ()=>import  ( '@/components/admin/catalog/groups/item')
 
 
 export default {

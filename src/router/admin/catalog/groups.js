@@ -1,7 +1,7 @@
 // components
-import Index from '@/components/admin/catalog/groups'
-import List from '@/components/admin/catalog/groups/list'
-import Group from '@/components/admin/catalog/groups/item'
+const Index= ()=>import  ( '@/components/admin/catalog/groups')
+const List= ()=>import  ( '@/components/admin/catalog/groups/list')
+const Group= ()=>import  ( '@/components/admin/catalog/groups/item')
 
 
 export default [

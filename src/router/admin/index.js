@@ -1,6 +1,6 @@
 // components
-import Admin from '@/components/admin'
-import Domain from '@/components/admin/domain'
+const Admin= ()=>import  ( '@/components/admin')
+const Domain= ()=>import  ( '@/components/admin/domain')
 // routes
 import Catalog from './catalog'
 import Users from './users'

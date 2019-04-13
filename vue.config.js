@@ -1,4 +1,4 @@
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 module.exports = {
     runtimeCompiler: true,
     devServer: {
@@ -11,10 +11,10 @@ module.exports = {
             vuex$: "vuex/dist/vuex.esm.js",
         }
     },
-    */
     configureWebpack: {
         plugins: [
-            new BundleAnalyzerPlugin()
+            //new BundleAnalyzerPlugin()
         ]
     }
+    */
 }
