@@ -32,7 +32,7 @@
             -->
         </span>
 
-        <span>Clients</span>
+        <span>Users</span>
     </router-link><!-- navbar-item -->
 
     <router-link class="navbar-item" :to="{name: 'AdminInquiries'}">

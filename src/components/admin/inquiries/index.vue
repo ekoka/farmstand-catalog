@@ -1,18 +1,7 @@
 <template>
 <div>
-    <h2 class="subtitle is-3">Inquiries</h2>
-
-    <h2 class="subtitle">Coming soon</h2>
-
-    <router-view/>
-
+    <div class="box">
+        <h3 class="title is-3">Under construction...</h3>
+    </div>
 </div>
 </template>
-
-<script>
-export default {
-    created(){
-    },
-}
-</script>
-

@@ -2,7 +2,7 @@
 <div>
     <nav class="menu">
         <p class="subtitle is-4">
-           Clients /
+           Users /
         </p>
         <ul class="menu-list">
             <li>
@@ -10,7 +10,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span class="is-size-4">Registered</span>
+                    <span class="is-size-4">Clients</span>
                 </router-link>
             </li>
             <li>
