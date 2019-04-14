@@ -16,11 +16,13 @@
     <div class="field has-addons" v-for="o,i in mutable.options">
         <confirmation 
             :active.sync="activeConfirmation" 
+            :key="o.group_option_id"
             @confirmation="removeHandler($event, i)">
             Do yo want to remove this option <span class="is-size-6">(any existing associations with products will be severed)</span>?
         </confirmation>
-        <modal v-if="o.group_option_id" :active.sync="productModal" @close="productModal=false">
+        <modal v-if="o.group_option_id" :key="o.group_option_id" :active.sync="productModal" @close="productModal=false">
             <group-option-products 
+                :key="o.group_option_id"
                 v-bind="productSelectionParams(o.group_option_id)"
                 @close="productModal=false">
             </group-option-products> 
