@@ -52,34 +52,30 @@
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <div class="navbar-link">
-                            Alex Johnson
+                            {{account.first_name}} {{account.last_name}}
                         </div>
                         <div class="navbar-dropdown">
+                            <a class="navbar-item" target="_blank" :href="accountUrl">
+                                <span class="icon">
+                                    <i class="iconify mdi" 
+                                        data-icon="mdi-account-circle"></i>
+                                </span>
+                                <span>Account</span>
+                            </a>
                             <a class="navbar-item">
-                                <div>
-                                    <span class="icon is-small">
-                                        <i class="fa fa-user-circle-o"></i>
-                                    </span>
-                                    Profile
-                                </div>
+                                <span class="icon">
+                                    <i class="iconify mdi" 
+                                        data-icon="mdi-bug"></i>
+                                </span>
+                                <span>Report bug</span>
                             </a>
 
                             <a class="navbar-item">
-                                <div>
-                                    <span class="icon is-small">
-                                        <i class="fa fa-bug"></i>
-                                    </span>
-                                    Report bug
-                                </div>
-                            </a>
-
-                            <a class="navbar-item">
-                                <div>
-                                    <span class="icon is-small">
-                                        <i class="fa fa-sign-out"></i>
-                                    </span>
-                                    Sign Out
-                                </div>
+                                <span class="icon">
+                                    <i class="iconify mdi" 
+                                        data-icon="mdi-logout"></i>
+                                </span>
+                                <span>Log out</span>
                             </a>
 
                         </div>
@@ -89,3 +85,21 @@
         </div>
     </nav>
 </template>
+<script>
+import {PRODUCTLIST_INDEX} from '@/assets/js/config'
+import URI from 'urijs'
+import cookies from '@/utils/cookies'
+export default {
+    computed:{
+        account(){
+            return this.$store.getters['api/account'].data
+        },
+        accountUrl(){
+            return URI(PRODUCTLIST_INDEX).path('/account')
+        },
+    },
+    methods:{
+
+    }
+}
+</script>
