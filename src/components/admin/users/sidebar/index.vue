@@ -1,8 +1,8 @@
 <template>
 <div>
     <nav class="menu">
-        <p class="menu-label">
-           User management 
+        <p class="subtitle is-4">
+           Clients /
         </p>
         <ul class="menu-list">
             <li>
@@ -10,7 +10,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span>Users</span>
+                    <span class="is-size-4">Registered</span>
                 </router-link>
             </li>
             <li>
@@ -18,7 +18,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span>Access requests</span>
+                    <span class="is-size-4">Access requests</span>
                 </router-link>
             </li>
             <li>
@@ -26,7 +26,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span>Invites</span>
+                    <span class="is-size-4">Invites</span>
                 </router-link>
             </li>
         </ul>
