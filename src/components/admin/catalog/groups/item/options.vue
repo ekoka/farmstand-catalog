@@ -15,16 +15,17 @@
         
     <div class="field has-addons" v-for="o,i in mutable.options">
         <confirmation 
+            v-if="o.group_option_id"
             :active.sync="activeConfirmation" 
-            :key="o.group_option_id"
+            :key="'confirm'+o.group_option_id"
             @confirmation="removeHandler($event, i)">
             Do yo want to remove this option <span class="is-size-6">(any existing associations with products will be severed)</span>?
         </confirmation>
-        <modal v-if="o.group_option_id" :key="o.group_option_id" :active.sync="productModal" @close="productModal=false">
+        <modal v-if="o.group_option_id" :key="'modal'+o.group_option_id" :active.sync="productModal[o.group_option_id]" @close="hideModal(o.group_option_id)">
             <group-option-products 
-                :key="o.group_option_id"
+                :key="'gop' + o.group_option_id"
                 v-bind="productSelectionParams(o.group_option_id)"
-                @close="productModal=false">
+                @close="hideModal(o.group_option_id)">
             </group-option-products> 
         </modal>
         <div class="control">
@@ -41,7 +42,7 @@
             <button 
                 class="button is-text is-outlined" 
                 :disabled="!o.group_option_id"
-                @click="productModal=true">
+                @click="showModal(o.group_option_id)">
                 select products
             </button>
         </div><!-- control -->
@@ -66,7 +67,7 @@ export default {
         return {
 
             activeConfirmation: false,
-            productModal:false,
+            productModal:{},
             mutable: {
                 options:[],
             },
@@ -138,6 +139,12 @@ export default {
                 optionUrl: group.url('option', {group_option_id }),
                 groupData: group.key('data'),
             }
+        },
+        showModal(group_option_id){
+            this.$set(this.productModal, group_option_id, true)
+        },
+        hideModal(group_option_id){
+            this.$set(this.productModal, group_option_id, false)
         },
 
         //openProductSelection(group_option_id){
