@@ -1,12 +1,17 @@
 <template>
 <div>
-    <nav class="breadcrumb">
+    <nav class="breadcrumb is-large has-arrow-separator">
         <ul>
             <li>
                 <router-link :to="{name:'AdminProductList'}">Products</router-link>
             </li>
             <li class="is-active">
-                <a href="">Edit Product</a>
+                <a v-if="product_id"> 
+                    Edit product
+                </a>
+                <a v-else>
+                    Add product
+                </a>
             </li>
         </ul>
     </nav> <!-- breadcrumb -->
@@ -23,9 +28,9 @@
                     <div class="level-item">
                         <div class="field is-grouped">
                             <div class="control">
-                                <button class="button">
+                                <router-link :to="{name: 'AdminProductList'}" class="button" >
                                     Cancel
-                                </button>
+                                </router-link>
                             </div>
                             <div class="control">
                                 <button class="button is-link" :class="buttonClass" @click="saveProduct">

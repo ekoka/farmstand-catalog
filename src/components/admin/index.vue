@@ -1,8 +1,8 @@
 <template>
 <div v-if="ready">
-    <navbar />
+    <navbar class="container is-fluid"/>
     <section class="section"> 
-        <router-view />
+        <router-view class="container is-fluid" />
     </section>
 </div>
 </template>

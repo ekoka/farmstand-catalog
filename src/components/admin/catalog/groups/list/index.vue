@@ -1,6 +1,11 @@
 <template>
 <div>
-    <h1 class="title">Groups</h1>
+    <nav class="breadcrumb is-large has-arrow-separator">
+        
+        <ul>
+            <li class="is-active"><a>Grouping</a></li>
+        </ul>
+    </nav>
     <div class="level">
         <div class="level-left">
             <div class="level-item is-hidden-tablet-only">

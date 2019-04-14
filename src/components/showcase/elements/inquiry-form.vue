@@ -25,7 +25,7 @@
                     <button class="button is-primary is-outlined is-small">Send questions / comments</button>
                 </div>
                 <div class="control">
-                    <button class="button is-small" @click="closeForm">Cancel</button>
+                    <button class="button is-small" @click="closeForm">Close</button>
                 </div>
             </div><!-- field -->
         </div><!-- questions -->
@@ -64,7 +64,7 @@
                     </button>
                 </div>
                 <div class="control">
-                    <button class="button is-small" @click="closeForm">Cancel</button>
+                    <button class="button is-small" @click="closeForm">Close</button>
                 </div>
             </div><!-- field -->
         </div><!-- rfq -->

@@ -1,0 +1,39 @@
+.group {
+    display: flex;
+    width: 14em;
+    flex-direction: column; 
+    margin-top: 30px;
+
+}
+
+.has-pointer, .group .group-header{
+    cursor: pointer;
+}
+
+.group .group-header.has-icon-right{
+    padding-right: 10px;
+    position: relative;
+}
+
+.group .group-header.has-icon-right .icon{
+    position: absolute;
+    top: 3px;
+    right: 3px;
+}
+
+.group .group-content{
+    position: relative;
+    top: 5px;
+}
+
+.group .group-item{
+    position: relative;
+    left: 10px;
+    width: 100%;
+    margin-bottom: 4px;
+    margin-top: 3px;
+}
+
+.group .group-item-label{
+    display: block;
+}

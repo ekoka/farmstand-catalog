@@ -19,6 +19,12 @@
             @confirmation="removeHandler($event, i)">
             Do yo want to remove this option <span class="is-size-6">(any existing associations with products will be severed)</span>?
         </confirmation>
+        <modal v-if="o.group_option_id" :active.sync="productModal" @close="productModal=false">
+            <group-option-products 
+                v-bind="productSelectionParams(o.group_option_id)"
+                @close="productModal=false">
+            </group-option-products> 
+        </modal>
         <div class="control">
             <button class="button" title="Remove this option" @click="removeOption(i, o)"><span class="icon is-small" :class="{'has-text-danger': o.group_option_id}" ><i class="iconify mdi" data-icon="mdi-minus-circle-outline"></i></span>
                 <span>remove</span>
@@ -33,7 +39,7 @@
             <button 
                 class="button is-text is-outlined" 
                 :disabled="!o.group_option_id"
-                @click="openProductSelection(o.group_option_id)">
+                @click="productModal=true">
                 select products
             </button>
         </div><!-- control -->
@@ -50,6 +56,7 @@ export default {
     components: {
         confirmation: ()=>import('@/components/utils/messaging/confirmation'),
         GroupOptionProducts: ()=>import  ( './group-option-products'),
+        modal : ()=>import('@/components/utils/modal'), 
     },
     props: ['options', 'groupResource'],
 
@@ -57,6 +64,7 @@ export default {
         return {
 
             activeConfirmation: false,
+            productModal:false,
             mutable: {
                 options:[],
             },
@@ -121,23 +129,32 @@ export default {
 
         },
 
-        openProductSelection(group_option_id){
+        productSelectionParams(group_option_id){
             const group = HAL(this.groupResource)
-            const optionUrl = group.url('option', {group_option_id })
-            const groupData = group.key('data')
-
-            this.modalComponent = {
-                component: GroupOptionProducts,
-                params:{
-                    group_option_id, 
-                    optionUrl,
-                    groupData,
-                },
-                events:{close(){
-                    },
-                },
+            return {
+                group_option_id,
+                optionUrl: group.url('option', {group_option_id }),
+                groupData: group.key('data'),
             }
         },
+
+        //openProductSelection(group_option_id){
+        //    const group = HAL(this.groupResource)
+        //    const optionUrl = group.url('option', {group_option_id })
+        //    const groupData = group.key('data')
+
+        //    this.modalComponent = {
+        //        component: GroupOptionProducts,
+        //        params:{
+        //            group_option_id, 
+        //            optionUrl,
+        //            groupData,
+        //        },
+        //        events:{close(){
+        //            },
+        //        },
+        //    }
+        //},
     },
 }
 </script>

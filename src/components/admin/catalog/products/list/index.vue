@@ -1,6 +1,11 @@
 <template>
 <div>
-    <h1 class="title">Products</h1>
+    <nav class="breadcrumb is-large has-arrow-separator">
+        
+        <ul>
+            <li class="is-active"><a>Products</a></li>
+        </ul>
+    </nav>
     <div class="level">
         <div class="level-left">
             <div class="level-item is-hidden-tablet-only">
@@ -16,10 +21,10 @@
             <div class="level-item">
                 <div class="select">
                     <select>
-                        <option> View all products </option>
-                        <option> Currently in catalog </option>
-                        <option> Currently not in catalog </option>
-                        <option> Currently available </option>
+                        <option> View products... </option>
+                        <option> Currently available  </option>
+                        <option> Currently not available </option>
+                        <option> In archive </option>
                     </select>
                 </div>
             </div><!-- level-item -->

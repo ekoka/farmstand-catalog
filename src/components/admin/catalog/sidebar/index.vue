@@ -1,8 +1,8 @@
 <template>
 <div>
     <nav class="menu">
-        <p class="menu-label">
-           Catalog 
+        <p class="subtitle is-4">
+           Catalog /
         </p>
         <ul class="menu-list">
             <li>
@@ -10,18 +10,19 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span>Products</span>
+                    <span class="is-size-4">Products</span>
                 </router-link>
             </li>
 
             <li>
                 <router-link :to="{name:'AdminGroupList'}" active-class="is-active">
-                    <span>Groups</span>
+                    <span class="is-size-4">Grouping</span>
                 </router-link>
             </li>
 
         </ul>
     </nav><!-- menu -->
+
 
     <productGroups v-if="showGroups"></productGroups>
 

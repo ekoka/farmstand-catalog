@@ -14,10 +14,12 @@
                     <smallcart/>
                 </div>
                 <div class="column">
-                    <product-table 
-                        :products="products" 
-                        :fieldNames="fieldNames" 
-                        :fields="schema.fields"/>
+                    <div class="container is-fluid">
+                        <product-table 
+                            :products="products" 
+                            :fieldNames="fieldNames" 
+                            :fields="schema.fields"/>
+                    </div>
                 </div><!-- column -->
             </div><!-- columns -->
         </div><!-- container -->

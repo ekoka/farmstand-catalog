@@ -9,7 +9,8 @@
             <div class="level-item">
                 <a>
                     <span class="icon has-text-warning">
-                        <i class="iconify mdi" data-icon="mdi-18px mdi-star"></i>
+                        <i class="iconify mdi mdi-18px" 
+                            data-icon="mdi-star"></i>
                     </span>Favorites
                 </a>
             </div>
@@ -54,7 +55,7 @@
                                 </button>
                                 <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
                                     <span class="icon is-small">
-                                        <i class="iconfiy mdi" data-icon="mdi-close"></i>
+                                        <i class="iconify mdi" data-icon="mdi-close"></i>
                                     </span>
                                 </button>
                             </div>
@@ -95,7 +96,8 @@
                 <div class="level-item">
                     <button class="button is-white is-small">
                         <span class="icon has-text-warning">
-                            <i class="iconfiy mdi" data-icon="mdi-18px mdi-star"></i>
+                            <i class="iconify mdi mdi-18px" 
+                                data-icon="mdi-star"></i>
                         </span> 
                         <span>
                             Favorite
@@ -129,7 +131,7 @@
 <script>
 import find from 'lodash/fp/find'
 import Vue from 'vue'
-import {mapActions, mapGetters, mapState, mapMutations} from 'vuex'
+import {mapGetters, mapState, mapMutations} from 'vuex'
 export default {
 
     props: ['products', 'fieldNames', 'fields'],

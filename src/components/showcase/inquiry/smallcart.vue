@@ -10,14 +10,16 @@
             </div>
         </li>
     </ul>-->
-    <div class="field has-addons">
-        <div class="control">
-            <span class="button has-background-dark has-text-warning is-static ">{{products.length}}</span>
-        </div>
-        <div class="control">
-            <router-link class="button is-warning" :to="{name:'CatalogInquiry'}">
-                Review and submit RFQ
-            </router-link>
+    <div class="container">
+        <div class="field has-addons">
+            <div class="control">
+                <span class="button has-background-dark has-text-warning is-static ">{{products.length}}</span>
+            </div>
+            <div class="control">
+                <router-link class="button is-warning" :to="{name:'CatalogInquiry'}">
+                    Review and submit RFQ
+                </router-link>
+            </div>
         </div>
     </div>
 </div>
@@ -86,7 +88,6 @@ export default {
 .rfq-smallcart {
     position: fixed;
     bottom: 40px;
-    left: 20px;
     margin-top:30px;
 }
 </style>

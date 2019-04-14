@@ -1,10 +1,18 @@
 <template>
     <div class="group">
-        <div class="group-header has-icon-right">
-            <h3 @click="toggleExpansion" class="subtitle is-5">
+        <div class="group-header has-icon-right has-pointer">
+            <p @click="toggleExpansion" class="subtitle is-5">
                 {{group.label}}
-                <span class="icon"><i class="iconify mdi" :data-icon="{'mdi-chevron-down': expanded, 'mdi-chevron-right':!expanded}"></i></span>
-            </h3>
+                <span v-show="!expanded" class="icon">
+                    <i class="iconify mdi" data-icon="mdi-chevron-right">
+                    </i>
+                </span>
+                <span v-show="expanded" class="icon">
+                    <i  class="iconify mdi" data-icon="mdi-chevron-down">
+                    </i>
+                </span>
+
+            </p>
         </div><!-- group-header -->
         <div v-if="expanded" class="group-content">
             <div class="group-item" v-for="o,i in group.options">
@@ -54,6 +62,7 @@ export default {
 </script>
 
 <style>
+    /*
 .group {
     display: flex;
     width: 14em;
@@ -62,7 +71,7 @@ export default {
 
 }
 
-.group .group-header{
+.has-pointer, .group .group-header{
     cursor: pointer;
 }
 
@@ -95,6 +104,7 @@ export default {
 }
 
 .group * {
-    /*border: 1px solid black;*/
 }
+*/
 </style>
+

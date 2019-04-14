@@ -1,14 +1,33 @@
 <template>
-<div>
-    <div v-for="f, i in groups"> 
-        <h2 class="subtitle">{{f.data.label}}</h2>
-        <div v-for="o,i in f.options">
-            <label>
-                <input type="checkbox" :value="o.group_option_id" v-model="mutable.selectedGroupOptions[f.group_id]">
-                {{o.data.label}}
-            </label>
+<div class="menu" >
+    <hr/>
+    <div class="group" v-for="g, i in groups"> 
+        <!--<p @click="toggleShow(g.group_id)" class="has-pointer has-margin-top-l subtitle is-6">{{g.data.label}}</p>-->
+
+        <div class="group-header has-icon-right has-pointer has-margin-top-l">
+            <p @click="toggleShow(g.group_id)" class="title is-6">
+                {{g.data.label}}
+                <span v-show="!show[g.group_id]" class="icon">
+                    <i class="iconify mdi" data-icon="mdi-chevron-right">
+                    </i>
+                </span>
+                <span v-show="show[g.group_id]" class="icon">
+                    <i  class="iconify mdi" data-icon="mdi-chevron-down">
+                    </i>
+                </span>
+
+            </p>
+        </div><!-- group-header -->
+
+        <div v-show="show[g.group_id]" class="group-content">
+            <div class="group-item" v-for="o,i in g.options">
+                <label>
+                    <input type="checkbox" :value="o.group_option_id" v-model="mutable.selectedGroupOptions[g.group_id]">
+                    {{o.data.label}}
+                </label>
+            </div>
         </div>
-    </div>
+    </div><!-- group -->
 </div>
 </template>
 
@@ -19,6 +38,7 @@ export default {
 
     data(){
         return {
+            show:{},
             mutable:{
                 selectedGroupOptions:{}
             }
@@ -33,12 +53,16 @@ export default {
                 })
             },
             deep:true,
-        }
+        },
+        //show:{
+        //    handler(){},
+        //    deep:true,
+        //},
     },
 
     mounted(){
-        each(f=>{
-            this.$set(this.mutable.selectedGroupOptions, f.group_id, [])
+        each(g=>{
+            this.$set(this.mutable.selectedGroupOptions, g.group_id, [])
         })(this.groups)
     },
 
@@ -52,6 +76,12 @@ export default {
         ...mapMutations('admin/products', {
             setProductGroups: 'setProductGroups'
         }),
+        toggleShow(group_id){
+            this.$set(this.show, group_id, !this.show[group_id])
+        },
+        //showOptions(group_id){
+        //    return this.show[group_id]
+        //},
     }
 }
 </script>

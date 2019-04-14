@@ -5,15 +5,12 @@
             {{account.first_name}} {{account.last_name}}
         </div>
         <div class="navbar-dropdown">
-            <a class="navbar-item">
-                <div>
-                        <a target="_blank" :href="accountUrl">
-                        <span class="icon is-small">
-                            <i class="iconify mdi" data-icon="mdi-account-circle"></i>
-                        </span>
-                        Go to your account
-                    </a>
-                </div>
+            <a class="navbar-item" target="_blank" :href="accountUrl">
+                <span class="icon">
+                    <i class="iconify mdi" 
+                        data-icon="mdi-account-circle"></i>
+                </span>
+                <span>Your account</span>
             </a>
 
             <!--<a class="navbar-item">

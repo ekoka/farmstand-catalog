@@ -14,12 +14,12 @@
     </div><!-- product-table-item -->
     <div class="prod-item column is-2">
         <div class="title is-5">
-            Availability
+            Available
         </div>
     </div><!-- product-table-item -->
     <div class="prod-item column is-2">
         <div class="title is-5">
-            Visibility
+            Published
         </div>
     </div><!-- product-table-item -->
     <div class="prod-item column is-1">

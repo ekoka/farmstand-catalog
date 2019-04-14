@@ -9,7 +9,7 @@
             Catalog
         </span>
         <span class="is-hidden-desktop-only">
-            Browse catalog
+            Catalog
         </span>
     </router-link>
 
@@ -32,7 +32,7 @@
             -->
         </span>
 
-        <span>Users</span>
+        <span>Clients</span>
     </router-link><!-- navbar-item -->
 
     <router-link class="navbar-item" :to="{name: 'AdminInquiries'}">
@@ -55,6 +55,13 @@
 
         <span>Inquiries</span>
     </router-link><!-- navbar-item -->
+
+    <a class="navbar-item">
+        <span class="icon has-text-primary">
+            <i class="iconify mdi" data-icon="mdi-finance"></i>
+        </span>
+        <span>Reports</span>
+    </a>
 
 </div><!-- navbar-start -->
 </template>

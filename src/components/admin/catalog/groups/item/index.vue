@@ -5,13 +5,18 @@
         @confirmation="removeHandler">
         Do yo want to remove this grouping <span class="is-size-6">(any existing associations with products will be severed)</span>?
     </confirmation>
-    <nav class="breadcrumb">
+    <nav class="breadcrumb is-large has-arrow-separator">
         <ul>
             <li>
-                <router-link :to="{name:'AdminGroupList'}">Groups</router-link>
+                <router-link :to="{name:'AdminGroupList'}">Grouping</router-link>
             </li>
             <li class="is-active">
-                <a href="">Edit Group</a>
+                <a v-if="group_id"> 
+                    Edit group 
+                </a>
+                <a v-else>
+                    Add group
+                </a>
             </li>
         </ul>
     </nav> <!-- breadcrumb -->
@@ -27,6 +32,11 @@
             <div class="level-right">
                 <div class="level-item">
                     <div class="field is-grouped">
+                        <div class="control">
+                            <router-link :to="{name: 'AdminGroupList'}" class="button" >
+                                Cancel
+                            </router-link>
+                        </div>
                         <div class="control">
                             <button class="button is-danger is-outlined" @click="removeGroup">Delete this group</button>
                         </div>
@@ -85,7 +95,9 @@
                    No 
                 </label>
             </div>
-            <tooltip>How many simultaneous options can a product be associated with. For example, in a "Category" group each product could belong to multiple categories. On the other hand a "Maker" group could be set up such that each product can only be linked to a single manufacturer. Note that once a group has been saved, it can only be changed from Single to Multiple choice, not the other way around.</tooltip>
+            <tooltip>
+                # todo: tooltip on how to use this setting.
+                <!--How many simultaneous options can a product be associated with. For example, in a "Category" group each product could belong to multiple categories. On the other hand a "Maker" group could be set up such that each product can only be linked to a single manufacturer. Note that once a group has been saved, it can only be changed from Single to Multiple choice, not the other way around.--></tooltip>
         </div><!-- field -->
         <option-list v-if="ready" 
             :groupResource="groupResource"
