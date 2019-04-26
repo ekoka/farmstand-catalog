@@ -1,3 +1,5 @@
+import cookies from '@/utils/cookies'
+import {parseJwt} from '@/utils/jwt'
 import {HAL} from '@/utils/hal'
 
 export default {
@@ -5,6 +7,7 @@ export default {
         profile: null,
         account: null,
         accessToken: null,
+        idToken: null,
         domain: null,
     },
 
@@ -39,8 +42,17 @@ export default {
             state.domain = domain
         },
 
-        setAccessToken(state, {accessToken}){
+        setAccessToken(state, {token}){
+            const accessToken = {
+                token: HAL(token).key('token'), 
+            }
+            const payload = accessToken.token.split('.')[1]
+            accessToken.payload = parseJwt(payload)
             state.accessToken = accessToken
+        },
+
+        setIdToken(state, {token}){
+            state.idToken = token
         },
 
         setProfile(state, {profile}){
@@ -50,9 +62,17 @@ export default {
         unsetProfile(state){
             state.profile = null
         },
+
     },
 
     actions: {
+
+        syncIdToken({commit}){
+            // cookie is source of truth during sync
+            const token = cookies.getCookie('idToken')
+            commit('setIdToken', {token})
+        },
+
         getAccount({getters, commit, dispatch}, {account_id}){
             const url = getters.root.url('account', {account_id})
             return getters.http({url, auth:true}).then(response => {
@@ -77,6 +97,20 @@ export default {
             }).catch(error=>{
                 console.log(error.response)
                 console.log(error.response.data)
+            })
+        },
+
+        postAccessToken({rootGetters, getters, commit, dispatch, state}){
+            const url = getters.root.url('access_token')
+            const authHeaders = {'Authorization': 'Bearer ' + state.idToken}
+            return getters.http({
+                data: {domain: rootGetters.subdomain},
+                method: 'post',
+                url,
+                headers:authHeaders,
+            }).then(response => {
+                commit('setAccessToken', {token: response.data})
+                return state.accessToken
             })
         },
     },

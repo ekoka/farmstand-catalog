@@ -60,7 +60,7 @@ const API = {
         },
 
         authHeaders(state, getters){
-            const authScheme = 'access_token'
+            const authScheme = 'Bearer'
             const auth = authScheme + ' ' + state.accessToken
             return {'Authorization': auth}
         },

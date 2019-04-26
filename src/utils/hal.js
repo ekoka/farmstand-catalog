@@ -4,7 +4,7 @@ import URI from 'urijs'
 import expand from 'urijs/src/URITemplate'
 
 // TODO: make 'host' configurable 
-import {API_HOST} from '../assets/js/config'
+//import {API_HOST} from '../assets/js/config'
 
 export function HAL(resource){
     return new HALResource(resource)
@@ -13,7 +13,7 @@ export function HAL(resource){
 export class HALResource {
     constructor (resource){
         this.resource = resource || {}
-        this.host = API_HOST
+        //this.host = API_HOST
         this._links = this.resource._links || {}
         this._halifyEmbedded() 
     }
@@ -107,10 +107,10 @@ export class HALResource {
             params = {}
         }
         const uri = URI.expand(href, params).search(qsparams)
-        if(uri.is('absolute')){
-            return uri.toString()
-        }
-        return uri.absoluteTo(this.host).toString()
+        //if(uri.is('absolute')){
+        return uri.toString()
+        //}
+        //return uri.absoluteTo(this.host).toString()
     }
 
     get _curies(){

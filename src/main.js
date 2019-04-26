@@ -179,7 +179,21 @@ new Vue({
                 localStorage.setItem('VERSION', VERSION)
                 window.location.reload()
             })
-        }
+        },
+
+        monitorIdTokenCookie(){
+            // synchronize idToken in cookie with idToken in localStorage
+            const idToken = cookies.getCookie('idToken')
+            if(idToken!=this.$store.state.api.idToken){
+                // change of state
+                this.$store.dispatch('api/syncIdToken')
+            }
+            //if(!idToken){
+            //    this.$store.dispatch('logOut')
+            //}
+            setTimeout(this.monitorIdTokenCookie, 2000)
+        },
+
     },
 
     store,
