@@ -43,6 +43,10 @@ export default {
         },
 
         setAccessToken(state, {token}){
+            if(!token){
+                state.accessToken = null
+                return
+            }
             const accessToken = {
                 token: HAL(token).key('token'), 
             }
@@ -94,9 +98,6 @@ export default {
             return getters.http({url, auth:true}).then(response=>{
                 commit('setDomain', {domain:response.data})
                 return HAL(response.data)
-            }).catch(error=>{
-                console.log(error.response)
-                console.log(error.response.data)
             })
         },
 
@@ -111,7 +112,14 @@ export default {
             }).then(response => {
                 commit('setAccessToken', {token: response.data})
                 return state.accessToken
+            }).catch(error => {
+                commit('setAccessToken', {token: null})
+                throw error
             })
+        },
+
+        deleteAccessToken({commit}){
+            commit('setAccessToken', {token: null})
         },
     },
 }

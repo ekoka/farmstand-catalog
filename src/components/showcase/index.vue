@@ -67,9 +67,21 @@ export default {
         //        })
         //    }
         //},
+        loggedIn: {
+            immediate: true,
+            handler(newValue, oldValue){
+                if(!newValue){
+                    this.$router.push({name: 'Index'})
+                }
+            },
+        }
+
     },
 
     computed:{
+        loggedIn(){
+            return this.$store.state.api.accessToken
+        },
         fieldNames(){
             if (this.schema.fields){
                 return this.schema.fields.filter(f=>{
@@ -93,6 +105,10 @@ export default {
     },
 
     mounted(){
+
+        if(!this.loggedIn){
+            return
+        }
 
         this.getPublicRoot().then(()=>{
             return this.getPublicProductSchema()

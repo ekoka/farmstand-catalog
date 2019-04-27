@@ -23,7 +23,17 @@ export default {
         }
     },
 
-    created(){
+    computed: {
+        loggedIn(){
+            const token = this.$store.state.accessToken 
+            return token && token.payload.role=='admin'
+        }
+    },
+
+    mounted(){
+        if(!this.loggedIn){
+            return
+        }
         const account = this.$store.getters['api/account']
         if(!account){
             // not logged in
@@ -39,22 +49,15 @@ export default {
         })
     },
 
-    mounted(){
-        const watchLoggedState = ()=>{
-            // are we logged in?
-            const account_id = cookies.getCookie('account_id')
-            //if(!this.$store.state['loggedIn']){
-            if(!account_id){
-                this.ready = false
-                // clear the state again, just in case the cookie was
-                // removed by another app than this one (e.g. subdomain).
-                this.$store.dispatch('api/resetApi').then(()=>{
+    watch: {
+        loggedIn: {
+            immediate: true,
+            handler(newValue, oldValue){
+                if(!newValue){
                     this.$router.push({name:'Index'})
-                })
+                }
             }
-            setTimeout(watchLoggedState, 2000)
-        }
-        watchLoggedState()
+        },
     },
 
 
