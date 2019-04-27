@@ -85,7 +85,7 @@ export default {
                 pid:notfound
             })
             return getters.http({
-                url,
+                url, auth:true,
             }).then(response=>{
                 const addNewResources = each(p=>{
                     commit('setPublicProduct', {product:p.resource})
@@ -99,7 +99,7 @@ export default {
         getPublicProducts({getters, commit, dispatch}, {params}={}){
 
             const url = getters.publicRoot.url('public_products', {}, params)
-            return getters.http({url}).then(response=>{
+            return getters.http({url, auth:true}).then(response=>{
                 return HAL(response.data)
             })
         },
@@ -109,7 +109,7 @@ export default {
 
         getPublicProductSchema({getters, commit}){
             const url = getters.publicRoot.url('public_product_schema')
-            return getters.http({url}).then(response=>{
+            return getters.http({url, auth:true}).then(response=>{
                 commit('setPublicProductSchema', {schema:response.data})
                 return HAL(response.data)
             })
@@ -117,7 +117,7 @@ export default {
 
         getPublicGroups({getters, commit}){
             const url = getters.publicRoot.url('public_groups')
-            return getters.http({url}).then(response=>{
+            return getters.http({url, auth:true}).then(response=>{
                 return HAL(response.data)
             }).catch(error=>{
                 console.log(error)
@@ -128,7 +128,7 @@ export default {
         postPublicInquiry({getters, commit, dispatch}, {data}){
             return dispatch('getPublicRoot').then(publicRoot=>{
                 let url = publicRoot.url('public_inquiries')
-                return getters.http({url, method:'post', data}).then(response=>{
+                return getters.http({url, method:'post', data, auth:true}).then(response=>{
                     console.log(response)
                 }).catch(error=>{
                     console.log(error)

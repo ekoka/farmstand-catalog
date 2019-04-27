@@ -24,26 +24,26 @@ export default {
     },
 
     computed: {
+        accessToken(){
+            return this.$store.state.api.accessToken
+        },
         loggedIn(){
-            const token = this.$store.state.accessToken 
+            const token = this.accessToken
             return token && token.payload.role=='admin'
-        }
+        },
     },
 
     mounted(){
         if(!this.loggedIn){
             return
         }
-        const account = this.$store.getters['api/account']
-        if(!account){
-            // not logged in
-            this.$router.push({name:'Index'})
-            return
-        }
         this.getRoot().then(()=>{
             return this.getDomain({
                 domain:this.$store.getters.subdomain
             })
+        }).then(()=>{
+            const account_id = this.accessToken.payload.account_id
+            return this.getAccount({account_id})
         }).then(()=>{
             this.ready = true
         })
@@ -52,8 +52,8 @@ export default {
     watch: {
         loggedIn: {
             immediate: true,
-            handler(newValue, oldValue){
-                if(!newValue){
+            handler(value){
+                if(!value){
                     this.$router.push({name:'Index'})
                 }
             }
@@ -66,6 +66,7 @@ export default {
             'getRoot': 'api/getRoot',
             'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
+            'getProfile': 'api/getProfile',
             'getProfile': 'api/getProfile',
         }),
         ...mapMutations({

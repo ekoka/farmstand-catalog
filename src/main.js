@@ -46,8 +46,7 @@ new Vue({
             if (this.$store.state.api.idToken){ // logged into productlist
                 return this.$store.dispatch('api/postAccessToken').then(()=>{
                     // logged into subdomain
-                    this.$store.dispatch('')
-                    //this.monitorAccessToken()
+                    this.monitorAccessToken()
                 }).catch(error=>{
                     // handle 401
                     if(error.response.status==401){
@@ -95,7 +94,13 @@ new Vue({
             const idToken = cookies.getCookie('idToken')
             if(idToken!=this.$store.state.api.idToken){
                 // change of state
-                this.$store.dispatch('api/syncIdToken')
+                this.$store.dispatch('api/syncIdToken').then(()=>{
+                    // if the change of state was a removal of the idToken
+                    // also remove the accessToken
+                    if(!this.$store.state.api.idToken){
+                        this.$store.dispatch('api/deleteAccessToken')
+                    }
+                })
             }
             setTimeout(this.monitorIdTokenCookie, 2000)
         },
