@@ -11,6 +11,7 @@ export default {
     state: {
         publicRoot: null,
         publicProductSchema: null,
+        publicDomain: null,
         publicProductCache: {stack: [], lock:[]},
     },
 
@@ -20,11 +21,20 @@ export default {
                 return HAL(state.publicRoot)
             }
         },
+        publicDomain(state){
+            if(state.publicDomain){
+                return HAL(state.publicDomain)
+            }
+        }
     },
 
     mutations:{
         setPublicRoot(state, {publicRoot}){
             state.publicRoot = publicRoot 
+        },
+
+        setPublicDomain(state, {publicDomain}){
+            state.publicDomain = publicDomain
         },
 
         setPublicProductSchema(state, {schema}){
@@ -43,6 +53,7 @@ export default {
     },
 
     actions: {
+
         getPublicRoot({getters, commit, dispatch, rootGetters}){
             async function getRoot(){
                 if(getters.root){
@@ -54,10 +65,20 @@ export default {
             const domain = rootGetters.subdomain
             return getRoot().then(root=>{
                 const url = root.url('public_root', {domain})
+                console.log(url)
                 return getters.http({url}).then(response=>{
                     commit('setPublicRoot', {publicRoot: response.data})
                     return HAL(response.data)
                 })
+            })
+        },
+
+        getPublicDomain({getters, commit, rootGetters}){
+            const domain = rootGetters.subdomain
+            const url = getters.publicRoot.url('public_domain', {domain})
+            return getters.http({url}).then(response=>{
+                commit('setPublicDomain', {publicDomain:response.data})
+                return getters.publicDomain
             })
         },
 

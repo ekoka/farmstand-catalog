@@ -1,4 +1,5 @@
 import axios from 'axios'
+import upperFirst from 'lodash/fp/upperFirst'
 import accounts from './accounts'
 import products from './products'
 import inquiries from './inquiries'
@@ -103,6 +104,14 @@ const API = {
                 commit('setRoot', {root:response.data})
                 return HAL(response.data)
             })
+        },
+
+        getResource({getters, commit, dispatch}, {resource, params=null}){
+            if(getters[resource]){
+                return getters[resource]
+            }
+            const capitalized = upperFirst(resource)
+            return dispatch('get'+capitalized, params)
         },
 
         resetApi({commit, dispatch}){

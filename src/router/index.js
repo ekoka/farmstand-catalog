@@ -3,7 +3,6 @@ import Router from 'vue-router'
 
 import Showcase from './showcase'
 import Admin from './admin'
-const Redirect = ()=>import  ( '@/components/redirect')
 const Index = ()=>import  ( '@/components/home')
 
 
@@ -14,11 +13,6 @@ export default new Router({
     routes: [
         Admin,
         Showcase,
-        {
-            name: 'Redirect',
-            path: '/redirect',
-            component: Redirect,
-        },
         {
             name: 'Index',
             path: '',

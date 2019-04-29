@@ -45,12 +45,10 @@ new Vue({
         this.monitorIdTokenCookie().then(()=>{
             if (this.$store.state.api.idToken){ // logged into productlist
                 return this.$store.dispatch('api/postAccessToken').then(()=>{
-                    // logged into subdomain
                     this.monitorAccessToken()
                 }).catch(error=>{
                     // handle 401
                     if(error.response.status==401){
-                        // we're not authorized to access domain.
                         // no accessToken issued.
                         return 
                     }
@@ -112,7 +110,7 @@ new Vue({
                 const exp = Date.now() + delay*2 // 10 minutes before expiry
                 if (exp/1000 >= accessToken.payload.exp){
                     this.$store.dispatch('api/postAccessToken').then(()=>{
-                        // we keep monitoring as long as we obtain a good access token
+                        // we keep monitoring as long as we obtain an access token
                         setTimeout(this.monitorAccessToken, delay)
                     }).catch(error=>{
                         return this.$store.dispatch('api/deleteAccessToken')

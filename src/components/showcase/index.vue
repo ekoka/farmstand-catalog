@@ -29,6 +29,7 @@
 
 <script>
 import map from 'lodash/fp/map'
+import findIndex from 'lodash/fp/findIndex'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
@@ -69,8 +70,8 @@ export default {
         //},
         loggedIn: {
             immediate: true,
-            handler(newValue, oldValue){
-                if(!newValue){
+            handler(value){
+                if(!value){
                     this.$router.push({name: 'Index'})
                 }
             },
@@ -80,6 +81,15 @@ export default {
 
     computed:{
         loggedIn(){
+            if(!this.accessToken){ 
+                return false
+            }
+            const idx = findIndex(role=>{
+                return role==this.accessToken.payload.role
+            })['admin', 'user']
+            return idx!=-1
+        },
+        accessToken(){
             return this.$store.state.api.accessToken
         },
         fieldNames(){
@@ -132,8 +142,8 @@ export default {
 
     methods: {
         fields(product){
-            let rv = [];
-            let fields = product.key('fields')
+            const rv = [];
+            const fields = product.key('fields')
             for (let i=0; i<this.fieldLength;i++){
                 rv[i] = fields[i] || ''
             }
