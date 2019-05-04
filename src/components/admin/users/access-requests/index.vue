@@ -11,108 +11,88 @@
         <div class="column is-12-tablet is-6-desktop is-4-fullhd">
             <div class="card">
                 <div class="card-content">
-                    <div class="media">
+                    <div v-for="req in access_requests" class="media">
                         <div class="media-content">
                             <p class="title is-5 is-spaced is-marginless">
-                                <a href="edit-customer.html">John Miller</a>
+                                <a @click="access_request=req">{{name(req.account)}}</a>
                             </p>
-                            <p class="is-size-6">XYZ Industries, Montreal</p>
+                            <p class="is-size-6">{{company(req.account)}}</p>
                         </div><!-- media-content -->
 
                         <div class="media-right">
-                            <span class="tag is-warning">pending</span>
-                        </div><!-- media-right -->
-                    </div><!-- media -->
-
-                    <div class="media">
-                        <div class="media-content">
-                            <p class="title is-5 is-spaced is-marginless">
-                                <a href="edit-customer.html">Samantha Rogers</a>
-                            </p>
-                            <p class="subtitle is-6">ACME Corporation, New York City</p>
-                        </div><!-- media-content -->
-
-                        <div class="media-right">
-                            <span class="tag is-success">approved</span>
-                        </div><!-- media-right -->
-                    </div><!-- media -->
-                    <div class="media">
-                        <div class="media-content">
-                            <p class="title is-5 is-spaced is-marginless">
-                                <a href="edit-customer.html">Paul Jacques</a>
-                            </p>
-                            <p class="subtitle is-6">AAA Distribution Inc., Los Angeles</p>
-                        </div><!-- media-content -->
-
-                        <div class="media-right">
-                            <span class="tag is-warning">pending</span>
+                            <span class="tag" :class="tagClass(req.status)">{{req.status}}</span>
                         </div><!-- media-right -->
                     </div><!-- media -->
                 </div><!-- card-content-->
             </div><!-- card -->
         </div><!-- column -->
 
-        <div class="column is-6-desktop is-6-widescreen">
-            <p class="heading">
-                <strong>Date and time of request</strong>
-            </p>
-            <p class="content">
-                Nov 18, 17:38
-            </p>
-            <p class="heading">
-                <strong>Customer </strong>
-            </p>
-
-            <p class="content">
-                <strong>
-                    <a href="edit-customer.html">John Miller</a>
-                </strong>
-                <br>
-                <code>johnmiller@gmail.com</code>
-                <br>
-                55 Long Bridge road
-                <br>
-                78170 Los Angeles
-                <br>
-                United States
-            </p><!-- content -->
-            <p class="heading">
-                <strong>Message</strong>
-            </p>
-
-            <p class="content">
-                Hey there, I'd like to have access to your catalog. 
-                Thank you in advance.
-            </p><!-- content -->
-            <p class="heading">
-                <strong>Reply (optional)</strong>
-            </p>
-            <div class="field">
-                <textarea class="textarea"></textarea>
-            </div>
-
-            <p class="heading">
-                <strong>Actions</strong>
-            </p>
-
-            <div class="buttons">
-                <button class="button  is-success is-outlined">Approve</button>
-                <button class="button  is-danger is-outlined">Reject</button>
-                <button class="button  is-dark is-outlined">Blacklist</button>
-                <button disabled class="button is-warning ">Archive</button>
-            </div><!-- buttons -->
-
-
-
-        </div><!-- column -->
+        <request v-if="access_request" :request="access_request" 
+            class="column is-6-desktop is-6-widescreen">
+        </request>
 
     </div><!-- columns -->
 </div>
 </template>
 
 <script>
+import map from 'lodash/fp/map'
+import filter from 'lodash/fp/filter'
+import request from './request'
+import {mapActions} from 'vuex'
 export default {
+    components:{
+        request,
+    },
+    data(){
+        return {
+            access_request:null,
+            access_requests: [],
+        }
+    },
+
+    computed:{
+        name(){
+            return (account)=>{
+                return account.first_name + ' ' + account.last_name
+            }
+        },
+
+        company(){
+            return (account)=>{
+                const company = [account.company]
+                const location = account.city || account.country
+                if(location){
+                   company.push(location) 
+                }
+                return company.join(', ')
+            }
+        },
+        tagClass(){
+            return (status)=> {
+                return {
+                    pending: 'is-warning',
+                    approved: 'is-success',
+                    declined: 'is-danger',
+                }[status]
+            }
+        },
+    },
+
+    mounted(){
+        this.getAccessRequests().then(response=>{
+            this.access_requests = map(access_request=>{
+                return access_request.resource
+            })(response.embedded('access_requests'))
+        })
+    },
+
     methods:{
+        ...mapActions({
+            getAccessRequests: 'api/getDomainAccessRequests',
+            //patchAccessRequest: 'api/patchAccessRequest',
+            postDomainAccount: 'api/postDomainAccount',
+        }),
     },
 }
 </script>

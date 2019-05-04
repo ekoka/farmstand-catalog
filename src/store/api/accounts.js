@@ -8,18 +8,12 @@ export default {
         account: null,
         accessToken: null,
         idToken: null,
-        domain: null,
     },
 
     getters: {
         account(state){
             if(state.account){
                 return HAL(state.account)
-            }
-        },
-        domain(state){
-            if (state.domain){
-                return HAL(state.domain)
             }
         },
         profile(state){
@@ -36,10 +30,6 @@ export default {
 
         unsetAccount(state){
             state.account = null
-        },
-
-        setDomain(state, {domain}){
-            state.domain = domain
         },
 
         setAccessToken(state, {token}){
@@ -89,14 +79,6 @@ export default {
             const url = getters.root.url('profile')
             return getters.http({url, auth:true}).then(response => {
                 commit('setProfile', {profile:response.data})
-                return HAL(response.data)
-            })
-        },
-
-        getDomain({commit, getters}, {domain}={}){
-            const url = getters.root.url('domain', {domain})
-            return getters.http({url, auth:true}).then(response=>{
-                commit('setDomain', {domain:response.data})
                 return HAL(response.data)
             })
         },

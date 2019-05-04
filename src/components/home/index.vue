@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import URI from 'urijs'
 import findIndex from 'lodash/fp/findIndex' 
 import modal from '@/components/utils/modal'
 import regUserRequest from './access-request/registered'

@@ -2,6 +2,7 @@ import axios from 'axios'
 import upperFirst from 'lodash/fp/upperFirst'
 import accounts from './accounts'
 import products from './products'
+import domains from './domains'
 import inquiries from './inquiries'
 import groups from './groups'
 import images from './images'
@@ -20,6 +21,7 @@ const mkstate = ()=>{
         root: null,
         ...jsoncopy(accounts.state),
         ...jsoncopy(groups.state),
+        ...jsoncopy(domains.state),
         ...jsoncopy(products.state),
         ...jsoncopy(inquiries.state),
         ...jsoncopy(images.state),
@@ -72,6 +74,7 @@ const API = {
             }
         },
         ...accounts.getters,
+        ...domains.getters,
         ...products.getters,
         ...inquiries.getters,
         ...groups.getters,
@@ -85,6 +88,7 @@ const API = {
         },
 
         ...accounts.mutations,
+        ...domains.mutations,
         ...products.mutations,
         ...inquiries.mutations,
         ...groups.mutations,
@@ -120,6 +124,7 @@ const API = {
         },
 
         ...accounts.actions,
+        ...domains.actions,
         ...groups.actions,
         ...products.actions,
         ...inquiries.actions,

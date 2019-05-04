@@ -23,6 +23,39 @@
     </div><!-- level -->
     <div class="box">
         <h1 class="title is-3">Under construction...</h1>
+        <div v-for="account in accounts">
+            <a>{{account.first_name}} {{account.last_name}}</a> 
+            (<span>{{account.role}}</span>)
+        </div>
     </div>
 </div>
 </template>
+
+<script>
+import {mapActions} from 'vuex'
+import map from 'lodash/fp/map'
+
+export default {
+    data(){
+        return {
+            accounts:[]
+        }
+    },
+    mounted(){
+        this.loadAccounts() 
+    },
+
+    methods:{
+        loadAccounts(){
+            this.getDomainAccounts().then(resource=>{
+                this.accounts = map(account=>{
+                    return account.resource
+                })(resource.embedded('accounts'))
+            })
+        },
+        ...mapActions({
+            getDomainAccounts:'api/getDomainAccounts'
+        }),
+    },
+}
+</script>
