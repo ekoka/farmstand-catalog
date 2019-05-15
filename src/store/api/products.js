@@ -115,7 +115,7 @@ export default {
         },
 
         getProducts({getters, commit}, {params}={}){
-            let url = getters.domain.url('products')
+            const url = getters.domain.url('products',null,params)
             return getters.http({url, auth:true}).then(response=>{
                 return HAL(response.data)
             })

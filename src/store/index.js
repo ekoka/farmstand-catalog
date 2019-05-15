@@ -56,5 +56,12 @@ export default new Vuex.Store({
             return getters.urlSubdomain
         },
     },
+
+    mutations: {
+        setLang(state, {lang}){
+            state.currentLang = lang 
+        },
+    },
+    
     plugins: [createPersistedState()],
 })

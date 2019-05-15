@@ -3,10 +3,10 @@
     <div class="tabs is-boxed is-centered is-marginless is-paddingless">
         <ul>
             <li :class="{'is-active': activeTab=='question'}">
-                <a @click="activeTab='question'">Ask a question</a>
+                <a @click="activeTab='question'">{{$t('ask')}}</a>
             </li>
             <li :class="{'is-active': activeTab=='rfq'}">
-                <a @click="activeTab='rfq'">Request for quotation</a>
+                <a @click="activeTab='rfq'">{{$t('rfq')}}</a>
             </li>
         </ul>
     </div> 
@@ -132,6 +132,19 @@ export default {
         ...mapState({
             inqProducts: state=>state.inquiry.products
         }),
+    },
+
+    i18n: {
+        messages:{
+            en:{
+                ask: 'Ask a question', 
+                rfq: 'Request for quotation',
+            },
+            fr: {
+                ask: 'Demandez un renseignement', 
+                rfq: 'Demande de devis',
+            },
+        },
     },
 
     methods:{

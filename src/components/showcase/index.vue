@@ -8,7 +8,7 @@
         <div class='container'>
             <div class="columns">
                 <div class="column is-4-tablet is-3-desktop is-2-widescreen">
-                    <p class="subtitle is-6">Narrow results by</p>
+                    <p class="subtitle is-6">{{$t('narrow')}}</p>
                     <!--<left-nav active="catalog"/>-->
                     <group-vertical v-for="f,i in groups" :key="i" :group="f"/>
                     <smallcart/>
@@ -114,8 +114,18 @@ export default {
         }),
     },
 
-    mounted(){
+    i18n: {
+        messages:{
+            en: {
+                narrow: 'Narrow results by',
+            },
+            fr: {
+                narrow: 'Filtrer les résultats par',
+            },
+        }
+    },
 
+    mounted(){
         if(!this.loggedIn){
             return
         }

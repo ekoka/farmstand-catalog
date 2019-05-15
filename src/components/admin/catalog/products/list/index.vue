@@ -10,11 +10,13 @@
         <div class="level-left">
             <div class="level-item is-hidden-tablet-only">
                 <div class="field has-addons">
+                    <form @submit.prevent="addSearchToRoute">
                     <p class="control">
-                        <input class="input" placeholder="Product name, SKU…">
+                        <input class="input" v-model="search" placeholder="Product name, SKU…">
                     </p>
+                    </form>
                     <p class="control">
-                        <button class="button">Search</button>
+                        <button @click="addSearchToRoute" class="button">Search</button>
                     </p>
                 </div><!-- field -->
             </div><!-- level-item -->
@@ -61,9 +63,20 @@ export default {
 
     data(){
         return {
+            search: null,
             ready: false,
             products: null,
         }
+    },
+
+    watch: {
+        '$route': {
+            handler(route){
+                this.search = route.query.q
+                this.searchProduct()
+            },
+            immediate: true,
+        },
     },
 
     computed:{
@@ -93,18 +106,9 @@ export default {
 
     mounted(){
         this.getProductSchema().then(()=>{
-            this.getProducts().then(products=>{
-                this.getProductResources({
-                    product_ids:products.data.product_ids
-                }).then(products=>{
-                    this.products = map(p=>{
-                        return p.data
-                    })(products)
-                    this.ready = true 
-                }).then(()=>{
-                    this.enableGroups()
-                })
-            })
+            this.ready = true 
+        }).then(()=>{
+            this.enableGroups()
         })
     },
 
@@ -135,8 +139,31 @@ export default {
             })
         },
 
+        searchProduct(){
+            const params = {
+                q: this.$route.query.q,
+                page: this.$route.query.page,
+            }
+            this.getProducts({params}).then(products=>{
+                this.getProductResources({
+                    product_ids:products.data.product_ids
+                }).then(products=>{
+                    this.products = map(p=>{
+                        return p.data
+                    })(products)
+                })
+            })
+        },
+
         disableGroups(){
             this.showGroups({value:false})
+        },
+
+        addSearchToRoute(){
+            const q = this.search
+            this.$router.push({
+                name: 'AdminProductList', query:{q}
+            })
         },
 
         ...mapActions({

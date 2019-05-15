@@ -52,6 +52,19 @@
                 <div class="navbar-end">
                     <div class="navbar-item has-dropdown is-hoverable">
                         <div class="navbar-link">
+                            {{$store.getters.lang}}
+                        </div>
+                        <div class="navbar-dropdown">
+                            <a @click="setLang('fr')" class="navbar-item" >
+                                <span>Français</span>
+                            </a>
+                            <a @click="setLang('en')" class="navbar-item">
+                                <span>English</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <div class="navbar-link">
                             {{account.first_name}} {{account.last_name}}
                         </div>
                         <div class="navbar-dropdown">
@@ -99,6 +112,10 @@ export default {
         },
     },
     methods:{
+        setLang(lang){
+            console.log('setting lang')
+            this.$store.commit('setLang', {lang})
+        }
 
     }
 }

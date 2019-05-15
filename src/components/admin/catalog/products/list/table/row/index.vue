@@ -33,7 +33,7 @@
     </div><!-- prod-item -->
     <div class="prod-item column is-2">
         <!-- <status-switch :options="visibilitySwitch" :value="this.rowData.visible"/>-->
-            <toggle 
+            <!--<toggle 
                 class="is-small" 
                 :css="{false: 'is-warning', true:'is-success'}"
                 :initValue="rowData.visible.value" 
@@ -44,7 +44,7 @@
                 <template slot="off">
                     hidden
                 </template>
-            </toggle>
+            </toggle>-->
             <!--<span class="tag" :class="visibilitySwitch.class" >{{visibilitySwitch.label}}</span>-->
     </div><!-- prod-item -->
     <div class="prod-item column is-1">
