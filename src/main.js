@@ -1,13 +1,13 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
-import VueI18n from 'vue-i18n'
 import store from './store'
 import router from './router'
 import './assets/css/main.scss'
 import URI from 'urijs'
 import cookies from '@/utils/cookies'
 import {PRODUCTLIST_INDEX} from '@/assets/js/config'
+import {i18n} from './plugins/i18n'
 
 
 // adding a global event bus 
@@ -21,10 +21,6 @@ Object.defineProperties(Vue.prototype, {
 })
 
 store.$eventBus = EventBus
-
-Vue.use(VueI18n)
-
-const i18n = new VueI18n({})
 
 Vue.config.productionTip = false
 Vue.prototype.$jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
@@ -49,6 +45,10 @@ new Vue({
         lang: {
             handler(v){
                 this.$i18n.locale = v
+                import(`./lang/${v}.js`).then(response=>{
+                    console.log(response.default)
+                    this.$i18n.setLocaleMessage(v, response.default)
+                })
             },
             immediate: true,
         },
@@ -62,12 +62,17 @@ new Vue({
         // init API
         this.$store.dispatch('api/getRoot')
 
+        // start monitoring id token
         this.monitorIdTokenCookie().then(()=>{
-            if (this.$store.state.api.idToken){ // logged into productlist
+            if (this.$store.state.api.idToken){ 
+                // logged into productlist
+                
+                // obtain an access token
                 return this.$store.dispatch('api/postAccessToken').then(()=>{
+                    // start monitoring access token
                     this.monitorAccessToken()
                 }).catch(error=>{
-                    // handle 401
+                    // handle 401 (id token has likely been revoked)
                     if(error.response.status==401){
                         // no accessToken issued.
                         return 
@@ -128,18 +133,19 @@ new Vue({
             if(this.$store.state.api.idToken){
                 const accessToken = this.$store.state.api.accessToken
                 const exp = Date.now() + delay*2 // 10 minutes before expiry
-                if (exp/1000 >= accessToken.payload.exp){
-                    this.$store.dispatch('api/postAccessToken').then(()=>{
-                        // we keep monitoring as long as we obtain an access token
-                        setTimeout(this.monitorAccessToken, delay)
-                    }).catch(error=>{
-                        return this.$store.dispatch('api/deleteAccessToken')
+                if (exp>=accessToken.payload.exp){
+                    // refresh access token
+                    this.$store.dispatch('api/postAccessToken').catch(error=>{
                         if (error.response.status==401){ 
                             // idToken is not valid anymore
-                            return
+                            this.$store.dispatch('api/deleteAccessToken')
                         }
+                        return
                     })
-                }
+                } 
+                // try again in 5 minutes
+                // we keep monitoring as long as we obtain an access token
+                setTimeout(this.monitorAccessToken, delay)
             }
         },
     },

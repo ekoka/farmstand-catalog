@@ -20,10 +20,10 @@
                                 <!-- notebook -->
                         </span>
                         <span class="is-hidden-touch is-hidden-widescreen">
-                            Catalog
+                            {{$t('catalog_mnu')}}
                         </span>
                         <span class="is-hidden-desktop-only">
-                            Browse catalog
+                            {{$t('catalog_mnu')}}
                         </span>
                     </router-link>
                     <router-link class="navbar-item" 
@@ -45,7 +45,7 @@
                             -->
                         </span>
 
-                        <span>Request for quotation</span>
+                        <span>{{$t('rfq_mnu')}}</span>
                     </router-link><!-- navbar-item -->
                 </div>
 
@@ -73,22 +73,14 @@
                                     <i class="iconify mdi" 
                                         data-icon="mdi-account-circle"></i>
                                 </span>
-                                <span>Account</span>
+                                <span>{{$t('account_mnu')}}</span>
                             </a>
-                            <a class="navbar-item">
-                                <span class="icon">
-                                    <i class="iconify mdi" 
-                                        data-icon="mdi-bug"></i>
-                                </span>
-                                <span>Report bug</span>
-                            </a>
-
                             <a class="navbar-item">
                                 <span class="icon">
                                     <i class="iconify mdi" 
                                         data-icon="mdi-logout"></i>
                                 </span>
-                                <span>Log out</span>
+                                <span>{{$t('logout_mnu')}}</span>
                             </a>
 
                         </div>

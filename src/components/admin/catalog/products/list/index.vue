@@ -10,13 +10,13 @@
         <div class="level-left">
             <div class="level-item is-hidden-tablet-only">
                 <div class="field has-addons">
-                    <form @submit.prevent="addSearchToRoute">
+                    <form @submit.prevent="newSearch">
                     <p class="control">
                         <input class="input" v-model="search" placeholder="Product name, SKU…">
                     </p>
                     </form>
                     <p class="control">
-                        <button @click="addSearchToRoute" class="button">Search</button>
+                        <button @click="newSearch" class="button">Search</button>
                     </p>
                 </div><!-- field -->
             </div><!-- level-item -->
@@ -42,6 +42,10 @@
     </div><!-- level -->
 
     <product-table v-if="ready" :products="groupedProducts" />
+
+    <div>
+        <a @click="moreResults" class="button is-text">more...</a> 
+    </div>
 </div>
 </template>
 
@@ -63,9 +67,11 @@ export default {
 
     data(){
         return {
+            last_product: null,
+
             search: null,
             ready: false,
-            products: null,
+            products: [],
         }
     },
 
@@ -73,6 +79,7 @@ export default {
         '$route': {
             handler(route){
                 this.search = route.query.q
+                this.products = []
                 this.searchProduct()
             },
             immediate: true,
@@ -139,31 +146,48 @@ export default {
             })
         },
 
-        searchProduct(){
+        searchProduct({query, last_product}={}){
             const params = {
-                q: this.$route.query.q,
-                page: this.$route.query.page,
+                q: query || this.search,
+                last_product,
             }
             this.getProducts({params}).then(products=>{
+                this.last_product = products.data.last_product
+                this.has_more = products.data.has_more
                 this.getProductResources({
                     product_ids:products.data.product_ids
                 }).then(products=>{
-                    this.products = map(p=>{
+                    this.products = [...this.products, ...map(p=>{
                         return p.data
-                    })(products)
+                    })(products)]
                 })
             })
         },
 
-        disableGroups(){
-            this.showGroups({value:false})
-        },
-
-        addSearchToRoute(){
+        newSearch(){
+            this.resetSearch()
             const q = this.search
             this.$router.push({
                 name: 'AdminProductList', query:{q}
             })
+        },
+
+        resetSearch(){
+            this.has_more = false
+            this.last_product = null
+        },
+
+        moreResults(){
+            if(this.last_product){
+                this.searchProduct({
+                    query: this.search,
+                    last_product: this.last_product,
+                })
+            }
+        },
+
+        disableGroups(){
+            this.showGroups({value:false})
         },
 
         ...mapActions({

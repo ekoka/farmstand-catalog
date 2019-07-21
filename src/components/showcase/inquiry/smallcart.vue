@@ -17,7 +17,7 @@
             </div>
             <div class="control">
                 <router-link class="button is-warning" :to="{name:'CatalogInquiry'}">
-                    Review and submit RFQ
+                    {{$t('rfq.review_and_submit_lbl')}}
                 </router-link>
             </div>
         </div>

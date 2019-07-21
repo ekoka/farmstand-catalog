@@ -1,28 +1,28 @@
 <template>
 <div>
-    <div class="level">
+    <!--<div class="level">
         <div class="level-left"></div>
         <div class="level-right">
             <div class="level-item has-text-weight-semibold">
-                All
+                {{$t('show_all_btn')}} 
             </div>
             <div class="level-item">
                 <a>
                     <span class="icon has-text-warning">
                         <i class="iconify mdi mdi-18px" 
                             data-icon="mdi-star"></i>
-                    </span>Favorites
+                    </span>{{$t('show_favorites_btn')}}
                 </a>
             </div>
             <div class="level-item">
                 <a class="">
                     <span class="icon has-text-danger">
                         <i class="iconify mdi" data-icon="mdi-minus-circle"></i>
-                    </span>Hidden
+                    </span>{{$t('show_hidden_btn')}}
                 </a>
             </div>
         </div>
-    </div>
+    </div>-->
     <article class="box" v-for="p,k in products">
         <div class="media">
             <div class="media-left">
@@ -51,7 +51,7 @@
                                 <button
                                     class="button is-warning is-small"
                                     @click="toggleRfqPane(p.product_id)">
-                                    Added to RFQ
+                                    {{$t('added_to_rfq_btn')}}
                                 </button>
                                 <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
                                     <span class="icon is-small">
@@ -63,7 +63,7 @@
                                 title="Inquire about this product" 
                                 class="button is-link is-outlined is-small"
                                 @click="toggleRfqPane(p.product_id)">
-                                <span>Inquire</span>
+                                <span>{{$t('inquire_btn')}}</span>
                             </button>
                         </div><!-- level-item -->
                     </div><!-- level-right -->
@@ -93,14 +93,14 @@
 
         <div class="level">
             <div class="level-left">
-                <div class="level-item">
+                <!--<div class="level-item">
                     <button class="button is-white is-small">
                         <span class="icon has-text-warning">
                             <i class="iconify mdi mdi-18px" 
                                 data-icon="mdi-star"></i>
                         </span> 
                         <span>
-                            Favorite
+                            {{$t('add_to_favorite_btn')}}
                         </span>
                     </button>
                 </div>
@@ -109,17 +109,31 @@
                         <span class="icon has-text-danger is-small">
                             <i class="iconify mdi" data-icon="mdi-minus-circle-outline"></i>
                         </span>
-                        <span>Hide</span>
+                        <span>
+                            {{$t('hide_btn')}}
+                        </span>
                     </a>
-                </div>
+                </div>-->
             </div><!-- level-left -->
             <div class="level-right">
                 <div class="level-item">
                     <a class="is-size-7 " @click="toggleExpandProduct(p.product_id)">
-                        <span>More details...</span>
+                        <template v-if="expandedProducts[p.product_id]">
+                        <span>
+                            {{$t('less_details_btn')}}
+                        </span>
+                        <span class="icon">
+                            <i class="iconify mdi" data-icon="mdi-chevron-double-up"></i>
+                        </span>
+                        </template>
+                        <template v-else>
+                        <span>
+                            {{$t('more_details_btn')}}
+                        </span>
                         <span class="icon">
                             <i class="iconify mdi" data-icon="mdi-chevron-double-down"></i>
                         </span>
+                        </template>
                     </a>
                 </div><!-- level-item -->
             </div>
@@ -132,6 +146,7 @@
 import find from 'lodash/fp/find'
 import Vue from 'vue'
 import {mapGetters, mapState, mapMutations} from 'vuex'
+
 export default {
 
     props: ['products', 'fieldNames', 'fields'],

@@ -3,15 +3,16 @@
     <top-nav/>
     <notification eventName="message-sent" 
         :defaults="{timeout:2}"> 
+
     </notification>
     <section class="section">
         <div class='container'>
             <div class="columns">
                 <div class="column is-4-tablet is-3-desktop is-2-widescreen">
-                    <p class="subtitle is-6">{{$t('narrow')}}</p>
+                    <p class="subtitle is-6">{{$t('narrow_result_lbl')}}</p>
                     <!--<left-nav active="catalog"/>-->
                     <group-vertical v-for="f,i in groups" :key="i" :group="f"/>
-                    <smallcart/>
+                    <smallcart />
                 </div>
                 <div class="column">
                     <div class="container is-fluid">
@@ -112,17 +113,6 @@ export default {
         ...mapGetters({
             productAdded: 'inquiry/productAdded',
         }),
-    },
-
-    i18n: {
-        messages:{
-            en: {
-                narrow: 'Narrow results by',
-            },
-            fr: {
-                narrow: 'Filtrer les résultats par',
-            },
-        }
     },
 
     mounted(){
