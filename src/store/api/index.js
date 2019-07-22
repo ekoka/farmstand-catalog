@@ -52,8 +52,15 @@ const API = {
 
     getters: {
 
-        http(state, getters){
-            return (req={url, method:'get', data:undefined, auth:false})=>{
+        http(state, getters, rootState, rootGetter){
+            return (req={url, method:'get', data:undefined, 
+                    auth:false, params})=>{
+                if(req.params===undefined){
+                    req.params = {}
+                }
+                if (req.params.lang===undefined){
+                    req.params.lang = rootGetter.lang
+                }
                 if (req.auth){
                     req.headers = getters.authHeaders
                 }

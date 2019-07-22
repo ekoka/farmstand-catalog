@@ -1,22 +1,12 @@
 <template>
 <div class="rfq-smallcart" v-if="products.length">
-    <!--<ul>
-        <li v-for="p,k in products"> 
-            <div>
-                {{getFieldValue(p, 'number')}} {{getFieldValue(p, 'name')}}
-                <a @click="removeProduct({product_id:p.product_id})" class="button is-danger is-inverted">
-                    <span class="icon"><i class="iconify mdi" data-icon="mdi-close-circle"></i></span> 
-                </a>
-            </div>
-        </li>
-    </ul>-->
     <div class="container">
         <div class="field has-addons">
             <div class="control">
                 <span class="button has-background-dark has-text-warning is-static ">{{products.length}}</span>
             </div>
             <div class="control">
-                <router-link class="button is-warning" :to="{name:'CatalogInquiry'}">
+                <router-link class="button is-warning" :to="{name:'ShowcaseInquiry'}">
                     {{$t('rfq.review_and_submit_lbl')}}
                 </router-link>
             </div>

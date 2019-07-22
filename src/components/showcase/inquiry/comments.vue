@@ -14,17 +14,15 @@ import {mapMutations} from 'vuex'
 export default {
 
     watch:{
-        '$store.state.comments': {
+        '$store.state.inquiry.comments': {
             deep: true,
             handler(nv){
+                // for vuex-persistedstate
                 this.pingMutation({})
             },
         }
     },
 
-    created(){
-        //this.cmpalias('router-link', 'rl')
-    },
     methods:{
         ...mapMutations({
             // only because vuex-persistedstate listens to mutations

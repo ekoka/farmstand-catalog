@@ -1,11 +1,10 @@
 <template>
 <div>
     <top-nav/>
-
     <section class="section">
         <div class="columns">
             <div class="column is-4-tablet is-3-desktop is-2-widescreen">
-                <left-nav active="inquiry"/>
+                <!--<left-nav active="inquiry"/>-->
             </div>
             <div class="column">
                 <div class="columns is-multiline">
@@ -13,7 +12,8 @@
                     <addresses class="column is-8"/>
                     <comments class="column is-8"/>
                 </div>
-                <button class="button" @click="sendInquiry">Send Inquiry</button>
+                <button v-if="inquiry.products.length" class="button is-link" @click="sendInquiry">{{$t('rfq.send_inquiry_btn')}}</button>
+                <p v-else class="subtitle is-4">{{$t('rfq.empty_inquiry_lbl')}}</p>
             </div><!-- column -->
         </div><!-- columns -->
     </section><!-- section -->
@@ -22,6 +22,7 @@
 
 <script>
 import {mapActions, mapState} from 'vuex'
+import map from 'lodash/fp/map'
 
 export default {
     components: {
@@ -37,21 +38,20 @@ export default {
         ...mapState({
             inquiry: state=>state.inquiry
         }),
+        inquiryView(){
+            return {
+                products: this.inquiry.products,
+                shipping_address: this.inquiry.shippingAddress,
+                billing_address: this.inquiry.billingAddress,
+                comments: this.inquiry.comments,
+            }
+        },
     },
 
     methods:{
 
         sendInquiry(){
-            const data = {}
-            data['products'] = this.inquiry.products.map(p=>{
-                let rv = {...p}
-                delete rv.fields
-                return rv
-            })
-            data['shipping_address'] = this.inquiry.shippingAddress
-            data['billing_address'] = this.inquiry.billingAddress
-            data['comments'] = this.inquiry.comments
-            this.postInquiry({data})
+            this.postInquiry({data:this.inquiryView})
         },
 
         ...mapActions({

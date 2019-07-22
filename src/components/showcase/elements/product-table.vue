@@ -49,9 +49,9 @@
                         <div class="level-item">
                             <div v-if="productAdded(p.product_id)" class="field has-addons">
                                 <button
-                                    class="button is-warning is-small"
+                                    class="button is-link is-small"
                                     @click="toggleRfqPane(p.product_id)">
-                                    {{$t('added_to_rfq_btn')}}
+                                    {{$t('rfq.added_to_rfq_btn')}}
                                 </button>
                                 <button class="button is-danger is-inverted is-small" @click="removeProduct({product_id:p.product_id})">
                                     <span class="icon is-small">
@@ -63,7 +63,7 @@
                                 title="Inquire about this product" 
                                 class="button is-link is-outlined is-small"
                                 @click="toggleRfqPane(p.product_id)">
-                                <span>{{$t('inquire_btn')}}</span>
+                                <span>{{$t('rfq.inquire_btn')}}</span>
                             </button>
                         </div><!-- level-item -->
                     </div><!-- level-right -->

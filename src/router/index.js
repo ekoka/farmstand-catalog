@@ -12,7 +12,7 @@ export default new Router({
     mode: 'history',
     routes: [
         Admin,
-        Showcase,
+        ...Showcase,
         {
             name: 'Index',
             path: '',

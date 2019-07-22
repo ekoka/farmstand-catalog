@@ -3,10 +3,10 @@
     <div class="tabs is-boxed is-centered is-marginless is-paddingless">
         <ul>
             <li :class="{'is-active': activeTab=='question'}">
-                <a @click="activeTab='question'">{{$t('ask_tab')}}</a>
+                <a @click="activeTab='question'">{{$t('rfq.ask_tab')}}</a>
             </li>
             <li :class="{'is-active': activeTab=='rfq'}">
-                <a @click="activeTab='rfq'">{{$t('rfq_tab')}}</a>
+                <a @click="activeTab='rfq'">{{$t('rfq.rfq_tab')}}</a>
             </li>
         </ul>
     </div> 
@@ -14,7 +14,7 @@
         <div v-if="activeTab=='question'">
             <div class="field">
                 <div class="control">
-                    <label class="label">{{$t('questions_comments_lbl')}}</label>
+                    <label class="label">{{$t('rfq.questions_comments_lbl')}}</label>
                 </div>
                 <div class="control">
                     <textarea @input="commentsEdited=true" v-model="comments" class="textarea"></textarea>
@@ -22,11 +22,13 @@
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
                 <div v-if="commentsEdited" class="control">
-                    <button class="button is-primary is-outlined is-small">Send questions / comments</button>
+                    <button class="button is-primary is-outlined is-small">
+                        {{$t('rfq.send_comment')}}
+                    </button>
                 </div>
                 <div class="control">
                     <button class="button is-small" @click="closeForm">
-                        {{$t('close_form_btn')}}
+                        {{$t('rfq.close_form_btn')}}
                     </button>
                 </div>
             </div><!-- field -->
@@ -34,7 +36,7 @@
         <div v-if="activeTab=='rfq'">
             <div class="field">
                 <div class="control">
-                    <label class="label">{{$t('requested_quantity_lbl')}}</label>
+                    <label class="label">{{$t('rfq.requested_quantity_lbl')}}</label>
                 </div>
                 <div class="control">
                     <input @input="rfqEdited=true" class="input" v-model="rfq.quantity"/>
@@ -42,7 +44,7 @@
             </div><!-- field -->
             <div class="field">
                 <div class="control">
-                    <label class="label">{{$t('other_questions_lbl')}}</label>
+                    <label class="label">{{$t('rfq.other_questions_lbl')}}</label>
                 </div>
                 <div class="control">
                     <textarea @input="rfqEdited=true" v-model="rfq.comments" class="textarea"></textarea>
@@ -50,24 +52,24 @@
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
                 <div v-if="showRfqButton" class="control">
-                    <button class="button is-small is-warning" 
+                    <button class="button is-small is-link is-outlined" 
                         @click="addProductToRfq(productAdded(product_id))">
                         <span v-if="productAdded(product_id)" class="">
-                            {{$t('update_rfq_btn')}}
+                            {{$t('rfq.update_rfq_btn')}}
                         </span>
                         <span v-else>
-                            {{$t('add_to_rfq_btn')}}
+                            {{$t('rfq.add_to_rfq_btn')}}
                         </span>
                     </button>
                 </div>
                 <div class="control">
                     <button v-if="productAdded(product_id)" class="button is-small is-danger is-outlined" @click="removeProductFromRfq">
-                        {{$t('remove_item_btn')}}
+                        {{$t('rfq.remove_item_btn')}}
                     </button>
                 </div>
                 <div class="control">
                     <button class="button is-small" @click="closeForm">
-                        {{$t('close_form_btn')}}
+                        {{$t('rfq.close_form_btn')}}
                     </button>
                 </div>
             </div><!-- field -->

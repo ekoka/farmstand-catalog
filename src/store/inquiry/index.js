@@ -49,6 +49,9 @@ const Inquiry = {
                 state.products.splice(index,1)
             }
         },
+        pingMutation(state, {}){
+            state.inquiry 
+        },
     },
 }
 function initInquiry({state, skip=[]}){
