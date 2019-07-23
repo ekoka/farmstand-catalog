@@ -24,8 +24,16 @@ const Inquiry = {
     },
 
     mutations: {
+        // this reinitializes the inquiry
         resetInquiry(state){
             initInquiry({state})
+        },
+
+        // this clears products and comments but leaves contact
+        // and address information.
+        clearInquiry(state){
+            state.products = []
+            state.comments = null
         },
 
         addProduct(state, {rfq}){
@@ -49,6 +57,7 @@ const Inquiry = {
                 state.products.splice(index,1)
             }
         },
+
         pingMutation(state, {}){
             state.inquiry 
         },

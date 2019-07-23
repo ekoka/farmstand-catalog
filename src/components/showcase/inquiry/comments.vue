@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="control">
-        <label class="label">Other comments or instructions</label>
+        <label class="label">{{$t('inquiry.other_instructions_lbl')}}</label>
     </div>
     <div class="control">
         <textarea class="textarea" v-model="$store.state.inquiry.comments"></textarea>
@@ -15,10 +15,13 @@ export default {
 
     watch:{
         '$store.state.inquiry.comments': {
-            deep: true,
+            immediate: true,
             handler(nv){
                 // for vuex-persistedstate
                 this.pingMutation({})
+                const c = this.$store.state.inquiry.comments
+                const notEmpty = c && c.trim() && true
+                this.$emit('update:emptyComments', !notEmpty)
             },
         }
     },

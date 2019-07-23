@@ -27,7 +27,7 @@
                 </label>
             </div><!-- control -->
             <div class="control">
-                <input class="input" v-model="billingAddress.first_name" required placeholder="e.g. Jane"/>
+                <input class="input" :class="{'is-danger': invalidFirstName}" v-model="billingAddress.first_name" required placeholder="e.g. Jane"/>
             </div>
         </div><!-- field -->
         <div class="field">
@@ -38,7 +38,7 @@
                 </label>
             </div><!-- control -->
             <div class="control">
-                <input class="input" v-model="billingAddress.last_name" required placeholder="e.g. Smith"/>
+                <input class="input" :class="{'is-danger': invalidLastName}" v-model="billingAddress.last_name" required placeholder="e.g. Smith"/>
             </div>
         </div><!-- field -->
         <div class="field">
@@ -49,7 +49,7 @@
                 </label>
             </div><!-- control -->
             <div class="control">
-                <input class="input" v-model="billingAddress.email" required placeholder="e.g. jane.smith@example.com"/>
+                <input class="input" :class="{'is-danger': invalidEmail}" v-model="billingAddress.email" required placeholder="e.g. jane.smith@example.com"/>
             </div>
         </div><!-- field -->
         <div class="field">
@@ -200,7 +200,19 @@ export default {
         ...mapState({
             shippingAddress: state=>state.inquiry.shippingAddress,
             billingAddress: state=>state.inquiry.billingAddress,
-        })
+        }),
+        invalidFirstName(){
+            return !this.billingAddress.first_name.trim()
+        },
+        invalidLastName(){
+            return !this.billingAddress.last_name.trim()
+        },
+        invalidEmail(){
+            return !this.billingAddress.email.trim()
+        },
+        invalidContact(){
+            return this.invalidFirstName || this.invalidLastName || this.invalidEmail
+        },
     },
 
     watch:{
@@ -215,7 +227,13 @@ export default {
             handler(nv){
                 this.pingMutation({})
             },
-        }
+        },
+        invalidContact: {
+            immediate: true,
+            handler(v){
+                this.$emit('update:invalidContact', v)
+            },
+        },
     },
 
     methods:{

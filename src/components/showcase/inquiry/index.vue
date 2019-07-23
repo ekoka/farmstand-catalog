@@ -8,12 +8,26 @@
             </div>
             <div class="column">
                 <div class="columns is-multiline">
-                    <cart class="column is-8"/>
-                    <addresses class="column is-8"/>
-                    <comments class="column is-8"/>
+                    <cart class="column is-8" :emptyCart.sync="emptyCart"/>
+                    <p v-if="emptyCart" class="subtitle is-4">{{$t('inquiry.error.no_product_lbl')}}</p>
+                    <comments :emptyComments.sync="emptyComments" class="column is-8"/>
+                    <addresses :invalidContact.sync="invalidContact" class="column is-8"/>
                 </div>
-                <button v-if="inquiry.products.length" class="button is-link" @click="sendInquiry">{{$t('rfq.send_inquiry_btn')}}</button>
-                <p v-else class="subtitle is-4">{{$t('rfq.empty_inquiry_lbl')}}</p>
+                <div class="field">
+                    <div class="control">
+                        <span v-if="invalidContact" class="has-text-danger">
+                            {{$t('inquiry.error.invalid_contact_lbl')}}
+                        </span>
+                    </div>
+                    <div class="control">
+                        <span v-if="emptyComments && emptyCart" class="has-text-danger">
+                            {{$t('inquiry.error.empty_inquiry_lbl')}}
+                        </span>
+                    </div>
+                    <div class="control">
+                    <button class="button is-link" :disabled="disabledButton" @click="sendInquiry">{{$t('inquiry.send_inquiry_btn')}}</button>
+                    </div>
+                </div>
             </div><!-- column -->
         </div><!-- columns -->
     </section><!-- section -->
@@ -21,7 +35,7 @@
 </template>
 
 <script>
-import {mapActions, mapState} from 'vuex'
+import {mapActions, mapState, mapMutations} from 'vuex'
 import map from 'lodash/fp/map'
 
 export default {
@@ -31,6 +45,14 @@ export default {
         cart: ()=>import  ( './cart'),
         addresses: ()=>import  ( './addresses'),
         comments: ()=>import  ( './comments'),
+    },
+
+    data(){
+        return {
+            invalidContact: false,
+            emptyCart: false,
+            emptyComments: false,
+        }
     },
 
 
@@ -43,8 +65,11 @@ export default {
                 products: this.inquiry.products,
                 shipping_address: this.inquiry.shippingAddress,
                 billing_address: this.inquiry.billingAddress,
-                comments: this.inquiry.comments,
+                comments: this.inquiry.comments && this.inquiry.comments.trim(),
             }
+        },
+        disabledButton(){
+            return this.invalidContact || (this.emptyCart && this.emptyComments)
         },
     },
 
@@ -52,7 +77,12 @@ export default {
 
         sendInquiry(){
             this.postInquiry({data:this.inquiryView})
+            this.clearInquiry()
         },
+
+        ...mapMutations({
+            clearInquiry: 'inquiry/clearInquiry'
+        }),
 
         ...mapActions({
             postInquiry: 'api/postPublicInquiry'

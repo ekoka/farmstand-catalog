@@ -44,6 +44,7 @@ import find from 'lodash/fp/find'
 import compose from 'lodash/fp/compose'
 
 export default {
+
     data(){
         return {
             products: [],
@@ -57,14 +58,15 @@ export default {
     computed:{
         ...mapState({
             inquiry: state=>state.inquiry.products
-        })
+        }),
     },
 
     watch:{
         inquiry: {
-            deep: true,
+            immediate: true,
             handler(nv){
                 this.pingMutation({})
+                this.$emit('update:emptyCart', this.inquiry.length==0)
             },
         },
     },
