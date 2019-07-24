@@ -1,28 +1,28 @@
 <template>
 <section>
     <div class="box">
-        <h3 class="subtitle">{{$t('rfq.contact.title_lbl')}}</h3>
+        <h3 class="subtitle">{{$t('inquiry.contact.title_lbl')}}</h3>
         <div class="field">
             <div class="control">
-                <button class="button is-info is-outlined">{{$t('rfq.contact.copy_from_profile_btn')}}</button>
+                <button class="button is-info is-outlined">{{$t('inquiry.contact.copy_from_profile_btn')}}</button>
             </div><!-- control -->
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label title="required">{{$t('rfq.contact.designation_lbl')}}</label>
+                <label title="required">{{$t('inquiry.contact.designation_lbl')}}</label>
             </div><!-- control -->
             <div class="select">
                 <select v-model="billingAddress.title">
-                    <option disabled>{{$t('rfq.contact.designation_select_opt')}}</option>
-                    <option value="Mrs">{{$t('rfq.contact.designation_mrs_opt')}}</option>
-                    <option value="Mr">{{$t('rfq.contact.designation_mr_opt')}}</option>
+                    <option disabled>{{$t('inquiry.contact.designation_select_opt')}}</option>
+                    <option value="Mrs">{{$t('inquiry.contact.designation_mrs_opt')}}</option>
+                    <option value="Mr">{{$t('inquiry.contact.designation_mr_opt')}}</option>
                 </select>
             </div><!-- select -->
         </div><!-- field -->
         <div class="field">
             <div class="control">
                 <label class="label" title="required">
-                    {{$t('rfq.contact.first_name_lbl')}} 
+                    {{$t('inquiry.contact.first_name_lbl')}} 
                     <span class="has-text-danger">*</span>
                 </label>
             </div><!-- control -->
@@ -33,7 +33,7 @@
         <div class="field">
             <div class="control">
                 <label class="label" title="required">
-                    {{$t('rfq.contact.last_name_lbl')}} 
+                    {{$t('inquiry.contact.last_name_lbl')}} 
                     <span class="has-text-danger">*</span>
                 </label>
             </div><!-- control -->
@@ -44,7 +44,7 @@
         <div class="field">
             <div class="control">
                 <label class="label" title="required">
-                    {{$t('rfq.contact.email_lbl')}}
+                    {{$t('inquiry.contact.email_lbl')}}
                     <span class="has-text-danger">*</span>
                 </label>
             </div><!-- control -->
@@ -55,7 +55,7 @@
         <div class="field">
             <div class="control">
                 <label>
-                    {{$t('rfq.contact.company_lbl')}}
+                    {{$t('inquiry.contact.company_lbl')}}
                 </label>
             </div><!-- control -->
             <div class="control">
@@ -66,15 +66,15 @@
     </div><!-- box -->
 
     <div class="box">
-        <h3 class="subtitle">{{$t('rfq.billing.title_lbl')}}</h3>
+        <h3 class="subtitle">{{$t('inquiry.billing.title_lbl')}}</h3>
         <div class="field">
             <div class="control">
-                <button class="button is-info is-outlined">{{$t('rfq.billing.copy_from_profile_btn')}}</button>
+                <button class="button is-info is-outlined">{{$t('inquiry.billing.copy_from_profile_btn')}}</button>
             </div><!-- control -->
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.address_1_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.address_1_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.address1"/>
@@ -82,7 +82,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.address_2_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.address_2_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.address2"/>
@@ -90,7 +90,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.city_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.city_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.city"/>
@@ -98,7 +98,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.state_province_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.state_province_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.state_province"/>
@@ -106,7 +106,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.country_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.country_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.country"/>
@@ -114,7 +114,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.billing.zip_postal_code_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.zip_postal_code_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.zip_postal_code"/>
@@ -123,16 +123,16 @@
     </div><!-- box -->
 
     <div class="box">
-        <h3 class="subtitle">{{$t('rfq.shipping.title_lbl')}}</h3>
+        <h3 class="subtitle">{{$t('inquiry.shipping.title_lbl')}}</h3>
         <div class="field">
             <div class="control">
-                <button class="button is-info is-outlined">{{$t('rfq.shipping.copy_billing_btn')}}</button>
+                <button class="button is-info is-outlined">{{$t('inquiry.shipping.copy_billing_btn')}}</button>
             </div><!-- control -->
         </div><!-- field -->
 
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.name_company_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.name_company_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.company"/>
@@ -141,7 +141,7 @@
 
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.address_1_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.address_1_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.address1"/>
@@ -149,7 +149,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.address_2_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.address_2_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.address2"/>
@@ -157,7 +157,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.city_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.city_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.city"/>
@@ -165,7 +165,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.state_province_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.state_province_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.state_province"/>
@@ -173,7 +173,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.country_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.country_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.country"/>
@@ -181,7 +181,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('rfq.shipping.zip_postal_code_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.zip_postal_code_lbl')}}</label> 
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.zip_postal_code"/>

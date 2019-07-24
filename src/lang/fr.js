@@ -20,7 +20,7 @@ export default {
     rfq_lbl: 'Demander un devis',
 
     inquiry: {
-        inquire_btn: 'Renseignez-vous',
+        inquire_btn: 'Renseignement',
         added_to_rfq_btn: 'Ajouté au devis',
         ask_tab: 'Poser une question',
         rfq_tab: 'Demander un devis',
@@ -75,7 +75,7 @@ export default {
         error:{
             invalid_contact_lbl: 'Nom, prénom, ou courriel manquants.',
             no_product_lbl: 'Aucun article ajouté à la requête',
-            empty_inquiry_lbl: 'Il n\'y a aucun article ou commentaire dans la demande',
+            empty_inquiry_lbl: 'Votre demande ne contient aucun article, ni de commentaire.',
         },
         msg:{
             inquiry_sent: 'La demande a été envoyée. Merci.',

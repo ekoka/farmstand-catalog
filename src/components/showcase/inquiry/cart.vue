@@ -7,7 +7,7 @@
         <div class="field">
             <div class="control">
                 <label class="label">
-                    {{$t('rfq.requested_quantity_lbl')}}
+                    {{$t('inquiry.requested_quantity_lbl')}}
                 </label> 
             </div><!-- control -->
             <div class="control">
@@ -18,7 +18,7 @@
         <div class="field">
             <div class="control">
                 <label class="label">
-                    {{$t('rfq.other_questions_lbl')}}
+                    {{$t('inquiry.other_questions_lbl')}}
                 </label>
             </div>
             <div class="control">
@@ -29,7 +29,7 @@
         <div class="control has-icons-left">
             <button class="button is-danger is-outlined is-small" 
                 @click="removeProduct({product_id:p.inquiry.product_id});loadInquiryProducts()">
-                {{$t('rfq.remove_item_btn')}}
+                {{$t('inquiry.remove_item_btn')}}
             </button>
         </div><!-- control -->
     </div><!-- box -->

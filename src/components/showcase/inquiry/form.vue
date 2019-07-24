@@ -49,6 +49,7 @@ export default {
             invalidContact: false,
             emptyCart: false,
             emptyComments: false,
+            formSubmitted: false,
         }
     },
 
@@ -66,15 +67,22 @@ export default {
             }
         },
         disabledButton(){
-            return this.invalidContact || (this.emptyCart && this.emptyComments)
+            return this.formSubmitted
+                || this.invalidContact
+                || (this.emptyCart && this.emptyComments)
         },
     },
 
     methods:{
 
         sendInquiry(){
-            this.postInquiry({data:this.inquiryView})
-            this.clearInquiry()
+            this.formSubmitted = true
+            this.postInquiry({data:this.inquiryView}).then(response=>{
+                this.clearInquiry()
+                this.$router.push({name:'InquirySent'})
+            }).catch(error=>{
+                this.formSubmitted = false
+            })
         },
 
         ...mapMutations({
