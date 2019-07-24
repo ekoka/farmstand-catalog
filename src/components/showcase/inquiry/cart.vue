@@ -51,10 +51,6 @@ export default {
         }
     },
 
-    mounted(){
-        this.loadInquiryProducts()
-    },
-
     computed:{
         ...mapState({
             inquiry: state=>state.inquiry.products
@@ -62,11 +58,21 @@ export default {
     },
 
     watch:{
+        // listens to product addition/removal
         inquiry: {
             immediate: true,
             handler(nv){
-                this.pingMutation({})
+                this.loadInquiryProducts()
                 this.$emit('update:emptyCart', this.inquiry.length==0)
+            },
+        },
+
+        // listens to modification to products
+        '$store.state.inquiry.products': {
+            deep: true,
+            handler(v){
+                // inform vuex-persistedstate of change
+                this.pingMutation({})
             },
         },
     },
