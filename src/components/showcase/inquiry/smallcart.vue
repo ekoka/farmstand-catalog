@@ -7,7 +7,7 @@
             </div>
             <div class="control">
                 <router-link class="button is-warning" :to="{name:'ShowcaseInquiry'}">
-                    {{$t('rfq.review_and_submit_lbl')}}
+                    {{$t('inquiry.review_and_submit_lbl')}}
                 </router-link>
             </div>
         </div>

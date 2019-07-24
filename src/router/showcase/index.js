@@ -1,6 +1,8 @@
 // components
 import Showcase from '@/components/showcase'
 import Inquiry from '@/components/showcase/inquiry'
+import InquiryForm from '@/components/showcase/inquiry/form'
+import InquirySent from '@/components/showcase/inquiry/sent'
 
 export default [
     {
@@ -9,9 +11,20 @@ export default [
         component: Showcase, 
     },
     {
-        name: 'ShowcaseInquiry', 
         component: Inquiry, 
-        path:'/inquiry'
-    }
+        path:'',
+        children: [
+            {
+                path: '/inquiry',
+                name: 'ShowcaseInquiry', 
+                component: InquiryForm,
+            },
+            {
+                path: '/inquiry/sent',
+                name: 'InquirySent', 
+                component: InquirySent,
+            },
+        ],
+    },
 ]
 
