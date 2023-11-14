@@ -17,8 +17,8 @@
     </div><!-- prod-item -->
     <div class="prod-item column is-2">
         <!-- <status-switch :options="availabilitySwitch" :value="this.rowData.available.value"/> -->
-            <toggle 
-                class="is-info is-small" 
+            <toggle
+                class="is-info is-small"
                 :css="{false: 'is-outlined'}"
                 @toggled="toggleAvailability($event)"
                 :initValue="rowData.available.value" >
@@ -32,19 +32,19 @@
             <!--<span class="tag" :class="availabilitySwitch.class" >{{availabilitySwitch.label}}</span>-->
     </div><!-- prod-item -->
     <div class="prod-item column is-2">
-        <!-- <status-switch :options="visibilitySwitch" :value="this.rowData.visible"/>-->
-            <!--<toggle 
-                class="is-small" 
+        <!--<status-switch :options="visibilitySwitch" :value="this.rowData.visible"/> -->
+            <toggle
+                class="is-small"
                 :css="{false: 'is-warning', true:'is-success'}"
-                :initValue="rowData.visible.value" 
+                :initValue="rowData.visible.value"
                 @toggled='toggleVisibility($event)' >
                 <template slot="on">
-                   published 
+                   published
                 </template>
                 <template slot="off">
                     hidden
                 </template>
-            </toggle>-->
+            </toggle>
             <!--<span class="tag" :class="visibilitySwitch.class" >{{visibilitySwitch.label}}</span>-->
     </div><!-- prod-item -->
     <div class="prod-item column is-1">
@@ -77,7 +77,7 @@ import each from 'lodash/fp/each'
 import map from 'lodash/fp/map'
 import {mapActions} from 'vuex'
 export default {
-    components: { 
+    components: {
         toggle: ()=>import('./toggle'),
     },
     props: ['product'],

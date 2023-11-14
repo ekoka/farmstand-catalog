@@ -27,7 +27,7 @@
             </div><!-- card -->
         </div><!-- column -->
 
-        <request v-if="access_request" :request="access_request" 
+        <request v-if="access_request" :request="access_request"
             class="column is-6-desktop is-6-widescreen">
         </request>
 
@@ -54,7 +54,7 @@ export default {
     computed:{
         name(){
             return (account)=>{
-                return account.first_name + ' ' + account.last_name
+                return account.name
             }
         },
 
@@ -63,7 +63,7 @@ export default {
                 const company = [account.company]
                 const location = account.city || account.country
                 if(location){
-                   company.push(location) 
+                   company.push(location)
                 }
                 return company.join(', ')
             }

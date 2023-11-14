@@ -16,18 +16,18 @@ export default {
     less_details_btn: 'Moins...',
 
 
-    ask_lbl: 'Demander un renseignement', 
+    ask_lbl: 'Demander un renseignement',
     rfq_lbl: 'Demander un devis',
 
     inquiry: {
         inquire_btn: 'Renseignement',
         added_to_rfq_btn: 'Ajouté au devis',
         ask_tab: 'Poser une question',
-        rfq_tab: 'Demander un devis',
+        rfq_tab: 'Demande d\'informations',
         review_and_submit_lbl: 'Vérifier et envoyer le devis',
-        requested_quantity_lbl: 'Quantité désirée',
+        requested_quantity_lbl: 'Quantité souhaitée',
         questions_comments_lbl: 'Avez-vous une question ou un commentaire sur cet article?',
-        other_questions_lbl: 'Autres questions ou commentaires sur l\'article?',
+        other_questions_lbl: 'Questions ou commentaires sur cet article?',
         other_instructions_lbl: 'Autres commentaires ou instructions',
         update_rfq_btn: 'Ajuster',
         add_to_rfq_btn: 'Ajouter au devis',
@@ -43,6 +43,7 @@ export default {
             designation_select_opt: '--Sélectionner--',
             designation_mrs_opt: 'Mme',
             designation_mr_opt: 'M',
+            name_lbl: 'Nom',
             first_name_lbl: 'Prénom',
             last_name_lbl: 'Nom',
             email_lbl: 'courriel',

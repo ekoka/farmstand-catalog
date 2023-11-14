@@ -1,9 +1,9 @@
 <template>
 <div class="box">
-    <h4 class='subtitle is-4'><strong>{{companyName}}</strong> uses a catalog by Productlist.io, do you want to request access to this catalog?</h4>
+    <h4 class='subtitle is-4'><strong>{{label}}</strong> uses a catalog by <span class="is-capitalized">{{project_name}}</span>, do you want to request access to this catalog?</h4>
 
     <p class="content is-size-5">
-        Some information from your Productlist profile will be used to make the introduction.
+    Some information from your <span class="is-capitalized">{{project_name}}</span> profile will be used to make the introduction.
     </p>
 
     <div class="field">
@@ -53,9 +53,13 @@
 </template>
 <script>
 export default{
+    props: ['domain'],
     computed: {
-        companyName(){
-            return 'Missarachew'
+        label(){
+            return this.domain.data.label ? this.domain.data.label : this.domain.name
+        },
+        project_name(){
+            return this.$cnf.PROJECT_NAME
         },
     }
 }

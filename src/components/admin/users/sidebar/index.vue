@@ -10,7 +10,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span class="is-size-4">Clients</span>
+                    <span class="is-size-6">Have access</span>
                 </router-link>
             </li>
             <li>
@@ -18,7 +18,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span class="is-size-4">Access requests</span>
+                    <span class="is-size-6">Requested access</span>
                 </router-link>
             </li>
             <li>
@@ -26,7 +26,7 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span class="is-size-4">Invites</span>
+                    <span class="is-size-6">Invited</span>
                 </router-link>
             </li>
         </ul>
@@ -39,7 +39,7 @@ import find from 'lodash/fp/find'
 export default {
     computed: {
         existingUsersRoute(){
-            const routeNames = [ 
+            const routeNames = [
                 'AdminUserList', 'AdminNewUser', 'AdminEditUser',]
             const rv = find(name=>{
                 return this.$route.name==name

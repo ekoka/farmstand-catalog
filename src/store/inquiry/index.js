@@ -17,7 +17,7 @@ const Inquiry = {
         productAdded(state){
             return function(product_id){
                 return find(p=>{
-                    return p.product_id==product_id 
+                    return p.product_id==product_id
                 })(state.products)
             }
         },
@@ -59,19 +59,22 @@ const Inquiry = {
         },
 
         pingMutation(state, {}){
-            state.inquiry 
+            state.inquiry
         },
     },
 }
 function initInquiry({state, skip=[]}){
-    const jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
+    //const jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
     let initState = {
         products: [],
-        billingAddress: {},
+        billingAddress: {
+            name: '',
+            email: '',
+        },
         shippingAddress: {},
         comments:null,
     }
-    
+
     // delete everything not in the skip list
     // or reset to initState
     Object.keys(state).concat(Object.keys(initState)).forEach(k=>{

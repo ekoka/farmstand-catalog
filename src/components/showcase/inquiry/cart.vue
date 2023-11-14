@@ -1,14 +1,14 @@
 <template>
 <div>
-    <div v-for="p in products" class="box"> 
-        <p class="title is-4">{{p.name}}</p>  
-        <p class="subtitle is-5">#{{p.number}}</p>
+    <div v-for="p in products" class="box">
+        <p class="title is-4">{{p.name}}</p>
+        <p class="is-uppercase subtitle is-5"># {{p.number}}</p>
 
         <div class="field">
             <div class="control">
                 <label class="label">
                     {{$t('inquiry.requested_quantity_lbl')}}
-                </label> 
+                </label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="p.inquiry.quantity" />
@@ -27,7 +27,7 @@
         </div><!-- field -->
 
         <div class="control has-icons-left">
-            <button class="button is-danger is-outlined is-small" 
+            <button class="button is-danger is-outlined is-small"
                 @click="removeProduct({product_id:p.inquiry.product_id});loadInquiryProducts()">
                 {{$t('inquiry.remove_item_btn')}}
             </button>
@@ -106,4 +106,3 @@ export default {
 
 }
 </script>
-

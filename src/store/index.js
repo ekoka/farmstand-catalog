@@ -1,19 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import URI from 'urijs'
 //import createPersistedState from 'vuex-persistedstate'
-import createPersistedState from '@/assets/js/persistedstate'
-
+import createPersistedState from '@/utils/persistedstate'
 import api from './api'
 import admin from './admin'
 import inquiry from './inquiry'
-import URI from 'urijs'
-
-import {
-    DOMAIN_HOST_TEMPLATE,
-    API_ROOT,
-    API_PUBLIC_ROOT,
-    PRODUCTLIST_INDEX,
-} from '@/assets/js/config'
+import cnf from '@/config'
 
 Vue.use(Vuex)
 
@@ -27,16 +20,16 @@ export default new Vuex.Store({
 
     getters: {
         DOMAIN_URI(state, getters){
-            return URI.expand(DOMAIN_HOST_TEMPLATE, getters.subdomain)
+            return URI.expand(cnf.DOMAIN_HOST_TEMPLATE, getters.subdomain)
         },
         API_ROOT_URI(state, getters){
-            return URI(API_ROOT)
+            return URI(cnf.API_ROOT)
         },
         API_PUBLIC_ROOT_URI(state, getters){
-            return URI(API_PUBLIC_ROOT)
+            return URI(cnf.API_PUBLIC_ROOT)
         },
-        PRODUCTLIST_URI(state, getters){
-            return URI(PRODUCTLIST_INDEX)
+        PROJECT_URI(state, getters){
+            return URI(cnf.PROJECT_INDEX)
         },
 
         URI(state, getters){
@@ -59,9 +52,9 @@ export default new Vuex.Store({
 
     mutations: {
         setLang(state, {lang}){
-            state.currentLang = lang 
+            state.currentLang = lang
         },
     },
-    
+
     plugins: [createPersistedState()],
 })

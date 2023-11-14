@@ -1,9 +1,9 @@
 <template>
 <div class="box">
-    <h4 class='subtitle is-4'><strong>{{companyName}}</strong> uses a catalog by Productlist.io</h4>
+    <h4 class='subtitle is-4'><strong>{{label}}</strong> uses a catalog by <span class="is-capitalized">{{project_name}}</span></h4>
 
     <p class="content is-size-5">
-    You must be logged on to your <em>Productlist</em> account to request access to a catalog. If you don't have an account, fill in the form below and one will be created for you while your access request is sent to <em>{{companyName}}</em>.
+    You must be logged on to your <span class="is-capitalized">{{project_name}}</span> account to request access to a catalog. If you don't have an account, fill in the form below and one will be created for you while your access request is sent to <em>{{label}}</em>.
     </p>
 
     <div class="content columns">
@@ -73,10 +73,14 @@
 
 <script>
 export default{
-    computed:{
-        companyName(){
-            return 'Missarachew'
+    props: ['domain'],
+    computed: {
+        label(){
+            return this.domain.data.label ? this.domain.data.label : this.domain.name
         },
-    },
+        project_name(){
+            return this.$cnf.PROJECT_NAME
+        },
+    }
 }
 </script>

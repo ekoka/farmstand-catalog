@@ -1,12 +1,12 @@
 <template>
 <div>
-    <p> Hello {{account.first_name}}, thank you for registering with SimpleB2B's KISS Order Manager.</p>
+    <p> Hello {{account.name}}, thank you for registering with SimpleB2B's KISS Order Manager.</p>
 
     <p> To initiate your catalog of product let's first choose an identifier (a nickname) to use for your company in URLs. It can be made up of numbers and lowercase non-accented letters. The dash is acceptable as a word separator. No space or other symbols. At least 3 characters and no longer than 20. e.g. "acme-inc", "xyzcorp".
     </p>
 
     <p>https://<input v-model="tenant.name"/>.simpleb2b.io</p>
-        
+
     <p>It would also be useful to your clients if you could enter some information about your company.</p>
     <div><label>Company Name <input v-model="tenant.company_name"/></label></div>
     <div><label>Address 1 <input v-model="tenant.address1"/></label></div>
@@ -49,4 +49,3 @@ export default {
     }
 }
 </script>
-

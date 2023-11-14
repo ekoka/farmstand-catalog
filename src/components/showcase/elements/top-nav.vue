@@ -3,7 +3,7 @@
         <div class="container">
             <div class="navbar-brand">
                 <router-link to="/" class="navbar-item">
-                    <h1 class="title is-4">{{$store.getters.subdomain}}</h1>
+                    <h1 class="title is-4">{{domain.key('data').label}}</h1>
                 </router-link>
                 <div class="navbar-burger">
                     <span></span>
@@ -26,7 +26,7 @@
                             {{$t('catalog_mnu')}}
                         </span>
                     </router-link>
-                    <router-link class="navbar-item" 
+                    <router-link class="navbar-item"
                         :to="{name: 'ShowcaseInquiry'}">
                         <span class="icon has-text-info">
                             <i class="iconify mdi" data-icon="mdi-message-bulleted"></i>
@@ -50,7 +50,7 @@
                 </div>
 
                 <div class="navbar-end">
-                    <div class="navbar-item has-dropdown is-hoverable">
+                    <div v-if="false" class="navbar-item has-dropdown is-hoverable">
                         <div class="navbar-link">
                             {{$store.getters.lang}}
                         </div>
@@ -64,20 +64,18 @@
                         </div>
                     </div>
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <div class="navbar-link">
-                            {{account.first_name}} {{account.last_name}}
-                        </div>
+                        <div class="navbar-link">{{account.data.name}}</div>
                         <div class="navbar-dropdown">
                             <a class="navbar-item" target="_blank" :href="accountUrl">
                                 <span class="icon">
-                                    <i class="iconify mdi" 
+                                    <i class="iconify mdi"
                                         data-icon="mdi-account-circle"></i>
                                 </span>
                                 <span>{{$t('account_mnu')}}</span>
                             </a>
                             <a class="navbar-item">
                                 <span class="icon">
-                                    <i class="iconify mdi" 
+                                    <i class="iconify mdi"
                                         data-icon="mdi-logout"></i>
                                 </span>
                                 <span>{{$t('logout_mnu')}}</span>
@@ -91,24 +89,28 @@
     </nav>
 </template>
 <script>
-import {PRODUCTLIST_INDEX} from '@/assets/js/config'
 import URI from 'urijs'
-import cookies from '@/utils/cookies'
+import {mapGetters} from 'vuex'
+
 export default {
     computed:{
-        account(){
-            return this.$store.getters['api/account'].data
+        ...mapGetters({
+            account: 'api/account',
+            domain: 'api/publicDomain',
+        }),
+        label(){
+            const lbl = this.domain.key('data').label
+            const name = this.domain.key('name')
+            return lbl ? lbl : name
         },
         accountUrl(){
-            return URI(PRODUCTLIST_INDEX).path('/account')
+            return URI(this.$cnf.PROJECT_INDEX).path('/account')
         },
     },
     methods:{
         setLang(lang){
-            console.log('setting lang')
             this.$store.commit('setLang', {lang})
         }
-
     }
 }
 </script>

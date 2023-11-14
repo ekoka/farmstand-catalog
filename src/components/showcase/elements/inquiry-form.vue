@@ -2,15 +2,17 @@
 <div class="box is-shadowless">
     <div class="tabs is-boxed is-centered is-marginless is-paddingless">
         <ul>
-            <li :class="{'is-active': activeTab=='question'}">
+            <!--<li :class="{'is-active': activeTab=='question'}">
                 <a @click="activeTab='question'">{{$t('inquiry.ask_tab')}}</a>
-            </li>
+            </li>-->
             <li :class="{'is-active': activeTab=='rfq'}">
-                <a @click="activeTab='rfq'">{{$t('inquiry.rfq_tab')}}</a>
+                <!--<a @click="activeTab='rfq'">{{$t('inquiry.rfq_tab')}}</a>-->
+                <label class="label">{{$t('inquiry.rfq_tab')}}</label>
             </li>
         </ul>
-    </div> 
+    </div>
     <div class="box is-shadowless">
+        <template v-if="false">
         <div v-if="activeTab=='question'">
             <div class="field">
                 <div class="control">
@@ -33,6 +35,7 @@
                 </div>
             </div><!-- field -->
         </div><!-- questions -->
+        </template>
         <div v-if="activeTab=='rfq'">
             <div class="field">
                 <div class="control">
@@ -52,7 +55,7 @@
             </div><!-- field -->
             <div class="field is-grouped is-grouped-centered">
                 <div v-if="showRfqButton" class="control">
-                    <button class="button is-small is-link is-outlined" 
+                    <button class="button is-small is-link is-outlined"
                         @click="addProductToRfq(productAdded(product_id))">
                         <span v-if="productAdded(product_id)" class="">
                             {{$t('inquiry.update_rfq_btn')}}
@@ -75,7 +78,7 @@
             </div><!-- field -->
         </div><!-- rfq -->
     </div><!-- tabs-contents -->
-</div> 
+</div>
 </template>
 
 <script>
@@ -97,7 +100,8 @@ export default {
                 comments:null,
             },
             comments: null,
-            activeTab: 'question',
+            //activeTab: 'question',
+            activeTab: 'rfq',
         }
     },
 
@@ -106,7 +110,7 @@ export default {
         if (product) {
             //{quantity, comments} = product
             this.rfq = {
-                quantity:product.quantity, 
+                quantity:product.quantity,
                 comments:product.comments
             }
             this.toggle = this.rfqFormEmpty
@@ -151,11 +155,11 @@ export default {
     //i18n: {
     //    messages:{
     //        en:{
-    //            ask: 'Ask a question', 
+    //            ask: 'Ask a question',
     //            rfq: 'Request for quotation',
     //        },
     //        fr: {
-    //            ask: 'Demandez un renseignement', 
+    //            ask: 'Demandez un renseignement',
     //            rfq: 'Demande de devis',
     //        },
     //    },

@@ -1,7 +1,7 @@
 <template>
 <div>
     <nav class="breadcrumb is-large has-arrow-separator">
-        
+
         <ul>
             <li class="is-active"><a>Grouping</a></li>
         </ul>
@@ -29,7 +29,7 @@
 
 <script>
 import each from 'lodash/fp/each'
-import {mapActions, mapGetters} from 'vuex'
+import {mapActions} from 'vuex'
 export default {
     data(){
         return {
@@ -74,4 +74,3 @@ export default {
 
 }
 </script>
-

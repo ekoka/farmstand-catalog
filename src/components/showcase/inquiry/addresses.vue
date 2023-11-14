@@ -11,34 +11,19 @@
             <div class="control">
                 <label title="required">{{$t('inquiry.contact.designation_lbl')}}</label>
             </div><!-- control -->
-            <div class="select">
-                <select v-model="billingAddress.title">
-                    <option disabled>{{$t('inquiry.contact.designation_select_opt')}}</option>
-                    <option value="Mrs">{{$t('inquiry.contact.designation_mrs_opt')}}</option>
-                    <option value="Mr">{{$t('inquiry.contact.designation_mr_opt')}}</option>
-                </select>
-            </div><!-- select -->
-        </div><!-- field -->
-        <div class="field">
             <div class="control">
-                <label class="label" title="required">
-                    {{$t('inquiry.contact.first_name_lbl')}} 
-                    <span class="has-text-danger">*</span>
-                </label>
-            </div><!-- control -->
-            <div class="control">
-                <input class="input" :class="{'is-danger': invalidFirstName}" v-model="billingAddress.first_name" required placeholder="e.g. Jane"/>
+                <input class="input" v-model="billingAddress.title" :placeholder="designation"/>
             </div>
         </div><!-- field -->
         <div class="field">
             <div class="control">
                 <label class="label" title="required">
-                    {{$t('inquiry.contact.last_name_lbl')}} 
+                    {{$t('inquiry.contact.name_lbl')}}
                     <span class="has-text-danger">*</span>
                 </label>
             </div><!-- control -->
             <div class="control">
-                <input class="input" :class="{'is-danger': invalidLastName}" v-model="billingAddress.last_name" required placeholder="e.g. Smith"/>
+                <input class="input" :class="{'is-danger': invalidName}" v-model="billingAddress.name" required placeholder="e.g. Jane Smith"/>
             </div>
         </div><!-- field -->
         <div class="field">
@@ -74,7 +59,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.address_1_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.address_1_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.address1"/>
@@ -82,7 +67,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.address_2_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.address_2_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.address2"/>
@@ -90,7 +75,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.city_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.city_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.city"/>
@@ -98,7 +83,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.state_province_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.state_province_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.state_province"/>
@@ -106,7 +91,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.country_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.country_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.country"/>
@@ -114,7 +99,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.billing.zip_postal_code_lbl')}}</label> 
+                <label>{{$t('inquiry.billing.zip_postal_code_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="billingAddress.zip_postal_code"/>
@@ -132,7 +117,7 @@
 
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.name_company_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.name_company_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.company"/>
@@ -141,7 +126,7 @@
 
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.address_1_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.address_1_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.address1"/>
@@ -149,7 +134,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.address_2_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.address_2_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.address2"/>
@@ -157,7 +142,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.city_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.city_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.city"/>
@@ -165,7 +150,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.state_province_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.state_province_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.state_province"/>
@@ -173,7 +158,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.country_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.country_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.country"/>
@@ -181,7 +166,7 @@
         </div><!-- field -->
         <div class="field">
             <div class="control">
-                <label>{{$t('inquiry.shipping.zip_postal_code_lbl')}}</label> 
+                <label>{{$t('inquiry.shipping.zip_postal_code_lbl')}}</label>
             </div><!-- control -->
             <div class="control">
                 <input class="input" v-model="shippingAddress.zip_postal_code"/>
@@ -193,25 +178,34 @@
 </template>
 
 <script>
+
+import join from 'lodash/fp/join'
 import {mapState, mapMutations} from 'vuex'
 export default {
+
+    data() {
+        return {
+            designation: join(', ')([
+                this.$t('inquiry.contact.designation_mrs_opt') || 'Mrs',
+                this.$t('inquiry.contact.designation_mr_opt') || 'Mr',
+                '...'
+            ]),
+        }
+    },
 
     computed:{
         ...mapState({
             shippingAddress: state=>state.inquiry.shippingAddress,
             billingAddress: state=>state.inquiry.billingAddress,
         }),
-        invalidFirstName(){
-            return !this.billingAddress.first_name.trim()
-        },
-        invalidLastName(){
-            return !this.billingAddress.last_name.trim()
+        invalidName(){
+            return !this.billingAddress.name.trim()
         },
         invalidEmail(){
             return !this.billingAddress.email.trim()
         },
         invalidContact(){
-            return this.invalidFirstName || this.invalidLastName || this.invalidEmail
+            return this.invalidName || this.invalidEmail
         },
     },
 
@@ -245,4 +239,3 @@ export default {
 
 }
 </script>
-

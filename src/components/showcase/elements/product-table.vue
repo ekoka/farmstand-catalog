@@ -4,12 +4,12 @@
         <div class="level-left"></div>
         <div class="level-right">
             <div class="level-item has-text-weight-semibold">
-                {{$t('show_all_btn')}} 
+                {{$t('show_all_btn')}}
             </div>
             <div class="level-item">
                 <a>
                     <span class="icon has-text-warning">
-                        <i class="iconify mdi mdi-18px" 
+                        <i class="iconify mdi mdi-18px"
                             data-icon="mdi-star"></i>
                     </span>{{$t('show_favorites_btn')}}
                 </a>
@@ -60,7 +60,7 @@
                                 </button>
                             </div>
                             <button v-else
-                                title="Inquire about this product" 
+                                title="Inquire about this product"
                                 class="button is-link is-outlined is-small"
                                 @click="toggleRfqPane(p.product_id)">
                                 <span>{{$t('inquiry.inquire_btn')}}</span>
@@ -70,7 +70,7 @@
                 </div><!-- level -->
                 <div class="level">
                     <div class="level-left">
-                        <p class="subtitle is-marginless is-italic">
+                        <p class="subtitle is-uppercase is-marginless is-italic">
                             # {{getFieldValue(p, 'number')}}
                         </p>
                     </div><!-- level-left -->
@@ -81,9 +81,9 @@
             </div><!-- media-content -->
         </div><!-- media -->
 
-        <inquiry-form 
+        <inquiry-form
             v-if="rfqPane[p.product_id]"
-            :product_id="p.product_id" 
+            :product_id="p.product_id"
             @hide="rfqPane[p.product_id]=false">
         </inquiry-form>
 
@@ -96,9 +96,9 @@
                 <!--<div class="level-item">
                     <button class="button is-white is-small">
                         <span class="icon has-text-warning">
-                            <i class="iconify mdi mdi-18px" 
+                            <i class="iconify mdi mdi-18px"
                                 data-icon="mdi-star"></i>
-                        </span> 
+                        </span>
                         <span>
                             {{$t('add_to_favorite_btn')}}
                         </span>

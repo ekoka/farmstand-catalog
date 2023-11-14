@@ -6,25 +6,24 @@ import InquirySent from '@/components/showcase/inquiry/sent'
 
 export default [
     {
-        name: 'Showcase', 
-        path: '/catalog', 
-        component: Showcase, 
+        name: 'Showcase',
+        path: '/catalog',
+        component: Showcase,
     },
     {
-        component: Inquiry, 
-        path:'',
+        component: Inquiry,
+        path:'/inquiry',
         children: [
             {
-                path: '/inquiry',
-                name: 'ShowcaseInquiry', 
+                path: '/inquiry/form',
+                name: 'ShowcaseInquiry',
                 component: InquiryForm,
             },
             {
                 path: '/inquiry/sent',
-                name: 'InquirySent', 
+                name: 'InquirySent',
                 component: InquirySent,
             },
         ],
     },
 ]
-

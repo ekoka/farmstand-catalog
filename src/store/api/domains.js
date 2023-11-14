@@ -56,7 +56,6 @@ export default {
         deleteDomainAccount({getters, dispatch}, {account_id}){
             return dispatch('getResource', {resource:'domain'}).then(domain=>{
                 const url = domain.url('domain_account', {account_id})
-                console.log(url)
                 return getters.http({
                     url,
                     method: 'delete',
@@ -94,7 +93,7 @@ export default {
         }){
             if(url){
                 return getters.http({
-                    url, data, method: 'patch', auth:true 
+                    url, data, method: 'patch', auth:true
                 })
             }
             return dispatch('getResource', {resource: 'domain'}).then(domain=>{

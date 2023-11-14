@@ -19,7 +19,7 @@
     </div><!-- product-table-item -->
     <div class="prod-item column is-2">
         <div class="title is-5">
-            Published
+            Publish
         </div>
     </div><!-- product-table-item -->
     <div class="prod-item column is-1">

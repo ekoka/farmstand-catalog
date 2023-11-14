@@ -30,7 +30,7 @@ export default {
 
     mutations:{
         setPublicRoot(state, {publicRoot}){
-            state.publicRoot = publicRoot 
+            state.publicRoot = publicRoot
         },
 
         setPublicDomain(state, {publicDomain}){
@@ -65,7 +65,6 @@ export default {
             const domain = rootGetters.subdomain
             return getRoot().then(root=>{
                 const url = root.url('public_root', {domain})
-                console.log(url)
                 return getters.http({url}).then(response=>{
                     commit('setPublicRoot', {publicRoot: response.data})
                     return HAL(response.data)
@@ -78,7 +77,7 @@ export default {
             const url = getters.publicRoot.url('public_domain', {domain})
             return getters.http({url}).then(response=>{
                 commit('setPublicDomain', {publicDomain:response.data})
-                return getters.publicDomain
+                return HAL(response.data)
             })
         },
 
@@ -101,7 +100,7 @@ export default {
             if(notfound.length==0){
                 return halify(found)
             }
-                
+
             const url = getters.publicRoot.url('public_product_resources', null, {
                 pid:notfound
             })
@@ -161,5 +160,4 @@ export default {
         getPublicInquiry({getters}, {inquiry_id}){
         },
     },
-
 }

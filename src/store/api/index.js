@@ -8,12 +8,12 @@ import groups from './groups'
 import images from './images'
 import publicapi from './publicapi'
 import {HAL} from '@/utils/hal'
-import {API_ROOT, API_HOST} from '@/assets/js/config'
+import cnf from '@/config'
 
 
 const jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
-const mkstate = ()=>{ 
-    // deep copy the init state from each submodule 
+const mkstate = ()=>{
+    // deep copy the init state from each submodule
     // as opposed to simply just copying the 1st level references.
     // this step is useful, for modules that make use of caching,
     // since the cache is a nested object.
@@ -30,7 +30,7 @@ const mkstate = ()=>{
 }
 
 const initApi = (state) => {
-    const initState = mkstate() 
+    const initState = mkstate()
     Object.keys(initState).forEach(k=>{
         // reinitialize state
         state[k] = initState[k]
@@ -45,7 +45,7 @@ const API = {
      *
      * They will be overwritten since initialization of `state`
      * happens in initApi().
-     * You should place your desired attributes either in the 
+     * You should place your desired attributes either in the
      * `mkstate()` function or in one of the submodules.
      * */
     state:{},  // Warning /!\ Do not put anything here /!\
@@ -53,7 +53,7 @@ const API = {
     getters: {
 
         http(state, getters, rootState, rootGetter){
-            return (req={url, method:'get', data:undefined, 
+            return (req={url, method:'get', data:undefined,
                     auth:false, params})=>{
                 if(req.params===undefined){
                     req.params = {}
@@ -103,14 +103,14 @@ const API = {
         ...images.mutations,
 
         resetApi(state){
-            initApi(state) 
+            initApi(state)
         },
     },
-        
+
     actions: {
         getRoot({getters,commit,state}){
             return getters.http({
-                url: API_ROOT
+                url: cnf.API_ROOT
             }).then(response=>{
                 commit('setRoot', {root:response.data})
                 return HAL(response.data)

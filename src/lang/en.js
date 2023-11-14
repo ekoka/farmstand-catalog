@@ -17,19 +17,19 @@ export default {
 
     review_and_submit_lbl: 'Review and submit',
 
-    ask_lbl: 'Ask a question', 
+    ask_lbl: 'Ask a question',
     rfq_lbl: 'Request for quotation',
 
     inquiry: {
         added_to_rfq_btn: 'Added to RFQ',
         inquire_btn: 'Inquire',
         ask_tab: 'Ask a question',
-        rfq_tab: 'RFQ',
+        rfq_tab: 'Request information about this item',
         review_and_submit_lbl: 'Review and submit RFQ',
         requested_quantity_lbl: 'Requested quantity',
-        questions_comments_lbl: 'Do you have questions or comments about this item?',
+        questions_comments_lbl: 'Questions or comments about this item?',
         requested_quantity_lbl: 'Requested quantity',
-        other_questions_lbl: 'Other questions or comments about this item?',
+        other_questions_lbl: 'Questions or comments about this item?',
         other_instructions_lbl: 'Other comments or instructions',
         update_rfq_btn: 'Update',
         add_to_rfq_btn: 'Add to Request for quotation',
@@ -44,6 +44,7 @@ export default {
             designation_select_opt: '--Select--',
             designation_mrs_opt: 'Mrs',
             designation_mr_opt: 'Mr',
+            name_lbl: 'Name',
             first_name_lbl: 'First name',
             last_name_lbl: 'Last name',
             email_lbl: 'Email',

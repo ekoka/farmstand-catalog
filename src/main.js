@@ -6,14 +6,14 @@ import router from './router'
 import './assets/css/main.scss'
 import URI from 'urijs'
 import cookies from '@/utils/cookies'
-import {PRODUCTLIST_INDEX} from '@/assets/js/config'
+import cnf from '@/config'
 import {i18n} from './plugins/i18n'
 
 
-// adding a global event bus 
+// adding a global event bus
 const EventBus = new Vue()
 Object.defineProperties(Vue.prototype, {
-    $eventBus: { 
+    $eventBus: {
         get () {
             return EventBus
         }
@@ -24,6 +24,7 @@ store.$eventBus = EventBus
 
 Vue.config.productionTip = false
 Vue.prototype.$jsoncopy = obj=> JSON.parse(JSON.stringify(obj))
+Vue.prototype.$cnf = cnf
 
 /* eslint-disable no-new */
 const VERSION = '1'
@@ -46,7 +47,6 @@ new Vue({
             handler(v){
                 this.$i18n.locale = v
                 import(`./lang/${v}.js`).then(response=>{
-                    console.log(response.default)
                     this.$i18n.setLocaleMessage(v, response.default)
                 })
             },
@@ -60,27 +60,30 @@ new Vue({
         //this.$i18n.locale = this.$store.getters.lang
 
         // init API
-        this.$store.dispatch('api/getRoot')
-
-        // start monitoring id token
-        this.monitorIdTokenCookie().then(()=>{
-            if (this.$store.state.api.idToken){ 
-                // logged into productlist
-                
-                // obtain an access token
+        this.$store.dispatch('api/getRoot').then(()=>{
+            return this.monitorIdTokenCookie()
+        }).then(()=>{
+            return this.$store.dispatch('api/getPublicRoot')
+        }).then(()=>{
+            return this.$store.dispatch('api/getPublicDomain')
+        }).then(()=>{
+            if (this.$store.state.api.idToken){
+                console.log('logged in')
+                // logged in; obtain an access token
                 return this.$store.dispatch('api/postAccessToken').then(()=>{
                     // start monitoring access token
                     this.monitorAccessToken()
-                }).catch(error=>{
+                }).catch((error)=>{
                     // handle 401 (id token has likely been revoked)
                     if(error.response.status==401){
                         // no accessToken issued.
-                        return 
+                        return
                     }
                     // rethrow any other error
                     throw error
                 })
             }
+            console.log('not logged in')
             // not logged in
             return this.initApi()
         }).then(()=>{
@@ -91,13 +94,17 @@ new Vue({
     methods:{
 
         initApi: async function (){
+            // reinitialize the store (empty data)
             await this.$store.dispatch('api/resetApi')
+            // repopulate API root
             await this.$store.dispatch('api/getRoot')
+            await this.$store.dispatch('api/getPublicRoot')
+            await this.$store.dispatch('api/getPublicDomain')
         },
 
         versionReset(){
             /* Clear the state if the version changes. This ensures
-             that clients are not stuck with a state that is inconsistent 
+             that clients are not stuck with a state that is inconsistent
              with latest changes.
              */
             // if versions are the same return
@@ -106,7 +113,6 @@ new Vue({
             }
             // otherwise clear all
             this.$store.dispatch('api/resetApi').then(()=>{
-                //this.$store.commit('inquiry/resetInquiry')
                 localStorage.setItem('VERSION', VERSION)
                 window.location.reload()
             })
@@ -136,13 +142,13 @@ new Vue({
                 if (exp>=accessToken.payload.exp){
                     // refresh access token
                     this.$store.dispatch('api/postAccessToken').catch(error=>{
-                        if (error.response.status==401){ 
+                        if (error.response.status==401){
                             // idToken is not valid anymore
                             this.$store.dispatch('api/deleteAccessToken')
                         }
                         return
                     })
-                } 
+                }
                 // try again in 5 minutes
                 // we keep monitoring as long as we obtain an access token
                 setTimeout(this.monitorAccessToken, delay)
@@ -156,11 +162,11 @@ new Vue({
     components: {
         App: ()=> import('./App'),
     },
-    // App component is loaded only once bootstrapping is done 
+    // App component is loaded only once bootstrapping is done
     template: '<App :ready="ready"/>'
 
 })
 
 window.onerror = function(message, source, lineno, colno, error) {
-  console.log('Exception: ', error)
+    console.log('Exception: ', error)
 }

@@ -3,7 +3,7 @@
     <nav class="breadcrumb is-large has-arrow-separator">
         <ul>
             <li class="is-active">
-                <router-link :to="{name:'AdminUserList'}">Clients</router-link>
+                <router-link :to="{name:'AdminUserList'}">Users</router-link>
             </li>
         </ul>
     </nav> <!-- breadcrumb -->
@@ -24,7 +24,7 @@
     <div class="box">
         <h1 class="title is-3">Under construction...</h1>
         <div v-for="account in accounts">
-            <a>{{account.first_name}} {{account.last_name}}</a> 
+            <a>{{account.name}}</a>
             (<span>{{account.role}}</span>)
         </div>
     </div>
@@ -42,13 +42,14 @@ export default {
         }
     },
     mounted(){
-        this.loadAccounts() 
+        this.loadAccounts()
     },
 
     methods:{
         loadAccounts(){
             this.getDomainAccounts().then(resource=>{
                 this.accounts = map(account=>{
+                    console.log(account.resource)
                     return account.resource
                 })(resource.embedded('accounts'))
             })

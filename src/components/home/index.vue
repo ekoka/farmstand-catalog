@@ -1,13 +1,13 @@
 <template>
 <section class="section" v-if="ready">
     <modal id="request" :active.sync="activateRequest">
-        <regUserRequest />
+        <regUserRequest :domain="domain" />
     </modal>
     <div class="container">
         <div class="level">
             <div class="level-left">
                 <div class="level-item">
-                    <h1 class="title is-1">{{domain.data.label}}</h1>
+                    <h1 class="title is-1">{{label}}</h1>
                 </div>
             </div>
             <div class="level-right">
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import findIndex from 'lodash/fp/findIndex' 
+import findIndex from 'lodash/fp/findIndex'
 import modal from '@/components/utils/modal'
 import regUserRequest from './access-request/registered'
 import {mapActions} from 'vuex'
@@ -49,14 +49,18 @@ export default{
         }
     },
     mounted(){
-        this.api({resource:'publicRoot'}).then(root=>{
-            return this.api({resource:'publicDomain'})
+        // this data might already be available
+        this.getResource({resource:'publicRoot'}).then(root=>{
+            return this.getResource({resource:'publicDomain'})
         }).then(domain=>{
             this.domain = domain.data
             this.ready = true
         })
     },
     computed:{
+        label(){
+            return this.domain.data.label ? this.domain.data.label : this.domain.name
+        },
         loggedIn (){
             if(!this.accessToken){
                 return false
@@ -83,11 +87,11 @@ export default{
                 domain: this.domain.name,
                 action: 'access',
             }
-            const productlistUrl = this.$store.getters.PRODUCTLIST_URI
-            window.location.href = productlistUrl.path('/access').query(params)
+            const projectUrl = this.$store.getters.PROJECT_URI
+            window.location.href = projectUrl.path('/access').query(params)
         },
         ...mapActions({
-            api: 'api/getResource'
+            getResource: 'api/getResource'
         })
     },
 }

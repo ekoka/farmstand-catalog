@@ -38,7 +38,7 @@ export default {
                 return
             }
             const accessToken = {
-                token: HAL(token).key('token'), 
+                token: HAL(token).key('token'),
             }
             const payload = accessToken.token.split('.')[1]
             accessToken.payload = parseJwt(payload)

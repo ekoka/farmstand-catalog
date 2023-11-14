@@ -10,13 +10,13 @@
                     <!--<span class="icon">
                         <i class="mdi mdi-note"></i>
                     </span>-->
-                    <span class="is-size-4">Products</span>
+                    <span class="is-size-6">Products</span>
                 </router-link>
             </li>
 
             <li>
                 <router-link :to="{name:'AdminGroupList'}" active-class="is-active">
-                    <span class="is-size-4">Grouping</span>
+                    <span class="is-size-6">Categories</span>
                 </router-link>
             </li>
 

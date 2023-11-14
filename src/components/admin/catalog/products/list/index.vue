@@ -1,7 +1,7 @@
 <template>
 <div>
     <nav class="breadcrumb is-large has-arrow-separator">
-        
+
         <ul>
             <li class="is-active"><a>Products</a></li>
         </ul>
@@ -43,8 +43,8 @@
 
     <product-table v-if="ready" :products="groupedProducts" />
 
-    <div>
-        <a @click="moreResults" class="button is-text">more...</a> 
+    <div v-if="has_more">
+        <a @click="moreResults" class="button is-text">more...</a>
     </div>
 </div>
 </template>
@@ -72,6 +72,7 @@ export default {
             search: null,
             ready: false,
             products: [],
+            has_more: null,
         }
     },
 
@@ -113,7 +114,7 @@ export default {
 
     mounted(){
         this.getProductSchema().then(()=>{
-            this.ready = true 
+            this.ready = true
         }).then(()=>{
             this.enableGroups()
         })
@@ -128,7 +129,7 @@ export default {
             let valid = 1
             forIn(foptions, fname => {
                 if(foptions.length){
-                    valid = 0 
+                    valid = 0
                     valid = intersection(foptions)(p.groups[fname] || []).length
                 }
             })

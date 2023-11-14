@@ -1,14 +1,13 @@
 <template>
 <div v-if="ready">
     <navbar class="container is-fluid"/>
-    <section class="section"> 
+    <section class="section">
         <router-view class="container is-fluid" />
     </section>
 </div>
 </template>
 
 <script>
-import cookies from '@/utils/cookies'
 import URI from 'urijs'
 import {mapActions, mapMutations} from 'vuex'
 
@@ -37,14 +36,8 @@ export default {
         if(!this.loggedIn){
             return
         }
-        this.getRoot().then(()=>{
-            return this.getDomain({
-                domain:this.$store.getters.subdomain
-            })
-        }).then(()=>{
-            const account_id = this.accessToken.payload.account_id
-            return this.getAccount({account_id})
-        }).then(()=>{
+        const account_id = this.accessToken.payload.account_id
+        return this.getAccount({account_id}).then(()=>{
             this.ready = true
         })
     },
@@ -63,14 +56,7 @@ export default {
 
     methods:{
         ...mapActions({
-            'getRoot': 'api/getRoot',
-            'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
-            'getProfile': 'api/getProfile',
-            'getProfile': 'api/getProfile',
-        }),
-        ...mapMutations({
-            'setAccessToken': 'api/setAccessToken',
         }),
     }
 

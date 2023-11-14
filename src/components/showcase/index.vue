@@ -1,9 +1,8 @@
 <template>
 <div>
     <top-nav/>
-    <notification eventName="message-sent" 
-        :defaults="{timeout:2}"> 
-
+    <notification eventName="message-sent"
+        :defaults="{timeout:2}">
     </notification>
     <section class="section">
         <div class='container'>
@@ -16,9 +15,9 @@
                 </div>
                 <div class="column">
                     <div class="container is-fluid">
-                        <product-table 
-                            :products="products" 
-                            :fieldNames="fieldNames" 
+                        <product-table
+                            :products="products"
+                            :fieldNames="fieldNames"
                             :fields="schema.fields"/>
                     </div>
                 </div><!-- column -->
@@ -34,7 +33,7 @@ import findIndex from 'lodash/fp/findIndex'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
-    components: { 
+    components: {
         smallcart: ()=>import  ( './inquiry/smallcart'),
         topNav: ()=>import  ( './elements/top-nav'),
         leftNav: ()=>import  ( './elements/left-nav'),
@@ -57,7 +56,7 @@ export default {
         //    deep: true,
         //    handler(selected){
         //        let groups = Object.keys(selected).group(s=>{
-        //            return selected[s].length 
+        //            return selected[s].length
         //        })
         //        let options = Object.values(selected).reduce((ff, f)=>{
         //            let rv = (ff && ff.length) ? new Set(ff.concat(f)) : new Set(f)
@@ -73,7 +72,10 @@ export default {
             immediate: true,
             handler(value){
                 if(!value){
+                    console.log('rerouting')
                     this.$router.push({name: 'Index'})
+                } else {
+                    console.log('not rerouting')
                 }
             },
         }
@@ -82,9 +84,11 @@ export default {
 
     computed:{
         loggedIn(){
-            if(!this.accessToken){ 
+            if(!this.accessToken){
+                console.log('no access token')
                 return false
             }
+            console.log('access token')
             const idx = findIndex(role=>{
                 return role==this.accessToken.payload.role
             })['admin', 'user']
@@ -154,7 +158,7 @@ export default {
             //return product.key('fields').map(f=>{
             //})
         },
-        
+
         ...mapActions({
             getPublicRoot:'api/getPublicRoot',
             getPublicProducts:'api/getPublicProducts',
@@ -167,4 +171,3 @@ export default {
     },
 }
 </script>
-

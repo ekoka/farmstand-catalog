@@ -22,7 +22,7 @@
     <p class="heading">
         <strong>From </strong>
         <p>
-            <strong>{{name}}</strong> 
+            <strong>{{name}}</strong>
         </p>
         <p><code>{{request.account.email}}</code></p>
     </p>
@@ -71,13 +71,12 @@
 
 <script>
 import {mapActions} from 'vuex'
-import {HAL} from '@/utils/hal' 
+import {HAL} from '@/utils/hal'
 export default {
     props: ['request'],
     computed:{
         name(){
-            const account = this.request.account
-            return account.first_name + ' ' + account.last_name 
+            this.request.account.name
         },
         url(){
             return HAL(this.request).self

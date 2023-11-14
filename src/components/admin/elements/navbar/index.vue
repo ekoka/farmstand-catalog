@@ -6,7 +6,7 @@
     <div class="navbar-brand">
         <router-link to="/admin" class="navbar-item has-background-grey-dark has-text-white-ter" >
             <span class="has-text-weight-bold is-size-4">
-                {{$store.getters['api/domain'].key('name')}}             
+                {{label}}
             </span>
             <span class="is-size-7">
                 &nbsp;admin
@@ -24,19 +24,33 @@
         <navbar-start />
         <navbar-end />
     </div>
-    <!--</div><!-- container -->
+    <!--</div> container -->
 </nav>
 </template>
 
 <script>
 import navbarStart from './navbar-start'
 import navbarEnd from './navbar-end'
+import {mapGetters} from 'vuex'
 
 export default {
-    components: { 
-        navbarStart, 
-        navbarEnd, 
+    components: {
+        navbarStart,
+        navbarEnd,
+    },
+
+    computed: {
+        ...mapGetters({
+            domain: 'api/publicDomain',
+        }),
+        label(){
+            const lbl = this.domain.key('data').label
+            const name = this.domain.key('name')
+            return lbl ? lbl : name
+        },
+
     }
+
 
 }
 </script>
