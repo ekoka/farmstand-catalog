@@ -15,6 +15,7 @@ export default {
             if(state.account){
                 return HAL(state.account)
             }
+            return {}
         },
         profile(state){
             if (state.profile){

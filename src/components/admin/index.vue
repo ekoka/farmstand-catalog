@@ -36,8 +36,14 @@ export default {
         if(!this.loggedIn){
             return
         }
-        const account_id = this.accessToken.payload.account_id
-        return this.getAccount({account_id}).then(()=>{
+        this.getRoot().then(()=>{
+            return this.getDomain({
+                domain:this.$store.getters.subdomain
+            })
+        }).then(()=>{
+            const account_id = this.accessToken.payload.account_id
+            return this.getAccount({account_id})
+        }).then(()=>{
             this.ready = true
         })
     },
@@ -53,13 +59,17 @@ export default {
         },
     },
 
-
     methods:{
         ...mapActions({
+            'getRoot': 'api/getRoot',
+            'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
+            'getProfile': 'api/getProfile',
+            'getProfile': 'api/getProfile',
+        }),
+        ...mapMutations({
+            'setAccessToken': 'api/setAccessToken',
         }),
     }
-
-
 }
 </script>

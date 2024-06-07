@@ -1,5 +1,5 @@
 <template>
-<div>
+<div v-if="ready">
     <top-nav/>
     <notification eventName="message-sent"
         :defaults="{timeout:2}">
@@ -48,6 +48,7 @@ export default {
             schema: {},
             categories:[],
             products: [],
+            ready: false,
         }
     },
 
@@ -124,7 +125,16 @@ export default {
             return
         }
 
-        this.getPublicRoot().then(()=>{
+        this.getRoot().then(()=>{
+            this.getPublicRoot()
+        }).then(()=>{
+            return this.getDomain({
+                domain:this.$store.getters.subdomain
+            })
+        }).then(()=>{
+            const account_id = this.accessToken.payload.account_id
+            return this.getAccount({account_id})
+        }).then(()=>{
             return this.getPublicProductSchema()
         }).then(schema=>{
             this.schema = schema.data
@@ -141,6 +151,8 @@ export default {
             return this.getPublicGroups()
         }).then(groups=>{
             this.groups = map(f=>f.data)(groups.embedded('groups'))
+        }).then(()=>{
+            this.ready = true
         })
     },
 
@@ -160,7 +172,10 @@ export default {
         },
 
         ...mapActions({
+            getRoot:'api/getRoot',
             getPublicRoot:'api/getPublicRoot',
+            getDomain:'api/getDomain',
+            getAccount:'api/getAccount',
             getPublicProducts:'api/getPublicProducts',
             getPublicProductSchema:'api/getPublicProductSchema',
             getPublicProductResources:'api/getPublicProductResources',
