@@ -70,7 +70,8 @@ export default {
         getGroups({getters, commit}, {params}={}){
             const url = getters.domain.url('groups')
             return getters.http({url, auth:true}).then(response=>{
-                return HAL(response.data)
+                const rv =  HAL(response.data)
+                return rv
             })
         },
 

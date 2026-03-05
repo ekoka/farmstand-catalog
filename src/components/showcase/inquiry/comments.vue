@@ -1,7 +1,7 @@
 <template>
 <div>
     <div class="control">
-        <label class="label">{{$t('inquiry.other_instructions_lbl')}}</label>
+        <label class="label">{{label}}</label>
     </div>
     <div class="control">
         <textarea class="textarea" v-model="$store.state.inquiry.comments"></textarea>
@@ -12,6 +12,10 @@
 <script>
 import {mapMutations} from 'vuex'
 export default {
+
+    props: {
+        label: null,
+    },
 
     watch:{
         '$store.state.inquiry.comments': {

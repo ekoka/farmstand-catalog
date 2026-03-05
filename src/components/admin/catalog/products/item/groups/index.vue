@@ -21,14 +21,13 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
-import {mapActions, mapMutations, mapGetters, mapState} from 'vuex'
-
+import {mapActions} from 'vuex'
 
 export default {
     components: {
         options: ()=>import  ( './options'),
     },
+
     props: ['product', 'productGroups'],
     
     data(){
@@ -57,11 +56,6 @@ export default {
 
     mounted(){
         this.loadGroups()
-    },
-
-    computed: {
-        ...mapGetters({}),
-        ...mapState({}),
     },
 
     methods: {
@@ -95,12 +89,19 @@ export default {
 
         loadGroups(){
             this.getGroups().then(groups=>{
-                this.groups = map(f=>f.data)(groups.embedded('groups'))
+                this.getGroupResources({
+                    group_ids:groups.data.group_ids
+                }).then(groups=>{
+                    groups.forEach(f=>{
+                        this.groups.push(f.data)
+                    })
+                })
             })
         },
-        ...mapMutations({}),
+
         ...mapActions({
             getGroups: 'api/getGroups',
+            getGroupResources:'api/getGroupResources',
         }),
     },
 }

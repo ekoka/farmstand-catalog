@@ -42,6 +42,7 @@ new Vue({
             return this.$store.getters.lang
         }
     },
+
     watch:{
         lang: {
             handler(v){
@@ -123,13 +124,14 @@ new Vue({
             const idToken = cookies.getCookie('idToken')
             if(idToken!=this.$store.state.api.idToken){
                 // change of state
-                this.$store.dispatch('api/syncIdToken').then(()=>{
-                    // if the change of state was a removal of the idToken
-                    // also remove the accessToken
-                    if(!this.$store.state.api.idToken){
-                        this.$store.dispatch('api/deleteAccessToken')
-                    }
-                })
+                this.$store.dispatch('api/syncIdToken')
+                    .then(()=>{
+                        // if the change of state was a removal of the idToken
+                        // also remove the accessToken
+                        if(!this.$store.state.api.idToken){
+                            this.$store.dispatch('api/deleteAccessToken')
+                        }
+                    })
             }
             setTimeout(this.monitorIdTokenCookie, 2000)
         },
@@ -141,13 +143,14 @@ new Vue({
                 const exp = Date.now() + delay*2 // 10 minutes before expiry
                 if (exp>=accessToken.payload.exp){
                     // refresh access token
-                    this.$store.dispatch('api/postAccessToken').catch(error=>{
-                        if (error.response.status==401){
-                            // idToken is not valid anymore
-                            this.$store.dispatch('api/deleteAccessToken')
-                        }
-                        return
-                    })
+                    this.$store.dispatch('api/postAccessToken')
+                        .catch(error=>{ 
+                            if (error.response.status==401){
+                                // idToken is not valid anymore
+                                this.$store.dispatch('api/deleteAccessToken')
+                            }
+                            return
+                        })
                 }
                 // try again in 5 minutes
                 // we keep monitoring as long as we obtain an access token

@@ -88,6 +88,7 @@ const API = {
         ...publicapi.getters,
         ...images.getters,
     },
+
     mutations: {
 
         setRoot(state, {root}){

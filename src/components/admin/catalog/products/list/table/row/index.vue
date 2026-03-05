@@ -70,11 +70,6 @@
 
 <script>
 //import statusSwitch from '@/components/admin/elements/status-switch'
-import compose from 'lodash/fp/compose'
-import filter from 'lodash/fp/filter'
-import find from 'lodash/fp/find'
-import each from 'lodash/fp/each'
-import map from 'lodash/fp/map'
 import {mapActions} from 'vuex'
 export default {
     components: {
@@ -92,22 +87,19 @@ export default {
     },
     computed:{
         rowData(){
+            // TODO: list of fields should be formalized.
+            const fields = ['name', 'number', 'available', 'visible','description']
             const data = {
                 product_id: this.mutable.product.product_id,
             }
-            if(this.mutable.product.images.length){
-                data['image'] = this.mutable.product.images[0]['1:1']
-            }
-            const addtodata = each(f => {
-                data[f.name] = f
+            fields.forEach(f=>{
+                data[f] = {value:''}; // default value
             })
-            const selectfields = filter(f=>{
-                return ['name', 'number', 'available', 'visible','description'].includes(
-                    f.name
-                )
+            this.mutable.product.fields.forEach(f=>{
+                if (fields.includes(f.name)) {
+                    data[f.name] = f
+                } 
             })
-
-            compose(addtodata, selectfields)(this.mutable.product.fields)
             return data
         },
     },
@@ -121,9 +113,7 @@ export default {
             //        partial: 0,
             //    }).then(product => {
             //        const fields = product.data.fields
-            //        description = find(f => {
-            //            return f.name == 'description'
-            //        })(fields)
+            //        description = fields.find(f => f.name=='description')
             //        if (description){
             //            this.description = description.value
             //        }
@@ -139,9 +129,7 @@ export default {
         },
 
         toggleAvailability(value){
-            const available = find(f=>{
-                return f.name=='available'
-            })(this.mutable.product.fields)
+            const available = this.mutable.product.fields.find(f=>f.name=='available')
             available.value = value
             this.patchProduct({
                 data: {fields:{fields: [available]}},
@@ -150,9 +138,7 @@ export default {
         },
 
         toggleVisibility(value){
-            const visible = find(f=>{
-                return f.name=='visible'
-            })(this.mutable.product.fields)
+            const visible = this.mutable.product.fields.find(f=>f.name=='visible')
             visible.value = value
             this.patchProduct({
                 data: {fields:{fields: [visible]}},

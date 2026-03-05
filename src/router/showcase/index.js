@@ -1,28 +1,22 @@
-// components
-import Showcase from '@/components/showcase'
-import Inquiry from '@/components/showcase/inquiry'
-import InquiryForm from '@/components/showcase/inquiry/form'
-import InquirySent from '@/components/showcase/inquiry/sent'
-
 export default [
     {
         name: 'Showcase',
         path: '/catalog',
-        component: Showcase,
+        component: () => import('@/components/showcase'),
     },
     {
-        component: Inquiry,
+        component: () => import(/* webpackChunkName: "ShowcaseInquiry" */ '@/components/showcase/inquiry'),
         path:'/inquiry',
         children: [
             {
                 path: '/inquiry/form',
                 name: 'ShowcaseInquiry',
-                component: InquiryForm,
+                component: () => import(/* webpackChunkName: "ShowcaseInquiry" */ '@/components/showcase/inquiry/form'),
             },
             {
                 path: '/inquiry/sent',
                 name: 'InquirySent',
-                component: InquirySent,
+                component: () => import(/* webpackChunkName: "ShowcaseInquiry" */ '@/components/showcase/inquiry/sent'),
             },
         ],
     },

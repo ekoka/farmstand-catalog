@@ -29,6 +29,7 @@ export default {
         questions_comments_lbl: 'Avez-vous une question ou un commentaire sur cet article?',
         other_questions_lbl: 'Questions ou commentaires sur cet article?',
         other_instructions_lbl: 'Autres commentaires ou instructions',
+        questions_or_comments_lbl: 'Questions ou commentaires',
         update_rfq_btn: 'Ajuster',
         add_to_rfq_btn: 'Ajouter au devis',
         remove_item_btn: 'Retirer du devis',

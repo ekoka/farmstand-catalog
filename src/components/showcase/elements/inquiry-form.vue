@@ -12,7 +12,6 @@
         </ul>
     </div>
     <div class="box is-shadowless">
-        <template v-if="false">
         <div v-if="activeTab=='question'">
             <div class="field">
                 <div class="control">
@@ -35,7 +34,6 @@
                 </div>
             </div><!-- field -->
         </div><!-- questions -->
-        </template>
         <div v-if="activeTab=='rfq'">
             <div class="field">
                 <div class="control">

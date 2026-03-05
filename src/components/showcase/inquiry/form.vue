@@ -8,7 +8,7 @@
             <div class="columns is-multiline">
                 <cart class="column is-8" :emptyCart.sync="emptyCart"/>
                 <p v-if="emptyCart" class="subtitle is-4">{{$t('inquiry.error.no_product_lbl')}}</p>
-                <comments :emptyComments.sync="emptyComments" class="column is-8"/>
+                <comments :label="generalCommentsLabel" :emptyComments.sync="emptyComments" class="column is-8"/>
                 <addresses :invalidContact.sync="invalidContact" class="column is-8"/>
             </div>
             <div class="field">
@@ -33,15 +33,14 @@
 
 <script>
 import {mapActions, mapState, mapMutations} from 'vuex'
-import map from 'lodash/fp/map'
 
 export default {
     components: {
-        topNav: ()=>import  ( '../elements/top-nav'),
-        leftNav: ()=>import  ( '../elements/left-nav'),
-        cart: ()=>import  ( './cart'),
-        addresses: ()=>import  ( './addresses'),
-        comments: ()=>import  ( './comments'),
+        topNav:     () => import('../elements/top-nav'),
+        leftNav:    () => import('../elements/left-nav'),
+        cart:       () => import('./cart'),
+        addresses:  () => import('./addresses'),
+        comments:   () => import('./comments'),
     },
 
     data(){
@@ -71,6 +70,9 @@ export default {
                 || this.invalidContact
                 || (this.emptyCart && this.emptyComments)
         },
+        generalCommentsLabel() {
+            return  this.emptyCart ? this.$t('inquiry.questions_or_comments_lbl') : this.$t('inquiry.other_instructions_lbl')
+        }
     },
 
     methods:{

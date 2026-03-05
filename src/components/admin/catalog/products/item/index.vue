@@ -93,16 +93,16 @@
 //import Field from './field'
 //import ProductImages from './images'
 //import Visibility from './visibility'
-//import Groups from './groups'
+import Groups from './groups'
 import {mapActions, mapGetters} from 'vuex'
 import unset from 'lodash/fp/unset'
 import find from 'lodash/fp/find'
 //import notification from '@/components/utils/messaging/notification'
 export default {
     components: {
-        Groups:()=>import('./groups'), 
-        Field:()=>import('./field'), 
-        ProductImages: ()=>import('./images'), 
+        Groups:()=>import('./groups'),
+        Field:()=>import('./field'),
+        ProductImages: ()=>import('./images'),
         notification: ()=>import('@/components/utils/messaging/notification')
     },
     props: ['product_id'],
@@ -129,8 +129,6 @@ export default {
             // watches it to disable the Save button, thus 
             // avoiding double-submits.
             submitted: false,
-
-
 
             mutable: {
                 product: {
@@ -207,7 +205,7 @@ export default {
                     // the "Cancel edit" feature.
                     this.mutable.product = product.data
                     this.mutable.groups = this.mutable.product.groups
-                    delete this.mutable.product.groups 
+                    //delete this.mutable.product.groups 
                     //Object.keys(resource.data).forEach((k) => {
                     //    // instead of directly assigning `product=resource`
                     //    // we rather assign each value to a `product`'s key.
@@ -330,16 +328,16 @@ export default {
             this.$set(this.mutable, 'groups', groups)
         },
 
-        ...mapActions({
-            getProductSchema: 'api/getProductSchema',
-            getProduct: 'api/getProduct',
-            putProduct: 'api/putProduct',
-            patchProduct: 'api/patchProduct',
-            postProduct: 'api/postProduct',
-            getGroupSets: 'api/getGroupSets',
-            putProductImages: 'api/putProductImages',
-            deleteProduct: 'api/deleteProduct',
-            putProductGroupOptions: 'api/putProductGroupOptions',
+        ...mapActions('api', {
+            getProductSchema: 'getProductSchema',
+            getProduct: 'getProduct',
+            putProduct: 'putProduct',
+            patchProduct: 'patchProduct',
+            postProduct: 'postProduct',
+            getGroupSets: 'getGroupSets',
+            putProductImages: 'putProductImages',
+            deleteProduct: 'deleteProduct',
+            putProductGroupOptions: 'putProductGroupOptions',
         }),
     },
 }

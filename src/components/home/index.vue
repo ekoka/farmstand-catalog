@@ -3,6 +3,11 @@
     <modal id="request" :active.sync="activateRequest">
         <regUserRequest :domain="domain" />
     </modal>
+    <br/>
+    <span v-if="show">{{name}}</span>
+    <button @click="change">switch</button>
+    <button @click="change2">switch2</button>
+    <button @click="change3">switch3</button>
     <div class="container">
         <div class="level">
             <div class="level-left">
@@ -41,13 +46,6 @@ export default{
     components: {
         modal, regUserRequest,
     },
-    data(){
-        return {
-            domain: null,
-            activateRequest: false,
-            ready: false,
-        }
-    },
     mounted(){
         // this data might already be available
         this.getResource({resource:'publicRoot'}).then(root=>{
@@ -77,7 +75,41 @@ export default{
             return this.$store.state.api.accessToken
         },
     },
+    data(){
+        return {
+            reactivePropertyFactory: {_:null},
+            domain: null,
+            activateRequest: false,
+            ready: false,
+            show: false,
+        }
+    },
     methods: {
+        makeReactiveProperty(key, value=null) {
+            // add a new item to `reactivePropertyFactory`
+            this.reactivePropertyFactory[key] = value
+            // make it reactive by reassigning a copy of itself to `reactivePropertyFactory`
+            this.reactivePropertyFactory = {...this.reactivePropertyFactory}
+            // assign the new reactive item to the component using the same name
+            if (!this[key]) {
+                this.unmapped = this.reactivePropertyFactory[key]
+            }
+            this[key] = this.reactivePropertyFactory[key]
+            // empty reactivePropertyFactory
+            this.reactivePropertyFactory = {}
+            this.show = true
+        },
+        change(){
+            this.makeReactiveProperty('name', 'Michael')
+        },
+        change2(){
+            this.name = 'John'
+        },
+        change3(){
+            this.name.last = 'Moore'
+            this.unmapped.last = 'Woo'
+        },
+
         accessRequest(){
             if(this.idToken && !this.loggedIn){
                 this.activateRequest = true

@@ -28,18 +28,16 @@
 </template>
 
 <script>
-import map from 'lodash/fp/map'
-import findIndex from 'lodash/fp/findIndex'
 import {mapActions, mapGetters} from 'vuex'
 
 export default {
     components: {
-        smallcart: ()=>import  ( './inquiry/smallcart'),
-        topNav: ()=>import  ( './elements/top-nav'),
-        leftNav: ()=>import  ( './elements/left-nav'),
-        groupVertical: ()=>import  ( './elements/group-vertical'),
-        productTable: ()=>import  ( './elements/product-table'),
-        notification: ()=>import  ( '@/components/utils/messaging/notification'),
+        smallcart: () => import('./inquiry/smallcart'),
+        topNav: () => import('./elements/top-nav'),
+        //leftNav: ()=>import  ( './elements/left-nav'),
+        groupVertical: () => import('./elements/group-vertical'),
+        productTable: () => import('./elements/product-table'),
+        notification: () => import('@/components/utils/messaging/notification'),
     },
 
     data(){
@@ -89,11 +87,8 @@ export default {
                 console.log('no access token')
                 return false
             }
-            console.log('access token')
-            const idx = findIndex(role=>{
-                return role==this.accessToken.payload.role
-            })['admin', 'user']
-            return idx!=-1
+            //const idx = ['admin', 'user'].findIndex(role => role==this.accessToken.payload.role)
+            return ['admin', 'user'].includes(this.accessToken.payload.role)
         },
         accessToken(){
             return this.$store.state.api.accessToken
@@ -125,35 +120,38 @@ export default {
             return
         }
 
-        this.getRoot().then(()=>{
-            this.getPublicRoot()
-        }).then(()=>{
-            return this.getDomain({
-                domain:this.$store.getters.subdomain
+        this.getRoot()
+            .then(() => {
+                this.getPublicRoot()
             })
-        }).then(()=>{
-            const account_id = this.accessToken.payload.account_id
-            return this.getAccount({account_id})
-        }).then(()=>{
-            return this.getPublicProductSchema()
-        }).then(schema=>{
-            this.schema = schema.data
-        }).then(()=>{
-            return this.getPublicProducts()
-        }).then(products=>{
-            const product_ids = products.key('products')
-            return this.getPublicProductResources({product_ids})
-        }).then(products=>{
-            this.products = map(p=>{
-                return p.data
-            })(products)
-        }).then(()=>{
-            return this.getPublicGroups()
-        }).then(groups=>{
-            this.groups = map(f=>f.data)(groups.embedded('groups'))
-        }).then(()=>{
-            this.ready = true
-        })
+            .then(() => {
+                return this.getDomain({
+                    domain:this.$store.getters.subdomain
+                })
+            })
+            .then(() => {
+                const account_id = this.accessToken.payload.account_id
+                return this.getAccount({account_id})
+            })
+            .then(() => this.getPublicProductSchema())
+            .then(schema => {
+                this.schema = schema.data
+            })
+            .then(() => this.getPublicProducts())
+            .then(products => {
+                const product_ids = products.key('products')
+                return this.getPublicProductResources({product_ids})
+            })
+            .then(products => {
+                this.products = products.map(p=>p.data)
+            })
+            .then(() => this.getPublicGroups())
+            .then(groups => {
+                this.groups = groups.embedded('groups').map(f => f.data)
+            })
+            .then(() => {
+                this.ready = true
+            })
     },
 
     methods: {
@@ -164,24 +162,21 @@ export default {
                 rv[i] = fields[i] || ''
             }
             return rv
-            //return product.key('fields').slice(0, this.fieldLength).map(f=>{
-            //    return f || 'none'
-            //})
-            //return product.key('fields').map(f=>{
-            //})
         },
+        ...mapActions('inquiry', {
+            addProduct: 'addProduct',
+            removeProduct: 'removeProduct',
+        }),
 
-        ...mapActions({
-            getRoot:'api/getRoot',
-            getPublicRoot:'api/getPublicRoot',
-            getDomain:'api/getDomain',
-            getAccount:'api/getAccount',
-            getPublicProducts:'api/getPublicProducts',
-            getPublicProductSchema:'api/getPublicProductSchema',
-            getPublicProductResources:'api/getPublicProductResources',
-            getPublicGroups: 'api/getPublicGroups',
-            addProduct: 'inquiry/addProduct',
-            removeProduct: 'inquiry/removeProduct',
+        ...mapActions('api', {
+            getRoot:'getRoot',
+            getPublicRoot:'getPublicRoot',
+            getDomain:'getDomain',
+            getAccount:'getAccount',
+            getPublicProducts:'getPublicProducts',
+            getPublicProductSchema:'getPublicProductSchema',
+            getPublicProductResources:'getPublicProductResources',
+            getPublicGroups: 'getPublicGroups',
         }),
     },
 }

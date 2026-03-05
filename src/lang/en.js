@@ -31,6 +31,7 @@ export default {
         requested_quantity_lbl: 'Requested quantity',
         other_questions_lbl: 'Questions or comments about this item?',
         other_instructions_lbl: 'Other comments or instructions',
+        questions_or_comments_lbl: 'Questions or comments',
         update_rfq_btn: 'Update',
         add_to_rfq_btn: 'Add to Request for quotation',
         remove_item_btn: 'Remove from inquiry',

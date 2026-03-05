@@ -65,7 +65,6 @@ export default {
             'getDomain': 'api/getDomain',
             'getAccount': 'api/getAccount',
             'getProfile': 'api/getProfile',
-            'getProfile': 'api/getProfile',
         }),
         ...mapMutations({
             'setAccessToken': 'api/setAccessToken',

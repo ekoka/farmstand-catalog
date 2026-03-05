@@ -194,7 +194,7 @@ export default {
         },
 
         getFieldValue(product, field){
-            return this.getField(product, field).value
+            return (this.getField(product, field) || {value: ''}).value
         },
 
         chevronUpDown(product_id){

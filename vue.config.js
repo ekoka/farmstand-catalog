@@ -1,11 +1,7 @@
-//const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 module.exports = {
     runtimeCompiler: true,
     devServer: {
-    //    proxy: 'http://api.farmstand.dev:8989',
-    //    disableHostCheck: true,
-    //    host: 'localhost',
-        public: 'demo.farmstand.dev:8082',
+        public: process.env.VUE_APP_DEV_SERVER_CATALOG_HOST,
         headers: {
             "Access-Control-Allow-Origin": "*",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
@@ -15,11 +11,4 @@ module.exports = {
     pages:{
         index: 'src/main.js',
     },
-    /*
-    configureWebpack: {
-        plugins: [
-            //new BundleAnalyzerPlugin()
-        ]
-    }
-    */
 }
