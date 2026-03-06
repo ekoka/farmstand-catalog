@@ -1,7 +1,16 @@
-FROM node:11.15.0 as builder
+ARG NODE_VERSION=24.14.0-alpine
+FROM node:${NODE_VERSION} AS dev
+ 
 WORKDIR /app
-RUN npm install -g yarn
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install
+COPY package*.json ./
+RUN npm install
+ 
 COPY . .
+# user `node` owns app files
+RUN chown -R node:node /app
+USER node
+ 
+# Vite dev server port
+EXPOSE 5173
+ 
+CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]

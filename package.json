@@ -1,32 +1,28 @@
 {
-  "name": "productlist-ui-new",
-  "version": "0.1.0",
+  "name": "farmstand-catalog-vu3",
+  "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test:unit": "vitest"
   },
   "dependencies": {
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "axios": "^0.18.0",
-    "babel-plugin-transform-vue-jsx": "^3.7.0",
-    "bulma": "^0.7.4",
-    "core-js": "^2.6.5",
-    "i18next": "^15.1.0",
-    "lodash-es": "^4.17.11",
-    "urijs": "^1.19.1",
-    "vue": "^2.6.6",
-    "vue-i18n": "^8.11.2",
-    "vue-router": "^3.0.1",
-    "vuedraggable": "^2.20.0",
-    "vuex": "^3.0.1"
+    "pinia": "^3.0.4",
+    "vue": "^3.5.29",
+    "vue-router": "^5.0.3"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-service": "^3.5.0",
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.1.0",
-    "vue-template-compiler": "^2.5.21",
-    "webpack": "^3.0.1"
+    "@vitejs/plugin-vue": "^6.0.4",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^28.1.0",
+    "vite": "^7.3.1",
+    "vite-plugin-vue-devtools": "^8.0.6",
+    "vitest": "^4.0.18"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
   }
 }
