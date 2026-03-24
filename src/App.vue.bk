@@ -1,0 +1,124 @@
+<script setup>
+//import HelloWorld from '@/components/HelloWorld.vue'
+//import { ref, onMounted } from 'vue'
+import { RouterView } from 'vue-router'
+const ready = ref(true)
+
+/*
+import { useStore } from 'pina'
+
+const lang = ref('en')
+const store = useStore()
+
+onMounted(() => {
+  console.log('onMounted called')
+  ready.value = true
+  return
+  // check versions
+  versionReset()
+  //this.$i18n.locale = store.getters.lang
+
+  // init api
+  store.dispatch('api/getRoot').then(()=>{
+      return monitorIdTokenCookie()
+  }).then(()=>{
+      return store.dispatch('api/getPublicRoot')
+  }).then(()=>{
+      return store.dispatch('api/getPublicDomain')
+  }).then(()=>{
+      if (store.state.api.idToken){
+          console.log('logged in')
+          // logged in; obtain an access token
+          return store.dispatch('api/postAccessToken').then(()=>{
+              // start monitoring access token
+              monitorAccessToken()
+          }).catch((error)=>{
+              // handle 401 (id token has likely been revoked)
+              if(error.response.status==401){
+                  // no accesstoken issued.
+                  return
+              }
+              // rethrow any other error
+              throw error
+          })
+      }
+      console.log('not logged in')
+      // not logged in
+      return initApi()
+  }).then(()=>{
+      ready.value = true
+  })
+})
+
+initApi = async function (){
+    // reinitialize the store (empty data)
+    await store.dispatch('api/resetApi')
+    // repopulate API root
+    await store.dispatch('api/getRoot')
+    await store.dispatch('api/getPublicRoot')
+    await store.dispatch('api/getPublicDomain')
+}
+
+versionReset = function(){
+    // Clear the state if the version changes. This ensures
+    //that clients are not stuck with a state that is inconsistent
+    //with latest changes.
+    // if versions are the same return
+    if(localStorage.getItem('VERSION') == VERSION){
+        return
+    }
+    // otherwise clear all
+    store.dispatch('api/resetApi').then(()=>{
+        localStorage.setItem('VERSION', VERSION)
+        window.location.reload()
+    })
+}
+
+monitorIdTokenCookie = async () => {
+    // synchronize idToken in cookie with idToken in localStorage
+    const idToken = cookies.getCookie('idToken')
+    if(idToken!=store.state.api.idToken){
+        // change of state
+        store.dispatch('api/syncIdToken')
+            .then(()=>{
+                // if the change of state was a removal of the idToken
+                // also remove the accessToken
+                if(!store.state.api.idToken){
+                    store.dispatch('api/deleteAccessToken')
+                }
+            })
+    }
+    setTimeout(monitorIdTokenCookie, 2000)
+}
+
+monitorAccessToken = () => {
+    const delay = 5 * 60 * 1000 // 5 minutes
+    if(store.state.api.idToken){
+        const accessToken = store.state.api.accessToken
+        const exp = Date.now() + delay*2 // 10 minutes before expiry
+        if (exp>=accessToken.payload.exp){
+            // refresh access token
+            store.dispatch('api/postAccessToken')
+                .catch(error=>{ 
+                    if (error.response.status==401){
+                        // idToken is not valid anymore
+                        store.dispatch('api/deleteAccessToken')
+                    }
+                    return
+                })
+        }
+        // try again in 5 minutes
+        // we keep monitoring as long as we obtain an access token
+        setTimeout(monitorAccessToken, delay)
+    }
+}
+*/
+</script>
+
+<template>
+    <RouterView v-if="ready" ></RouterView>
+</template>
+
+<style scoped>
+
+</style>

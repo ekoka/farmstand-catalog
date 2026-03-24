@@ -10,7 +10,9 @@
     "test:unit": "vitest"
   },
   "dependencies": {
+    "axios": "^1.13.6",
     "pinia": "^3.0.4",
+    "urijs": "^1.19.11",
     "vue": "^3.5.29",
     "vue-router": "^5.0.3"
   },
