@@ -7,33 +7,17 @@ import {HAL} from '@/utils/hal'
 export default defineStore('root', () => {
     const root = ref(null)                          // HAL resource
     const rawRoot = computed( () => root.resource ) // raw resource
-    async function getRoot() {
+    function getRoot() {
         if (root.value) return root
-        return http({ url: cnf.API_ROOT }).then( resp => {
+        http({ url: cnf.API_ROOT }).then( resp => {
             root.value = HAL(resp.data)
             return root
         })
     }
 
-    function getResource({getters, commit, dispatch}, {resource, params=null}){
-        if(getters[resource]){
-            return getters[resource]
-        }
-        const capitalized = upperFirst(resource)
-        return dispatch('get'+capitalized, params)
+    function resetApi() {
+        return this.getRoot()
     }
 
-    function resetApi({commit, dispatch}){
-        commit('resetApi')
-        return dispatch('getRoot')
-    }
-
-
-
-
-
-
-
-
-    return { getRoot, root }
+    return { getRoot, root, resetApi }
 })

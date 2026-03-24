@@ -7,17 +7,12 @@ import useDomainStore from './domain'
 
 export default defineStore('products', {
 
-    state: {
-
+    state: () => ({
         productSchema: null,
         productCache: {stack: [], lock: []},
-    },
+    }),
 
-    getters: {
-        productSchema: (state) => state.productSchema && HAL(state.productSchema)
-    },
-
-    actions:{
+    actions: {
         //putProductSchema({getters, dispatch, commit},{data}){
         //    const url = getters.domain.url('product_schema')
         //    return getters.http({
@@ -31,8 +26,8 @@ export default defineStore('products', {
             const domainStore = useDomainStore()
             const url = domainStore.domain.url('product_schema')
             return http({url, auth:true}).then(resp => {
-                this.state.productSchema = HAL(resp.data)
-                return this.state.productSchema
+                this.productSchema = HAL(resp.data)
+                return this.productSchema
             })
         },
 
@@ -48,7 +43,7 @@ export default defineStore('products', {
             const url = domainStore.domain.url('product', { product_id })
             return http({ url, method:'put', data, auth:true }).then( _ => {
                 // remove cached product resource.
-                Buffer(this.state.productCache).remove({ product_id })
+                Buffer(this.productCache).remove({ product_id })
             })
         },
 
@@ -61,7 +56,7 @@ export default defineStore('products', {
             const url = domainStore.domain.url('product', { product_id })
             return http({ url, method:'patch', data, auth:true }).then( _ => {
                 // remove cached product resource.
-                Buffer(this.state.productCache).remove({ product_id })
+                Buffer(this.productCache).remove({ product_id })
             })
         },
 
@@ -72,7 +67,7 @@ export default defineStore('products', {
             const url = domainStore.domain.url('product', { product_id })
             return http({ url, method:'delete', auth:true }).then( _ => {
                 // remove cached product resource
-                Buffer(this.state.productCache).remove({ product_id })
+                Buffer(this.productCache).remove({ product_id })
             })
         },
 
@@ -92,7 +87,7 @@ export default defineStore('products', {
             return http({url, auth:true}).then(resp => {
                 const product_id = HAL(resp.data).key('product_id')
                 const path = { product_id }
-                Buffer(this.state.productCache).store(path, resp.data)
+                Buffer(this.productCache).store(path, resp.data)
                 return HAL(resp.data)
             })
         },
@@ -112,7 +107,7 @@ export default defineStore('products', {
         },
 
         async getProductResources({ product_ids }){
-            const buffer = Buffer(state.productCache)
+            const buffer = Buffer(this.productCache)
             const { found, foundIds } = product_ids.reduce((accumulator, product_id) => {
                 const resource = buffer.fetch({ product_id })
                 if (resource) {
@@ -133,7 +128,7 @@ export default defineStore('products', {
                 resources.embedded('products').forEach( p => {
                     const product_id = HAL(p.resource).key('product_id')
                     const path = { product_id }
-                    Buffer(this.state.productCache).store(path, p.resource)
+                    Buffer(this.productCache).store(path, p.resource)
                 })
                 return Array.from(union(found.map(p => HAL(p)), resources.embedded('products')))
             })

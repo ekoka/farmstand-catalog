@@ -1,31 +1,22 @@
+import { defineStore } from 'pinia'
+import { difference, union } from '@/utils/ds'
 import { HAL } from '@/utils/hal'
-import { http } from '@/stores/http'
+import http from '@/stores/http'
+import { Buffer } from '@/utils/cache'
+import useDomainStore from './domain'
 
-export default {
-    state: {
-        inquiries: null,
-    },
+//export defineStore('inquiries', default {
+export defineStore('inquiries', () => {
+    const inquiries = ref(null)
 
-    mutations:{
-    },
+    function getInquiries() {
+        const domainStore = useDomainStore()
+        const url = domainStore.domain.url('inquiries')
+        return http({url, auth:true}).then( resp => {
+            inquiries.value = HAL(resp.data)
+            return inquiries
+        })
+    }
 
-    actions:{
-        getInquiries({getters, commit}, {refresh=false}={}){
-            let url = getters.domain.url('inquiries')
-            if (!refresh){
-                let resource = getters.cache({key:url})
-                if(resource){
-                    return HAL(resource)
-                }
-            }
-            return http({url, auth:true}).then(resp => {
-                const cache = useCacheStore()
-                commit('cache', {key:url, value:resp.data})
-                this.state.inquiries = resp.data
-                return HAL(resp.data)
-            }).catch(err => {
-                console.log(err)
-            })
-        },
-    },
-}
+    return { inquiries, getInquiries }
+})

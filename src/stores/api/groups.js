@@ -67,13 +67,13 @@ export default defineStore('groups', {
                 // halify
                 const group_id = HAL(resp.data).key('group_id')
                 const path = { group_id }
-                Buffer(this.state.groupCache).store(path, resp.data)
+                Buffer(this.groupCache).store(path, resp.data)
                 return HAL(resp.data)
             })
         },
 
         async getGroupResources({ group_ids }){
-            const buffer = Buffer(this.state.groupCache)
+            const buffer = Buffer(this.groupCache)
             const { found, foundIds } = group_ids.reduce((accumulator, group_id) => {
                 const resource = buffer.fetch({ group_id })
                 if (resource) {
@@ -96,7 +96,7 @@ export default defineStore('groups', {
                     const group = g.resource
                     const group_id = HAL(group).key('group_id')
                     const path = { group_id }
-                    Buffer(this.state.groupCache).store(path, group)
+                    Buffer(this.groupCache).store(path, group)
                 })
                 return Array.from(union(found.map(f => HAL(f)), resources.embedded('groups')))
             })
@@ -110,7 +110,7 @@ export default defineStore('groups', {
                 method:'put',
                 data,
                 auth:true,
-            }).then( _ => Buffer(this.state.groupCache).remove({ group_id }) )
+            }).then( _ => Buffer(this.groupCache).remove({ group_id }) )
         },
 
         async deleteGroup({ group_id }) {
@@ -120,7 +120,7 @@ export default defineStore('groups', {
             const url = domainStore.domain.url('groups', { group_id })
             return http({ url, method:'delete', auth:true })
                 // remove cached group resource
-                .then( _ => Buffer(this.state.groupCache).remove({ group_id }) )
+                .then( _ => Buffer(this.groupCache).remove({ group_id }) )
         },
         
         async getGroupOption({ url }) {

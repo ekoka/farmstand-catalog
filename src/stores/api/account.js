@@ -5,11 +5,10 @@ import useRootStore from './root'
 
 export default defineStore('account', {
 
-    state: {
-
+    state: () =>({
         profile: null,
         account: null,
-    },
+    }),
 
     actions: {
 
@@ -32,11 +31,11 @@ export default defineStore('account', {
         },
 
         unsetProfile(){
-            this.state.profile = null
+            this.profile = null
         },
 
         unsetAccount(){
-            this.state.account = null
+            this.account = null
         },
     },
 })

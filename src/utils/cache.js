@@ -14,7 +14,7 @@ const alpha = 'abcdefghijklkmnopqrstuvwxyz'
 const numeric = '1234567890'
 const chars = alpha + alpha.toUpperCase() + numeric
 
-class Lock{
+class Lock {
     constructor(object){
         // the object that is accessed asynchronously
         this.object = object
